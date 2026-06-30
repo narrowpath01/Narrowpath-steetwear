@@ -10,11 +10,11 @@ interface MarqueeProps {
 }
 
 export default function Marquee({ text, speed = "medium", className = "" }: MarqueeProps) {
-  // Repeat the text multiple times so the screen is always filled
-  const repeatedText = Array(15).fill(text).join("  •  ");
+  // Repeat the text multiple times with wide spacing and no dots
+  const repeatedText = Array(15).fill(text).join("                ");
 
-  // Determine duration based on speed (slow = 120s for very slow speed)
-  const duration = speed === "slow" ? 120 : speed === "fast" ? 25 : 60;
+  // Determine duration based on speed (slow = 200s for extremely slow speed)
+  const duration = speed === "slow" ? 200 : speed === "fast" ? 25 : 60;
 
   return (
     <div className={`flex overflow-hidden bg-black text-white py-3 border-y border-neutral-800 ${className}`}>

@@ -19,30 +19,49 @@ export default async function Home() {
     }
   });
 
+  const printedProducts = products.filter(p => p.collection === 'PRINTED' || !p.collection);
+  const monochromeProducts = products.filter(p => p.collection === 'MONOCHROME');
+
   return (
     <main className="min-h-screen bg-white text-black">
 
-      {/* 1. Restore the Framer Motion Hero Section */}
-      {/* <Hero /> */}
-
-      {/* 2. Restore the Scrolling Marquee */}
-      {/* <Marquee text="" /> */}
-
-      {/* 4. Restore the Editorial Carousel */}
+      {/* Editorial Carousel */}
       <EditorialCarousel products={products} />
 
-      {/* 3. The Live Database Product Grid */}
-      <section className="py-10 px-4 md:px-8 max-w-[1600px] mx-auto">
-        <div className="mb-8 flex justify-between items-center">
-          <h2 className="text-[20px] lg:text-[20px] font-black uppercase tracking-widest text-neutral-600">Latest Drops</h2>
+      {/* Latest Drops Section */}
+      <section className="py-10 px-4 md:px-8 max-w-[1600px] mx-auto space-y-12">
+        <div>
+          <div className="mb-4 flex justify-between items-center">
+            <h2 className="text-[20px] lg:text-[20px] font-black uppercase tracking-widest text-neutral-600">Latest Drops</h2>
+          </div>
+          
+          {/* Printed Collection */}
+          <div className="space-y-4">
+            <div className="text-[11px] font-normal text-black uppercase tracking-widest pl-0.5">
+              Printed
+            </div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-2 gap-y-8">
+              {printedProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-2 gap-y-8">        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-        </div>
+        {/* Monochrome Collection */}
+        {monochromeProducts.length > 0 && (
+          <div className="space-y-4 pt-4 border-t border-neutral-100">
+            <div className="text-[11px] font-normal text-black uppercase tracking-widest pl-0.5">
+              Monochrome
+            </div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-2 gap-y-8">
+              {monochromeProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        )}
       </section>
-
 
     </main>
   );

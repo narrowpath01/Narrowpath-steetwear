@@ -272,47 +272,42 @@ export default function Navbar() {
       {/* 4. MOBILE DRAWER NAVIGATION (Slide in full screen menu) */}
       {isMenuOpen && (
         <div className="fixed inset-0 z-[125] flex md:hidden bg-white w-full h-full flex-col">
-          {/* Scrollable category list */}
-          <div className="flex-1 flex flex-col justify-center gap-6 px-12 animate-in fade-in slide-in-from-top-4 duration-300">
+          {/* Scrollable category list shifted top-left and smaller */}
+          <div className="flex-1 flex flex-col justify-start items-start pt-28 px-10 gap-5 animate-in fade-in slide-in-from-top-4 duration-300">
             <Link 
               href="/shop" 
               onClick={() => setIsMenuOpen(false)} 
-              className="text-4xl font-black uppercase tracking-tight text-black hover:opacity-50 transition-opacity"
+              className="text-2xl font-black uppercase tracking-widest text-black hover:opacity-50 transition-opacity"
             >
               Shop
             </Link>
             <Link 
               href="/collections" 
               onClick={() => setIsMenuOpen(false)} 
-              className="text-4xl font-black uppercase tracking-tight text-black hover:opacity-50 transition-opacity"
+              className="text-2xl font-black uppercase tracking-widest text-black hover:opacity-50 transition-opacity"
             >
               Collections
             </Link>
             <Link 
               href="/customise" 
               onClick={() => setIsMenuOpen(false)} 
-              className="text-4xl font-black uppercase tracking-tight text-black hover:opacity-50 transition-opacity text-[#005bd3]"
+              className="text-2xl font-black uppercase tracking-widest text-[#005bd3] hover:opacity-50 transition-opacity"
             >
               Customise Your Tee
-            </Link>
-            <Link 
-              href="/about" 
-              onClick={() => setIsMenuOpen(false)} 
-              className="text-4xl font-black uppercase tracking-tight text-black hover:opacity-50 transition-opacity"
-            >
-              About
             </Link>
           </div>
 
           {/* About us & Contact info footer */}
-          <div className="px-12 py-6 border-t border-neutral-100 bg-neutral-50/50 text-neutral-500 space-y-2 text-xs">
-            <Link href="/about" onClick={() => setIsMenuOpen(false)} className="block hover:text-black transition-colors font-bold uppercase tracking-wider text-[10px]">
+          <div className="px-10 py-8 border-t border-neutral-100 bg-neutral-50/50 text-neutral-500 space-y-4">
+            <Link href="/about" onClick={() => setIsMenuOpen(false)} className="block text-neutral-500 hover:text-black transition-colors font-bold uppercase tracking-widest text-xs">
               About Us
             </Link>
-            <div className="text-[11px] leading-relaxed">
-              <span className="font-semibold block uppercase tracking-wider text-[10px] text-neutral-400 mb-0.5">Contact Us</span>
-              Email: <a href="mailto:narrowpathtshirts@gmail.com" className="font-mono hover:underline">narrowpathtshirts@gmail.com</a><br />
-              Phone: <span className="font-mono">9315457852</span>
+            <div className="space-y-1">
+              <span className="font-bold block uppercase tracking-widest text-[10px] text-neutral-400">Contact Us</span>
+              <div className="text-xs leading-relaxed text-neutral-500">
+                Email: <a href="mailto:narrowpathtshirts@gmail.com" className="font-mono hover:underline">narrowpathtshirts@gmail.com</a><br />
+                Phone: <span className="font-mono">9315457852</span>
+              </div>
             </div>
           </div>
 

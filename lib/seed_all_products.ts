@@ -148,7 +148,35 @@ async function main() {
     }
   });
 
-  console.log("\nDatabase seeded successfully with all 5 products!");
+  // 6. Monochrome Off-White Heavyweight Tee
+  console.log("Seeding: Monochrome Off-White Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Monochrome Off-White Heavyweight Tee",
+      handle: "monochrome-off-white-heavyweight-tee",
+      description: "Premium heavyweight off-white monochrome tee. Clean design, boxy relaxed fit, crafted from 100% premium cotton for ultimate comfort, styling, and structural drape. Minimalist stitching details with no graphics.",
+      collection: "MONOCHROME",
+      images: {
+        create: [
+          { url: "/monochrome-offwhite-front.png", altText: "Monochrome Off-White Heavyweight Tee Front View" },
+          { url: "/monochrome-offwhite-back.png", altText: "Monochrome Off-White Heavyweight Tee Back View" },
+          { url: "/monochrome-offwhite-back-model.png", altText: "Monochrome Off-White Heavyweight Tee Back Model View" },
+          { url: "/monochrome-offwhite-collar-detail.png", altText: "Monochrome Off-White Heavyweight Tee Collar Detail" },
+          { url: "/monochrome-offwhite-fabric.png", altText: "Monochrome Off-White Heavyweight Tee Fabric Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price, inventory: 100 },
+          { title: "M", price, inventory: 100 },
+          { title: "L", price, inventory: 100 },
+          { title: "XL", price, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  console.log("\nDatabase seeded successfully with all 6 products!");
 }
 
 main()
