@@ -10,7 +10,6 @@ export function Footer() {
         <div className="flex flex-col gap-4">
           <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-2">Connect</h3>
           <Link href="#" className="text-sm font-medium hover:text-neutral-400 transition-colors">Instagram</Link>
-          <Link href="#" className="text-sm font-medium hover:text-neutral-400 transition-colors">YouTube</Link>
           <Link href="#" className="text-sm font-medium hover:text-neutral-400 transition-colors">WhatsApp</Link>
         </div>
 
@@ -20,15 +19,12 @@ export function Footer() {
           <Link href="/policies/returns" className="text-sm font-medium hover:text-neutral-400 transition-colors">Returns/Exchanges</Link>
           <Link href="/policies/shipping" className="text-sm font-medium hover:text-neutral-400 transition-colors">Shipping Policy</Link>
           <Link href="/policies/privacy" className="text-sm font-medium hover:text-neutral-400 transition-colors">Privacy Policy</Link>
-          <Link href="#" className="text-sm font-medium hover:text-neutral-400 transition-colors">FAQ</Link>
         </div>
 
         {/* Column 3: About */}
         <div className="flex flex-col gap-4">
           <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-2">Narrow Path</h3>
           <Link href="/about" className="text-sm font-medium hover:text-neutral-400 transition-colors">Our Story</Link>
-          <Link href="#" className="text-sm font-medium hover:text-neutral-400 transition-colors">Stores</Link>
-          <Link href="#" className="text-sm font-medium hover:text-neutral-400 transition-colors">Careers</Link>
         </div>
 
         {/* Column 4 & 5: Giant Brand Anchor */}
