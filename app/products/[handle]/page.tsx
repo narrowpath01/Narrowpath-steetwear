@@ -33,7 +33,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
       <div className="max-w-7xl mx-auto bg-white p-6 md:p-12 rounded-3xl border border-neutral-200 shadow-sm flex flex-col lg:flex-row gap-12 lg:gap-24 relative">
         
         {/* Left Side: Scrolling Image Stack with Dots Indicator */}
-        <div className="w-full lg:w-[60%] rounded-2xl overflow-hidden lg:h-[650px] flex">
+        <div className="w-full lg:w-[60%] rounded-2xl overflow-hidden lg:h-[650px] lg:self-center flex">
           <ProductGalleryWrapper images={images} />
         </div>
 

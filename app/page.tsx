@@ -29,7 +29,7 @@ export default async function Home() {
       {/* <Marquee text="" /> */}
 
       {/* 4. Restore the Editorial Carousel */}
-      <EditorialCarousel />
+      <EditorialCarousel products={products} />
 
       {/* 3. The Live Database Product Grid */}
       <section className="py-10 px-4 md:px-8 max-w-[1600px] mx-auto">

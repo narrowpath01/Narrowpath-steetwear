@@ -4,27 +4,41 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 
-const COLLECTIONS = [
-  { id: 1, title: "WINTER COLLECTION", image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1200&auto=format&fit=crop" },
-  { id: 2, title: "CAPS", image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?q=80&w=1200&auto=format&fit=crop" },
-  { id: 3, title: "HOODIES", image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=1200&auto=format&fit=crop" },
-  { id: 4, title: "TEES", image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1200&auto=format&fit=crop" },
+interface EditorialCarouselProps {
+  products?: any[];
+}
+
+const COLLECTIONS_FALLBACK = [
+  { id: "fallback-1", title: "WINTER COLLECTION", image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1200&auto=format&fit=crop", handle: "" },
+  { id: "fallback-2", title: "CAPS", image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?q=80&w=1200&auto=format&fit=crop", handle: "" },
+  { id: "fallback-3", title: "HOODIES", image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=1200&auto=format&fit=crop", handle: "" },
+  { id: "fallback-4", title: "TEES", image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1200&auto=format&fit=crop", handle: "" },
 ];
 
-// The Engineering Fix: Double the array to create invisible buffer items
-const EXTENDED_COLLECTIONS = [
-  ...COLLECTIONS,
-  ...COLLECTIONS.map((item) => ({ ...item, id: item.id + 4 }))
-];
-
-export default function EditorialCarousel() {
+export default function EditorialCarousel({ products = [] }: EditorialCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const isWheeling = useRef(false);
-  
-  // Use the extended 8-item length for the math engine
-  const len = EXTENDED_COLLECTIONS.length; 
+
+  // Map products to matching title, image and link references
+  const items = products && products.length > 0
+    ? products.slice(0, 4).map((p) => ({
+        id: p.id,
+        title: p.title.toUpperCase(),
+        image: p.images?.[0]?.url || "https://via.placeholder.com/400x500",
+        handle: p.handle
+      }))
+    : COLLECTIONS_FALLBACK;
+
+  // The Engineering Fix: Double the array to create invisible buffer items
+  const extendedItems = [
+    ...items,
+    ...items.map((item, idx) => ({ ...item, id: `${item.id}-buffer-${idx}` }))
+  ];
+
+  const len = extendedItems.length; 
 
   const handleDragEnd = (e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     const swipeThreshold = 50;
@@ -86,23 +100,22 @@ export default function EditorialCarousel() {
 
   const handleDotClick = (idx: number) => {
     // Math to ensure the carousel takes the shortest path when clicking a dot
-    const currentBase = activeIndex - (activeIndex % COLLECTIONS.length);
+    const currentBase = activeIndex - (activeIndex % items.length);
     setActiveIndex(currentBase + idx);
   };
 
   return (
     <section 
       ref={containerRef} 
-      className="relative w-full bg-zinc-100 py-16 md:py-24 overflow-hidden flex flex-col items-center"
+      className="relative w-full bg-zinc-50 py-16 md:py-24 overflow-hidden flex flex-col items-center border-t border-neutral-100"
     >
       <div className="relative w-full max-w-[400px] h-[500px] flex justify-center items-center">
         <AnimatePresence initial={false}>
-          {EXTENDED_COLLECTIONS.map((item, index) => {
+          {extendedItems.map((item, index) => {
             const variant = getVariant(index);
 
-            return (
+            const cardContent = (
               <motion.div
-                key={item.id}
                 variants={cardVariants}
                 initial={false}
                 animate={variant}
@@ -111,39 +124,59 @@ export default function EditorialCarousel() {
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.2}
                 onDragEnd={handleDragEnd}
-                className="absolute w-[80%] md:w-[90%] h-full rounded-2xl overflow-hidden cursor-grab active:cursor-grabbing shadow-2xl"
+                className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden cursor-grab active:cursor-grabbing shadow-2xl border border-neutral-100/50"
               >
                 <Image
                   src={item.image}
                   alt={item.title}
                   fill
-                  className="object-cover pointer-events-none"
+                  className="object-cover pointer-events-none object-top rounded-2xl"
                   sizes="(max-width: 768px) 80vw, 400px"
                   priority={index === 0 || index === 1}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent pointer-events-none" />
                 <div className="absolute bottom-8 left-0 w-full text-center pointer-events-none">
-                  <h3 className="text-white text-2xl font-black uppercase tracking-widest drop-shadow-md">
+                  <h3 className="text-white text-2xl font-black uppercase tracking-widest drop-shadow-md px-4">
                     {item.title}
                   </h3>
                 </div>
               </motion.div>
+            );
+
+            // Wrap in absolute positioning div matching relative parent dimensions
+            return (
+              <div 
+                key={item.id} 
+                className="absolute w-[80%] md:w-[90%] h-full flex justify-center items-center"
+                style={{ pointerEvents: variant === "active" ? "auto" : "none" }}
+              >
+                {item.handle ? (
+                  <Link href={`/products/${item.handle}`} className="w-full h-full block relative">
+                    {cardContent}
+                  </Link>
+                ) : (
+                  <div className="w-full h-full block relative">
+                    {cardContent}
+                  </div>
+                )}
+              </div>
             );
           })}
         </AnimatePresence>
       </div>
 
       <div className="flex justify-center gap-3 mt-8">
-        {COLLECTIONS.map((_, idx) => {
+        {items.map((_, idx) => {
           // Use modulo to highlight the correct dot out of the original 4
-          const isActive = activeIndex % COLLECTIONS.length === idx;
+          const isActive = activeIndex % items.length === idx;
           return (
             <button
               key={idx}
               onClick={() => handleDotClick(idx)}
-              className={`h-1.5 rounded-full transition-all duration-500 ${
-                isActive ? "w-8 bg-black" : "w-2 bg-neutral-300"
+              className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
+                isActive ? "w-8 bg-black" : "w-2 bg-neutral-300 hover:bg-neutral-400"
               }`}
+              aria-label={`Go to slide ${idx + 1}`}
             />
           );
         })}

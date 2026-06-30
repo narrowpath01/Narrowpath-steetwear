@@ -53,13 +53,13 @@ export default function ProductGalleryWrapper({ images }: ProductGalleryWrapperP
     <div className="w-full flex gap-3 sm:gap-6 items-stretch lg:h-full">
       {/* Left Vertical Dots Indicator */}
       {images.length > 1 && (
-        <div className="flex flex-col justify-center gap-3 pr-1 sm:pr-2 select-none flex-shrink-0">
+        <div className="flex flex-col justify-center gap-3 px-3 select-none flex-shrink-0">
           {images.map((_, idx) => (
             <button
               key={idx}
               onClick={() => scrollToImage(idx)}
-              className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full cursor-pointer transition-all duration-300 ${
-                activeImageIndex === idx ? "bg-black scale-125" : "bg-neutral-300 hover:bg-neutral-400"
+              className={`w-1.5 rounded-full cursor-pointer transition-all duration-500 ${
+                activeImageIndex === idx ? "h-8 bg-black" : "h-1.5 bg-neutral-300 hover:bg-neutral-400"
               }`}
               aria-label={`Go to image ${idx + 1}`}
             />

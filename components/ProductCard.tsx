@@ -82,15 +82,20 @@ export default function ProductCard({ product }: ProductCardProps) {
           className="w-full h-full flex overflow-x-auto snap-x snap-mandatory scrollbar-none scroll-smooth"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          {images.map((img: any, idx: number) => (
-            <div key={img.id || idx} className="w-full h-full flex-shrink-0 snap-start relative">
-              <img
-                src={img.url}
-                alt={img.altText || `${product.title} view ${idx + 1}`}
-                className="w-full h-full object-cover object-top rounded-2xl animate-fade-in"
-              />
-            </div>
-          ))}
+          {images.map((img: any, idx: number) => {
+            const isSideView = img.url.includes("do-not-be-afraid-side.png");
+            return (
+              <div key={img.id || idx} className="w-full h-full flex-shrink-0 snap-start relative overflow-hidden rounded-2xl">
+                <img
+                  src={img.url}
+                  alt={img.altText || `${product.title} view ${idx + 1}`}
+                  className={`w-full h-full object-cover object-top rounded-2xl animate-fade-in transition-all duration-300 ${
+                    isSideView ? "scale-[1.12] origin-top" : ""
+                  }`}
+                />
+              </div>
+            );
+          })}
         </div>
 
         {/* Hover Navigation Arrows (Desktop Only) */}
