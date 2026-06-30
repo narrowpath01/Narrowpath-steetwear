@@ -84,7 +84,7 @@ export default function LoginPage() {
             <button
               onClick={() => signIn("google", { callbackUrl: "/" })}
               disabled={loading}
-              className="w-full bg-white text-[#3c4043] border border-[#dadce0] py-3 rounded-full font-medium text-sm hover:bg-[#f8f9fa] transition-colors mb-6 flex items-center justify-center gap-3 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-white text-[#3c4043] border border-[#dadce0] py-3 rounded-full font-medium text-sm hover:bg-[#f8f9fa] transition-colors flex items-center justify-center gap-3 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {/* Official Multi-colored Google G Logo */}
               <svg className="w-5 h-5" viewBox="0 0 48 48">
@@ -97,14 +97,17 @@ export default function LoginPage() {
               Continue with Google
             </button>
 
-            {/* Divider */}
+            {/* Divider (Commented out until SMS OTP is set up) */}
+            {/* 
             <div className="flex items-center w-full mb-6">
               <div className="flex-1 border-t border-neutral-200"></div>
               <span className="px-3 text-neutral-400 text-xs font-bold uppercase tracking-widest">Or</span>
               <div className="flex-1 border-t border-neutral-200"></div>
             </div>
+            */}
 
-            {/* Phone / Email Form */}
+            {/* Phone / Email Form (Commented out until SMS OTP is set up) */}
+            {/* 
             <form onSubmit={handleSendCode} className="flex flex-col gap-4 w-full">
               <input
                 type="text"
@@ -123,6 +126,7 @@ export default function LoginPage() {
                 {loading ? "Sending..." : "Send Code"}
               </button>
             </form>
+            */}
           </div>
         ) : (
           <form onSubmit={handleVerify} className="flex flex-col gap-4 w-full">

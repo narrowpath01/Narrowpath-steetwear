@@ -274,55 +274,22 @@ export default function Navbar() {
       {/* 4. MOBILE DRAWER NAVIGATION (Slide in full screen menu) */}
       {isMenuOpen && (
         <div className="fixed inset-0 z-[125] flex md:hidden bg-white w-full h-full flex-col">
-          {/* Scrollable category list */}
-          <div className="flex-1 overflow-y-auto pt-28 px-8 flex flex-col gap-8">
-            {/* Top link list */}
-            <div className="flex flex-col gap-5 text-xl font-extrabold tracking-tight text-black animate-in fade-in slide-in-from-top-4 duration-300">
-              <Link href="/shop?tag=new-arrivals" onClick={() => setIsMenuOpen(false)} className="hover:opacity-50 transition-opacity">New Arrivals</Link>
-              <Link href="/shop?tag=winter-2025" onClick={() => setIsMenuOpen(false)} className="hover:opacity-50 transition-opacity">Winter collection 2025</Link>
-              <Link href="/shop?tag=basics" onClick={() => setIsMenuOpen(false)} className="hover:opacity-50 transition-opacity">Basics</Link>
-              <Link href="/shop?tag=racing-club" onClick={() => setIsMenuOpen(false)} className="hover:opacity-50 transition-opacity">Bluorng Racing Club</Link>
-              <Link href="/shop?tag=iconics" onClick={() => setIsMenuOpen(false)} className="hover:opacity-50 transition-opacity">Iconics</Link>
-            </div>
-
-            <div className="h-[1px] bg-neutral-100 my-1 animate-in fade-in duration-300"></div>
-
-            {/* Expandable filters list */}
-            <div className="flex flex-col gap-5 text-base font-bold text-neutral-900 animate-in fade-in slide-in-from-top-6 duration-300">
-              <div className="flex justify-between items-center hover:opacity-60 cursor-pointer" onClick={() => { router.push("/shop?category=top"); setIsMenuOpen(false); }}>
-                <span>Top</span>
-                <span className="text-xl font-light text-neutral-400">+</span>
-              </div>
-              <div className="flex justify-between items-center hover:opacity-60 cursor-pointer" onClick={() => { router.push("/shop?category=bottom"); setIsMenuOpen(false); }}>
-                <span>Bottom</span>
-                <span className="text-xl font-light text-neutral-400">+</span>
-              </div>
-              <div className="flex justify-between items-center hover:opacity-60 cursor-pointer" onClick={() => { router.push("/shop?category=accessories"); setIsMenuOpen(false); }}>
-                <span>Accessories</span>
-                <span className="text-xl font-light text-neutral-400">+</span>
-              </div>
-              <div className="flex justify-between items-center hover:opacity-60 cursor-pointer" onClick={() => { router.push("/shop"); setIsMenuOpen(false); }}>
-                <span>Shop by color</span>
-                <span className="text-xl font-light text-neutral-400">+</span>
-              </div>
-              <div className="flex justify-between items-center hover:opacity-60 cursor-pointer" onClick={() => { router.push("/about"); setIsMenuOpen(false); }}>
-                <span>Walk in Stores</span>
-                <span className="text-xl font-light text-neutral-400">+</span>
-              </div>
-              <div className="flex justify-between items-center hover:opacity-60 cursor-pointer" onClick={() => { router.push("/about"); setIsMenuOpen(false); }}>
-                <span>Support</span>
-                <span className="text-xl font-light text-neutral-400">+</span>
-              </div>
-            </div>
-
-            <div className="h-[1px] bg-neutral-100 my-1 animate-in fade-in duration-300"></div>
-
-            {/* Footer menu links */}
-            <div className="flex flex-col gap-4 text-sm font-bold text-neutral-600 pb-20 animate-in fade-in duration-300">
-              <Link href="/about" onClick={() => setIsMenuOpen(false)} className="hover:opacity-50 transition-opacity">Our Story</Link>
-              <Link href="/about" onClick={() => setIsMenuOpen(false)} className="hover:opacity-50 transition-opacity">Collaborations</Link>
-              <Link href="/about" onClick={() => setIsMenuOpen(false)} className="hover:opacity-50 transition-opacity">Media & Press</Link>
-            </div>
+          {/* Scrollable category list displaying only Shop and About */}
+          <div className="flex-1 flex flex-col justify-center gap-8 px-12 animate-in fade-in slide-in-from-top-4 duration-300">
+            <Link 
+              href="/shop" 
+              onClick={() => setIsMenuOpen(false)} 
+              className="text-4xl font-black uppercase tracking-tight text-black hover:opacity-50 transition-opacity"
+            >
+              Shop
+            </Link>
+            <Link 
+              href="/about" 
+              onClick={() => setIsMenuOpen(false)} 
+              className="text-4xl font-black uppercase tracking-tight text-black hover:opacity-50 transition-opacity"
+            >
+              About
+            </Link>
           </div>
 
           {/* Clean Close Drawer Button at bottom center */}
