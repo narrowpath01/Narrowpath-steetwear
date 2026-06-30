@@ -33,6 +33,31 @@ export async function POST(req: Request) {
     const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
 
 
+    // Check if an identical physical address already exists for the user (case-insensitive and trimmed)
+    const existingAddress = await prisma.address.findFirst({
+      where: {
+        userId: user.id,
+        street: { equals: street.trim(), mode: 'insensitive' },
+        city: { equals: city.trim(), mode: 'insensitive' },
+        state: { equals: state.trim(), mode: 'insensitive' },
+        pinCode: { equals: pinCode.trim(), mode: 'insensitive' },
+      }
+    });
+
+    if (existingAddress) {
+      console.log("[Addresses API] Found existing matching address ID:", existingAddress.id);
+      const updatedAddress = await prisma.address.update({
+        where: { id: existingAddress.id },
+        data: {
+          firstName,
+          lastName,
+          phoneNumber: phoneNumber || existingAddress.phoneNumber,
+          email: session.user.email || "",
+        }
+      });
+      return NextResponse.json(updatedAddress, { status: 200 });
+    }
+
     const newAddress = await prisma.address.create({
       data: {
         userId: user.id,
@@ -40,10 +65,10 @@ export async function POST(req: Request) {
         lastName,
         phoneNumber,
         email: session.user.email || "",
-        street,
-        city,
-        state,
-        pinCode,
+        street: street.trim(),
+        city: city.trim(),
+        state: state.trim(),
+        pinCode: pinCode.trim(),
       }
     });
 
@@ -69,7 +94,16 @@ export async function GET() {
       orderBy: { createdAt: 'desc' }
     });
 
-    return NextResponse.json(addresses, { status: 200 });
+    // Deduplicate on-the-fly by normalized street, city, state, pinCode to clean up duplicates from the UI
+    const seen = new Set<string>();
+    const uniqueAddresses = addresses.filter((addr) => {
+      const key = `${addr.street.trim().toLowerCase()}|${addr.city.trim().toLowerCase()}|${addr.state.trim().toLowerCase()}|${addr.pinCode.trim().toLowerCase()}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    return NextResponse.json(uniqueAddresses, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch addresses" }, { status: 500 });
   }

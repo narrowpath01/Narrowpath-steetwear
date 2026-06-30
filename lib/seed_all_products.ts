@@ -102,9 +102,9 @@ async function main() {
       description: "Premium heavyweight red tee featuring a bold graphic print of Kung Fu Panda in a martial arts stance set inside a yellow crescent circle on the back, and a minimalist black and white 'the kung fu PANDA' chest lettering. Relaxed boxy fit, crafted from 100% premium cotton for comfort and style.",
       images: {
         create: [
+          { url: "/panda-side.png", altText: "Kung Fu Panda Heavyweight Tee Side View" },
           { url: "/panda-front.png", altText: "Kung Fu Panda Heavyweight Tee Front View" },
           { url: "/panda-detail-front.png", altText: "Kung Fu Panda Heavyweight Tee Chest Logo" },
-          { url: "/panda-side.png", altText: "Kung Fu Panda Heavyweight Tee Side View" },
           { url: "/panda-back.png", altText: "Kung Fu Panda Heavyweight Tee Back View" },
           { url: "/panda-detail-back.png", altText: "Kung Fu Panda Heavyweight Tee Back Graphic Detail" },
         ]
@@ -188,6 +188,7 @@ async function main() {
         create: [
           { url: "/monochrome-brown-front.png", altText: "Monochrome Brown Heavyweight Tee Front View" },
           { url: "/monochrome-brown-fabric.png", altText: "Monochrome Brown Heavyweight Tee Fabric Detail" },
+          { url: "/monochrome-brown-back-model.png", altText: "Monochrome Brown Heavyweight Tee Back Model View" },
           { url: "/monochrome-brown-detail.png", altText: "Monochrome Brown Heavyweight Tee Detail View" },
           { url: "/monochrome-brown-back.png", altText: "Monochrome Brown Heavyweight Tee Back View" },
         ]
@@ -203,7 +204,35 @@ async function main() {
     }
   });
 
-  console.log("\nDatabase seeded successfully with all 7 products!");
+  // 8. Monochrome Black Heavyweight Tee
+  console.log("Seeding: Monochrome Black Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Monochrome Black Heavyweight Tee",
+      handle: "monochrome-black-heavyweight-tee",
+      description: "Premium heavyweight black monochrome tee. Clean design, boxy relaxed fit, crafted from 100% premium cotton for ultimate comfort, styling, and structural drape. Minimalist stitching details with no graphics.",
+      collection: "MONOCHROME",
+      images: {
+        create: [
+          { url: "/monochrome-black-front.png", altText: "Monochrome Black Heavyweight Tee Front View" },
+          { url: "/monochrome-black-back.png", altText: "Monochrome Black Heavyweight Tee Back View" },
+          { url: "/monochrome-black-fabric.png", altText: "Monochrome Black Heavyweight Tee Fabric Detail" },
+          { url: "/monochrome-black-model.png", altText: "Monochrome Black Heavyweight Tee Model View" },
+          { url: "/monochrome-black-collar.png", altText: "Monochrome Black Heavyweight Tee Collar View" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price, inventory: 100 },
+          { title: "M", price, inventory: 100 },
+          { title: "L", price, inventory: 100 },
+          { title: "XL", price, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  console.log("\nDatabase seeded successfully with all 8 products!");
 }
 
 main()

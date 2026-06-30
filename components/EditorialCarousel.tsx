@@ -177,6 +177,14 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
             );
           })}
         </AnimatePresence>
+
+        {/* Fixed white Shop now link sitting on top of the slides viewport */}
+        <Link 
+          href="/shop" 
+          className="absolute bottom-12 z-30 text-white text-lg font-medium tracking-wide hover:opacity-80 transition-opacity cursor-pointer underline underline-offset-8 decoration-neutral-100"
+        >
+          Shop now
+        </Link>
       </div>
 
       <div className="flex justify-center gap-3 mt-4">

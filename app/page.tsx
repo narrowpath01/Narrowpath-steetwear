@@ -26,7 +26,7 @@ export default async function Home() {
     <main className="min-h-screen bg-white text-black">
 
       {/* Editorial Carousel */}
-      <EditorialCarousel products={products} />
+      <EditorialCarousel products={printedProducts} />
 
       {/* Latest Drops Section */}
       <section className="py-10 px-4 md:px-8 max-w-[1600px] mx-auto space-y-12">

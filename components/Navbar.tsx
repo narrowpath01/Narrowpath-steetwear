@@ -93,13 +93,6 @@ export default function Navbar() {
               </Link>
             )}
 
-            {/* Wishlist */}
-            <Link href="/wishlist" className="hover:opacity-50 transition-opacity text-black" aria-label="Wishlist">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="square" strokeLinejoin="miter" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-              </svg>
-            </Link>
-
             {/* Cart Bag */}
             <button onClick={toggleCart} className="relative flex items-center hover:opacity-50 transition-opacity text-black" aria-label="Cart">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -204,16 +197,6 @@ export default function Navbar() {
 
         {/* Top Right Floating Icons */}
         <div className="fixed top-4 right-4 z-[130] flex items-center gap-2.5 pointer-events-auto">
-          {/* Wishlist Bookmark */}
-          <Link
-            href="/wishlist"
-            className="bg-white/85 backdrop-blur-md border border-neutral-200/80 rounded-full p-2.5 shadow-sm text-black flex items-center justify-center hover:bg-white transition-all"
-            aria-label="Wishlist"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="square" strokeLinejoin="miter" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-            </svg>
-          </Link>
 
           {/* Cart Bag */}
           <button

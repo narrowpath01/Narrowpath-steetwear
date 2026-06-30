@@ -12,6 +12,7 @@
     "@auth/prisma-adapter": "^2.11.2",
     "@prisma/client": "^6.19.3",
     "framer-motion": "^12.40.0",
+    "html-to-image": "^1.11.13",
     "next": "16.2.6",
     "next-auth": "^4.24.14",
     "razorpay": "^2.9.6",

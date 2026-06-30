@@ -65,21 +65,31 @@ export async function POST(req: Request) {
     
     // If the frontend didn't pass an existing address ID, create a new one
     if (!addressId) {
-      // Check if an identical address already exists for the user
+      // Check if an identical physical address already exists for the user (case-insensitive and trimmed)
       const existingAddress = await prisma.address.findFirst({
         where: {
           userId: session.user.id,
-          street: addressData.street,
-          city: addressData.city,
-          state: addressData.state,
-          pinCode: addressData.pinCode,
-          phoneNumber: addressData.phoneNumber || null,
+          street: { equals: addressData.street.trim(), mode: 'insensitive' },
+          city: { equals: addressData.city.trim(), mode: 'insensitive' },
+          state: { equals: addressData.state.trim(), mode: 'insensitive' },
+          pinCode: { equals: addressData.pinCode.trim(), mode: 'insensitive' },
         }
       });
 
       if (existingAddress) {
         addressId = existingAddress.id;
         console.log("[Create Order] Found matching existing address ID:", addressId);
+        
+        // Update contact details on existing address
+        await prisma.address.update({
+          where: { id: existingAddress.id },
+          data: {
+            firstName: addressData.firstName,
+            lastName: addressData.lastName,
+            phoneNumber: addressData.phoneNumber || existingAddress.phoneNumber,
+            email: addressData.email,
+          }
+        });
       } else {
         const newAddress = await prisma.address.create({
           data: {
@@ -88,10 +98,10 @@ export async function POST(req: Request) {
             lastName: addressData.lastName,
             phoneNumber: addressData.phoneNumber,
             email: addressData.email,
-            street: addressData.street,
-            city: addressData.city,
-            state: addressData.state,
-            pinCode: addressData.pinCode,
+            street: addressData.street.trim(),
+            city: addressData.city.trim(),
+            state: addressData.state.trim(),
+            pinCode: addressData.pinCode.trim(),
             country: "IN",
           }
         });
