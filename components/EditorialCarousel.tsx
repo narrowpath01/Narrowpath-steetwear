@@ -32,6 +32,16 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
       }))
     : COLLECTIONS_FALLBACK;
 
+  // Swap sunflower and christ tee positions in the items array
+  const sunflowerIdx = items.findIndex(item => item.handle.includes("sunflower"));
+  const christIdx = items.findIndex(item => item.handle.includes("christ"));
+
+  if (sunflowerIdx !== -1 && christIdx !== -1) {
+    const temp = items[sunflowerIdx];
+    items[sunflowerIdx] = items[christIdx];
+    items[christIdx] = temp;
+  }
+
   // The Engineering Fix: Double the array to create invisible buffer items
   const extendedItems = [
     ...items,
@@ -130,16 +140,12 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
                   src={item.image}
                   alt={item.title}
                   fill
-                  className="object-cover pointer-events-none object-top rounded-2xl"
+                  className={`object-cover pointer-events-none object-top rounded-2xl transition-transform duration-300 ${
+                    item.handle.includes("christ") ? "scale-[0.90]" : ""
+                  }`}
                   sizes="(max-width: 768px) 80vw, 400px"
                   priority={index === 0 || index === 1}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent pointer-events-none" />
-                <div className="absolute bottom-8 left-0 w-full text-center pointer-events-none">
-                  <h3 className="text-white text-2xl font-black uppercase tracking-widest drop-shadow-md px-4">
-                    {item.title}
-                  </h3>
-                </div>
               </motion.div>
             );
 
