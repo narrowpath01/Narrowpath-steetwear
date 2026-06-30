@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     // Delhivery expects weight in grams. Minimum is usually 500g for standard parcels.
     const actualWeight = Math.max(weightGrams || 500, 500); 
 
-    const ptType = paymentType === "COD" ? "COD" : "Pre-paid";
+    const ptType = "Pre-paid";
 
     const delhiveryUrl = `${process.env.DELHIVERY_BASE_URL}/api/kinko/v1/invoice/charges/.json?md=S&ss=Delivered&d_pin=${destPin}&o_pin=${originPin}&cgm=${actualWeight}&pt=${ptType}`;
 

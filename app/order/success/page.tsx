@@ -26,8 +26,6 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
 
   if (!order) redirect("/");
 
-  const isCod = order.status === "COD_PENDING";
-
   return (
     <div className="min-h-screen bg-neutral-50 text-black flex flex-col justify-center items-center px-4 py-24">
       <div className="max-w-xl w-full bg-white border border-neutral-200 rounded-3xl p-8 shadow-xl text-center">
@@ -52,10 +50,8 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
 
           <div className="flex justify-between items-center pb-3 border-b border-neutral-200/60">
             <span className="text-xs uppercase font-bold text-neutral-400 tracking-wider">Payment Status</span>
-            <span className={`text-xs uppercase font-black px-2 py-0.5 rounded ${
-              isCod ? "bg-amber-100 text-amber-800" : "bg-green-100 text-green-800"
-            }`}>
-              {isCod ? "COD (Pending)" : "Prepaid (Paid)"}
+            <span className="text-xs uppercase font-black px-2 py-0.5 rounded bg-green-100 text-green-800">
+              Prepaid (Paid)
             </span>
           </div>
 

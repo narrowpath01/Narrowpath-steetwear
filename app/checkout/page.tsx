@@ -39,8 +39,8 @@ export default function CheckoutPage() {
   const [shippingFee, setShippingFee] = useState<number>(0);
   const [calculatingShipping, setCalculatingShipping] = useState(false);
 
-  // Payment Method State
-  const [paymentMethod, setPaymentMethod] = useState<"PREPAID" | "COD">("PREPAID");
+  // Payment Method is PREPAID only
+  const paymentMethod = "PREPAID";
 
   useEffect(() => {
     setIsMounted(true);
@@ -70,7 +70,7 @@ export default function CheckoutPage() {
     fetchRealAddresses();
   }, [session, status]);
 
-  const verifyCheckoutPin = async (pin: string, method: "PREPAID" | "COD" = paymentMethod) => {
+  const verifyCheckoutPin = async (pin: string, method: "PREPAID" = "PREPAID") => {
     if (pin.length === 6 && !isNaN(Number(pin))) {
       setCheckingPin(true);
       setCalculatingShipping(true); 
@@ -111,12 +111,7 @@ export default function CheckoutPage() {
     }
   };
 
-  const handlePaymentMethodChange = (method: "PREPAID" | "COD") => {
-    setPaymentMethod(method);
-    if (formData.pinCode) {
-      verifyCheckoutPin(formData.pinCode, method);
-    }
-  };
+
 
   const handleSelectSavedAddress = (id: string) => {
     setSelectedDropdownId(id);
@@ -233,41 +228,7 @@ export default function CheckoutPage() {
     }
   };
 
-  const handleCodOrder = async () => {
-    if (!formData.firstName || !formData.street || !formData.city || !formData.pinCode || !formData.phoneNumber) {
-      alert("Don't skip steps. Fill out the entire shipping form.");
-      return;
-    }
 
-    setIsProcessing(true);
-
-    try {
-      const res = await fetch("/api/checkout/cod", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          items, 
-          addressData: formData 
-        }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-
-      if (data.success) {
-        alert("Order placed successfully under Cash on Delivery!");
-        window.location.href = `/order/success?id=${data.dbOrderId}`;
-      } else {
-        alert("Failed to place Cash on Delivery order.");
-      }
-
-    } catch (error: any) {
-      console.error("COD Checkout failed:", error);
-      alert(error.message || "Something broke during COD checkout.");
-    } finally {
-      setIsProcessing(false);
-    }
-  };
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
@@ -454,46 +415,15 @@ export default function CheckoutPage() {
             <span>INR {totalPrice() + shippingFee}</span>
           </div>
 
-          {/* PAYMENT METHOD SELECTOR */}
-          <div className="mb-8 border-t border-neutral-100 pt-6">
-            <label className="text-neutral-500 text-xs font-bold tracking-widest uppercase mb-3 block">
-              Select Payment Method
-            </label>
-            <div className="grid grid-cols-2 gap-4">
-              <button
-                type="button"
-                onClick={() => handlePaymentMethodChange("PREPAID")}
-                className={`py-4 rounded-full border text-xs font-bold uppercase tracking-wider transition-all ${
-                  paymentMethod === "PREPAID"
-                    ? "border-black bg-black text-white"
-                    : "border-neutral-300 text-neutral-600 hover:border-neutral-400 bg-white"
-                }`}
-              >
-                Prepaid (UPI / Card)
-              </button>
-              <button
-                type="button"
-                onClick={() => handlePaymentMethodChange("COD")}
-                className={`py-4 rounded-full border text-xs font-bold uppercase tracking-wider transition-all ${
-                  paymentMethod === "COD"
-                    ? "border-black bg-black text-white"
-                    : "border-neutral-300 text-neutral-600 hover:border-neutral-400 bg-white"
-                }`}
-              >
-                Cash on Delivery (COD)
-              </button>
-            </div>
-          </div>
-
           <button 
-            onClick={paymentMethod === "COD" ? handleCodOrder : handlePayment}
+            onClick={handlePayment}
             disabled={isPinServiceable === false || checkingPin || calculatingShipping || !formData.pinCode || isProcessing}
             className="w-full bg-black text-white py-5 rounded-full font-bold uppercase tracking-widest text-sm hover:bg-neutral-800 transition-colors disabled:bg-neutral-400 disabled:cursor-not-allowed mt-auto"
           >
             {isProcessing ? "Processing..." : 
              checkingPin || calculatingShipping ? "Calculating..." : 
              isPinServiceable === false ? "Area Unserviceable" : 
-             paymentMethod === "COD" ? "Place COD Order" : "Pay Now"}
+             "Pay Now"}
           </button>
         </div>
 

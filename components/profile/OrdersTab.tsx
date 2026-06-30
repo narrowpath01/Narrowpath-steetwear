@@ -94,7 +94,7 @@ export default function OrdersTab() {
             </div>
 
             <div className="flex flex-wrap gap-3 mt-4">
-              {order.awb && (order.status === 'SHIPPED' || order.status === 'DELIVERED' || order.status === 'COD_PENDING') && (
+              {order.awb && (order.status === 'SHIPPED' || order.status === 'DELIVERED') && (
                 <button onClick={() => handleTrack(order.awb!)} className="bg-black text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-neutral-800 transition-colors">
                   {activeAwb === order.awb ? "Close Tracking" : "Track Shipment"}
                 </button>

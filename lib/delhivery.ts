@@ -1,4 +1,5 @@
 import prisma from "./db";
+import { sendWhatsAppNotification } from "./whatsapp";
 
 export async function createDelhiveryShipment(orderId: string) {
     // 1. Fetch Order Details from DB
@@ -20,8 +21,6 @@ export async function createDelhiveryShipment(orderId: string) {
         throw new Error("Order or Address not found");
     }
 
-    const isCod = order.status === "COD_PENDING";
-
     // 2. Format Payload for Delhivery
     const payload = {
         format: "json",
@@ -36,7 +35,7 @@ export async function createDelhiveryShipment(orderId: string) {
                     name: `${order.address.firstName} ${order.address.lastName}`,
                     phone: order.address.phoneNumber || "9999999999",
                     order: order.id, // Your internal order ID
-                    payment_mode: isCod ? "COD" : "Pre-paid",
+                    payment_mode: "Pre-paid",
                     return_pin: "110095", // Warehouse PIN
                     return_city: "New Delhi",
                     return_phone: "9894781426",
@@ -45,7 +44,7 @@ export async function createDelhiveryShipment(orderId: string) {
                     return_country: "India",
                     products_desc: order.items.map(item => item.variant.product.title).join(", "),
                     hsn_code: "61091000",
-                    cod_amount: isCod ? order.amount : 0,
+                    cod_amount: 0,
                     order_date: order.createdAt.toISOString(),
                     total_amount: order.amount,
                     seller_add: "Ground Floor, S/o Kishori Lal, B-250, Gali No-6, New Seemapuri, Shahdara",
@@ -73,7 +72,7 @@ export async function createDelhiveryShipment(orderId: string) {
     formParams.append("format", payload.format);
     formParams.append("data", payload.data);
 
-    console.log(`Sending shipment request to Delhivery for order ${orderId} (${isCod ? 'COD' : 'Prepaid'})...`);
+    console.log(`Sending shipment request to Delhivery for order ${orderId} (Prepaid)...`);
     const response = await fetch(delhiveryUrl, {
         method: "POST",
         headers: {
@@ -102,6 +101,13 @@ export async function createDelhiveryShipment(orderId: string) {
             shippingStatus: "Manifested" 
         }
     });
+
+    // 5. Send Order Confirmation WhatsApp Message
+    try {
+        await sendWhatsAppNotification(orderId, waybill);
+    } catch (waError) {
+        console.error("Failed to trigger WhatsApp order confirmation:", waError);
+    }
 
     return waybill;
 }

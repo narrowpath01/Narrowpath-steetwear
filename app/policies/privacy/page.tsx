@@ -4,7 +4,7 @@ export default function PrivacyPolicyPage() {
       <div className="max-w-7xl mx-auto bg-white p-6 md:p-12 rounded-3xl border-l border-r border-neutral-300 shadow-sm text-black">
         <h1 className="text-3xl font-black uppercase mb-8 text-black tracking-widest">Privacy Policy</h1>
 
-        <div className="text-black space-y-6 text-sm leading-relaxed">
+        <div className="text-black space-y-6 text-sm leading-relaxed text-justify">
           <p className="text-xs font-bold uppercase tracking-widest text-neutral-500">Last Updated: June 29, 2026</p>
 
           <p>

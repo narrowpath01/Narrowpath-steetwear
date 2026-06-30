@@ -7,7 +7,7 @@ export default function ShippingPolicyPage() {
 
                 <h1 className="text-3xl font-black uppercase mb-8 text-black">Shipping Policy</h1>
 
-                <div className="text-black space-y-6">
+                <div className="text-black space-y-6 text-justify">
                     <p className="text-xs font-bold uppercase tracking-widest text-neutral-500">Last Updated: June 25, 2026</p>
 
                     <div>
