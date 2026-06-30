@@ -290,9 +290,9 @@ export default function CheckoutPage() {
 
            {/* SAVED ADDRESSES SECTION */}
             {(() => {
-              const isFetching = status === "loading" || isLoadingAddresses;
-              if (!isFetching && (!session || savedAddresses.length === 0)) return null;
+              if (status === "unauthenticated") return null;
 
+              const isFetching = status === "loading" || isLoadingAddresses;
               const selectedAddress = savedAddresses.find(a => a.id === selectedDropdownId);
 
               return (
@@ -304,15 +304,17 @@ export default function CheckoutPage() {
                   <div className="relative">
                     <button
                       type="button"
-                      disabled={isFetching}
+                      disabled={isFetching || savedAddresses.length === 0}
                       onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                       className={`w-full text-left border rounded-xl p-4 text-sm focus:outline-none transition-all flex justify-between items-center ${
                         isDropdownOpen ? "border-black ring-1 ring-black" : "border-neutral-300"
-                      } ${isFetching ? "cursor-not-allowed opacity-60 bg-neutral-50" : "bg-white hover:border-neutral-400"}`}
+                      } ${(isFetching || savedAddresses.length === 0) ? "cursor-not-allowed opacity-60 bg-neutral-50" : "bg-white hover:border-neutral-400"}`}
                     >
                       <span className={`truncate pr-4 ${!selectedAddress ? "text-neutral-400" : "text-black font-medium"}`}>
                         {isFetching
                           ? "Fetching your addresses..."
+                          : savedAddresses.length === 0
+                          ? "No saved addresses found"
                           : selectedAddress
                           ? `${selectedAddress.street}, ${selectedAddress.city} - ${selectedAddress.pinCode}`
                           : "Select a saved address..."}
@@ -330,7 +332,7 @@ export default function CheckoutPage() {
                       )}
                     </button>
 
-                    {isDropdownOpen && !isFetching && (
+                    {isDropdownOpen && !isFetching && savedAddresses.length > 0 && (
                       <>
                         <div className="fixed inset-0 z-10" onClick={() => setIsDropdownOpen(false)}></div>
                         <div className="absolute z-20 w-full mt-2 bg-white border border-neutral-200 rounded-xl shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
