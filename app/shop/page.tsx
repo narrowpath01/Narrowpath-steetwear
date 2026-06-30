@@ -17,8 +17,8 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
     orderBy: { createdAt: 'desc' }
   });
 
-  const printedProducts = products.filter(p => p.collection === 'PRINTED' || !p.collection);
-  const monochromeProducts = products.filter(p => p.collection === 'MONOCHROME');
+  const printedProducts = products.filter((p: any) => p.collection === 'PRINTED' || !p.collection);
+  const monochromeProducts = products.filter((p: any) => p.collection === 'MONOCHROME');
 
   const showPrinted = !type || type.toLowerCase() === "printed";
   const showMonochrome = !type || type.toLowerCase() === "monochrome";

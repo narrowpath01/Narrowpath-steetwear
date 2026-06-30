@@ -19,8 +19,8 @@ export default async function Home() {
     }
   });
 
-  const printedProducts = products.filter(p => p.collection === 'PRINTED' || !p.collection);
-  const monochromeProducts = products.filter(p => p.collection === 'MONOCHROME');
+  const printedProducts = products.filter((p: any) => p.collection === 'PRINTED' || !p.collection);
+  const monochromeProducts = products.filter((p: any) => p.collection === 'MONOCHROME');
 
   return (
     <main className="min-h-screen bg-white text-black">

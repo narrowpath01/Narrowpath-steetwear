@@ -136,21 +136,37 @@ export default function Navbar() {
       {/* 2. DESKTOP MENU DRAWER (Hidden on mobile) */}
       {isMenuOpen && (
         <div className="fixed inset-0 z-[150] hidden md:flex">
-          <div className="w-80 bg-white h-full shadow-2xl p-6 flex flex-col gap-8 transform transition-transform">
-            <button
-              onClick={() => setIsMenuOpen(false)}
-              className="self-end p-2 hover:bg-neutral-100 rounded-full transition-colors text-black flex items-center justify-center"
-              aria-label="Close menu"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-            <nav className="flex flex-col gap-6 mt-10">
-              <Link href="/shop" onClick={() => setIsMenuOpen(false)} className="text-3xl font-black uppercase text-black hover:opacity-50">Shop</Link>
-              <Link href="/customize" onClick={() => setIsMenuOpen(false)} className="text-3xl font-black uppercase text-black hover:opacity-50">Customize Your Tee</Link>
-              <Link href="/about" onClick={() => setIsMenuOpen(false)} className="text-3xl font-black uppercase text-black hover:opacity-50">About</Link>
-            </nav>
+          <div className="w-80 bg-white h-full shadow-2xl p-6 flex flex-col justify-between transform transition-transform">
+            <div className="flex flex-col">
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="self-end p-2 hover:bg-neutral-100 rounded-full transition-colors text-black flex items-center justify-center"
+                aria-label="Close menu"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              <nav className="flex flex-col items-start gap-5 mt-10 pl-2">
+                <Link href="/shop" onClick={() => setIsMenuOpen(false)} className="text-xl font-black uppercase tracking-widest text-black hover:opacity-50 transition-opacity">Shop</Link>
+                <Link href="/collections" onClick={() => setIsMenuOpen(false)} className="text-xl font-black uppercase tracking-widest text-black hover:opacity-50 transition-opacity">Collections</Link>
+                <Link href="/customise" onClick={() => setIsMenuOpen(false)} className="text-xl font-black uppercase tracking-widest text-[#005bd3] hover:opacity-50 transition-opacity">Customise Your Tee</Link>
+              </nav>
+            </div>
+
+            {/* Footer Contact Details */}
+            <div className="border-t border-neutral-100 pt-6 pl-2 space-y-4 text-neutral-500">
+              <Link href="/about" onClick={() => setIsMenuOpen(false)} className="block text-neutral-500 hover:text-black transition-colors font-bold uppercase tracking-widest text-xs">
+                About Us
+              </Link>
+              <div className="space-y-1">
+                <span className="font-bold block uppercase tracking-widest text-[10px] text-neutral-400">Contact Us</span>
+                <div className="text-xs leading-relaxed text-neutral-500">
+                  Email: <a href="mailto:narrowpathtshirts@gmail.com" className="font-mono hover:underline">narrowpathtshirts@gmail.com</a><br />
+                  Phone: <span className="font-mono">9315457852</span>
+                </div>
+              </div>
+            </div>
           </div>
           <div
             className="flex-1 bg-black/60 cursor-pointer backdrop-blur-sm"
