@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="bg-black text-white pt-16 pb-8 px-6 md:px-12 mt-auto">
+    <footer className="bg-black text-white pt-16 pb-28 md:pb-8 px-6 md:px-12 mt-auto">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
 
         {/* Column 1: Connect */}
