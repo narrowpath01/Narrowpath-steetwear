@@ -58,12 +58,12 @@ export default function ProductForm({ product }: ProductFormProps) {
         </div>
 
         {/* Round buttons for sizes */}
-        <div className="grid grid-cols-4 gap-3">
+        <div className="flex flex-wrap gap-2.5">
           {variants.map((variant: any) => (
             <button
               key={variant.id}
               onClick={() => setSelectedVariant(variant)}
-              className={`w-full aspect-square flex items-center justify-center text-sm font-black transition-all duration-200 border rounded-full ${
+              className={`w-11 h-11 flex items-center justify-center text-xs font-black transition-all duration-200 border rounded-full ${
                 selectedVariant?.id === variant.id
                   ? "border-black bg-black text-white"
                   : "border-neutral-200 bg-white text-black hover:border-black"

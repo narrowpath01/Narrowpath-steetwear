@@ -14,6 +14,7 @@ export default function ProductGalleryWrapper({ images }: ProductGalleryWrapperP
   const handleScroll = () => {
     if (!containerRef.current) return;
     const container = containerRef.current;
+    const scrollTop = container.scrollTop;
     
     // The ProductGallery component renders a div containing the list of image wrappers
     const galleryContainer = container.firstElementChild;
@@ -25,9 +26,7 @@ export default function ProductGalleryWrapper({ images }: ProductGalleryWrapperP
 
     for (let i = 0; i < children.length; i++) {
       const child = children[i] as HTMLElement;
-      const rect = child.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-      const distance = Math.abs(rect.top - containerRect.top);
+      const distance = Math.abs(child.offsetTop - scrollTop);
       if (distance < minDistance) {
         minDistance = distance;
         closestIndex = i;
@@ -72,7 +71,7 @@ export default function ProductGalleryWrapper({ images }: ProductGalleryWrapperP
       <div
         ref={containerRef}
         onScroll={handleScroll}
-        className="relative flex-1 rounded-2xl overflow-y-auto h-[60vh] lg:h-full scrollbar-hide overscroll-contain"
+        className="relative flex-1 rounded-2xl overflow-y-auto h-[60vh] lg:h-full scrollbar-hide"
       >
         <ProductGallery images={images} />
       </div>
