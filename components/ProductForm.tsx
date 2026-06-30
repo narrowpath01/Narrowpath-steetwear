@@ -1,0 +1,165 @@
+// components/ProductForm.tsx
+"use client";
+
+import { useState } from "react";
+import { useCartStore } from "@/store/useCartStore";
+
+interface ProductFormProps {
+  product: any;
+}
+
+export default function ProductForm({ product }: ProductFormProps) {
+  const sizeOrder: Record<string, number> = { "Small": 1, "Medium": 2, "Large": 3, "XL": 4, "S": 1, "M": 2, "L": 3 };
+
+  // Intercept the raw database array and force the sort before rendering
+  const variants = [...(product.variants || [])].sort(
+    (a: any, b: any) => (sizeOrder[a.title] || 99) - (sizeOrder[b.title] || 99)
+  );
+  const [selectedVariant, setSelectedVariant] = useState(variants[0]);
+  const [isSizeChartOpen, setIsSizeChartOpen] = useState(false);
+
+  const { addItem, toggleCart } = useCartStore();
+
+  const handleAddToCart = () => {
+    if (!selectedVariant) return;
+
+    addItem(selectedVariant.id, {
+      variantTitle: selectedVariant.title,
+      price: selectedVariant.price,
+      productTitle: product.title,
+      image: product.images?.[0]?.url || "",
+    });
+
+    toggleCart();
+  };
+
+  return (
+    <div className="flex flex-col">
+      {/* Price section just above select sizes */}
+      <div className="mb-6 flex items-baseline gap-2">
+        <span className="text-2xl md:text-3xl font-black text-black">
+          INR {selectedVariant?.price || 0}
+        </span>
+        <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">
+          (incl. of all taxes)
+        </span>
+      </div>
+
+      <div className="mb-8">
+        <div className="flex justify-between items-center mb-4">
+          <span className="text-sm font-bold uppercase tracking-widest text-black">Select Size</span>
+          <button 
+            type="button"
+            onClick={() => setIsSizeChartOpen(true)}
+            className="text-xs font-bold uppercase tracking-widest text-neutral-500 hover:text-black underline transition-colors"
+          >
+            Size Chart
+          </button>
+        </div>
+
+        {/* Round buttons for sizes */}
+        <div className="grid grid-cols-4 gap-3">
+          {variants.map((variant: any) => (
+            <button
+              key={variant.id}
+              onClick={() => setSelectedVariant(variant)}
+              className={`w-full aspect-square flex items-center justify-center text-sm font-black transition-all duration-200 border rounded-full ${
+                selectedVariant?.id === variant.id
+                  ? "border-black bg-black text-white"
+                  : "border-neutral-200 bg-white text-black hover:border-black"
+              }`}
+            >
+              {variant.title}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Add to Cart button - rounded-full */}
+      <button
+        onClick={handleAddToCart}
+        disabled={!selectedVariant}
+        className="w-full bg-black text-white py-5 rounded-full font-black uppercase tracking-widest text-sm hover:bg-neutral-800 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Add to Cart
+      </button>
+
+      {/* Product Description */}
+      <div className="mt-12 space-y-6 text-sm text-neutral-600 leading-relaxed border-t border-neutral-200 pt-8">
+        <div className="whitespace-pre-wrap">{product.description}</div>
+      </div>
+
+      {/* Size Chart Modal */}
+      {isSizeChartOpen && (
+        <div className="fixed inset-0 z-[160] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="relative bg-white text-black w-full max-w-md p-6 rounded-3xl shadow-2xl border border-neutral-100 animate-in zoom-in-95 duration-200">
+            {/* Modal Header */}
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-black uppercase tracking-wider">Size Chart</h3>
+              <button 
+                onClick={() => setIsSizeChartOpen(false)}
+                className="p-1.5 hover:bg-neutral-100 rounded-full transition-colors text-black flex items-center justify-center"
+                aria-label="Close size chart"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Subtitle */}
+            <p className="text-xs text-neutral-500 mb-4 uppercase font-bold tracking-wider">
+              Heavyweight Oversized Tee (Measurements in Inches)
+            </p>
+
+            {/* Table */}
+            <div className="border border-neutral-200 rounded-2xl overflow-hidden mb-6">
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="bg-neutral-50 border-b border-neutral-200">
+                    <th className="p-3 font-bold uppercase tracking-wider text-neutral-600">Size</th>
+                    <th className="p-3 font-bold uppercase tracking-wider text-neutral-600">Chest</th>
+                    <th className="p-3 font-bold uppercase tracking-wider text-neutral-600">Length</th>
+                    <th className="p-3 font-bold uppercase tracking-wider text-neutral-600">Shoulder</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-neutral-100 font-medium text-neutral-800">
+                  <tr>
+                    <td className="p-3 font-black bg-neutral-50/50 text-black">S</td>
+                    <td className="p-3">42"</td>
+                    <td className="p-3">28"</td>
+                    <td className="p-3">19.5"</td>
+                  </tr>
+                  <tr>
+                    <td className="p-3 font-black bg-neutral-50/50 text-black">M</td>
+                    <td className="p-3">44"</td>
+                    <td className="p-3">29"</td>
+                    <td className="p-3">20.0"</td>
+                  </tr>
+                  <tr>
+                    <td className="p-3 font-black bg-neutral-50/50 text-black">L</td>
+                    <td className="p-3">46"</td>
+                    <td className="p-3">30"</td>
+                    <td className="p-3">20.5"</td>
+                  </tr>
+                  <tr>
+                    <td className="p-3 font-black bg-neutral-50/50 text-black">XL</td>
+                    <td className="p-3">48"</td>
+                    <td className="p-3">31"</td>
+                    <td className="p-3">21.0"</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            {/* Footnotes */}
+            <div className="text-xs text-neutral-600 leading-relaxed bg-neutral-50 p-4 rounded-2xl border border-neutral-100">
+              <p className="font-bold text-black uppercase tracking-wider mb-1">Fitting Guide</p>
+              <p>These tees are designed with a relaxed, oversized drape. We recommend buying your normal size. If you prefer a closer fit, please size down.</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,114 @@
+import { NextResponse } from "next/server";
+import Razorpay from "razorpay";
+import prisma from "@/lib/db";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID!,
+  key_secret: process.env.RAZORPAY_KEY_SECRET!,
+});
+
+export async function POST(req: Request) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const body = await req.json();
+    const { items, addressData } = body;
+
+    // 1. Calculate Base Amount of the clothes
+    const baseAmount = items.reduce((acc: number, item: any) => acc + (item.variant.price * item.quantity), 0);
+
+    // 2. SECURE SHIPPING RECALCULATION
+    // We do NOT trust the frontend fee. We recalculate it directly with Delhivery here.
+    const estimatedWeight = items.reduce((acc: number, item: any) => acc + (500 * item.quantity), 0);
+    let finalShippingFee = 100; // Fallback fee just in case Delhivery API is down
+
+    try {
+      const originPin = "110095"; // Your warehouse PIN
+      const actualWeight = Math.max(estimatedWeight, 500); 
+      const delhiveryUrl = `${process.env.DELHIVERY_BASE_URL}/api/kinko/v1/invoice/charges/.json?md=S&ss=Delivered&d_pin=${addressData.pinCode}&o_pin=${originPin}&cgm=${actualWeight}&pt=Pre-paid`;
+
+      const response = await fetch(delhiveryUrl, {
+        method: "GET",
+        headers: {
+          "Authorization": `Token ${process.env.DELHIVERY_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+      
+      if (response.ok && data[0]?.total_amount) {
+        finalShippingFee = Math.ceil(data[0].total_amount);
+      } else {
+        console.error("Delhivery returned invalid pricing data, using fallback.");
+      }
+    } catch (shippingError) {
+      console.error("Secure Shipping Calc Error:", shippingError);
+    }
+
+    // 3. Lock in the absolute final total
+    const totalAmount = baseAmount + finalShippingFee;
+
+    // 4. Create Order in Razorpay
+    const options = {
+      amount: totalAmount * 100, // Razorpay expects amounts in paise (multiply by 100)
+      currency: "INR",
+      receipt: `rcpt_${Date.now()}`,
+    };
+    const razorpayOrder = await razorpay.orders.create(options);
+
+    // 5. Handle Address securely
+    let addressId = addressData.id;
+    
+    // If the frontend didn't pass an existing address ID, create a new one
+    if (!addressId) {
+      const newAddress = await prisma.address.create({
+        data: {
+          userId: session.user.id,
+          firstName: addressData.firstName,
+          lastName: addressData.lastName,
+          phoneNumber: addressData.phoneNumber,
+          email: addressData.email,
+          street: addressData.street,
+          city: addressData.city,
+          state: addressData.state,
+          pinCode: addressData.pinCode,
+          country: "IN",
+        }
+      });
+      addressId = newAddress.id;
+    }
+
+    // 6. Draft the Order in your Database
+    const newOrder = await prisma.order.create({
+      data: {
+        userId: session.user.id,
+        amount: totalAmount,
+        status: "PENDING",
+        razorpayOrderId: razorpayOrder.id,
+        addressId: addressId,
+        // Map the cart items to database OrderItems
+        items: {
+          create: items.map((item: any) => ({
+            variantId: item.variant.id,
+            quantity: item.quantity,
+            price: item.variant.price
+          }))
+        }
+      }
+    });
+
+    return NextResponse.json({ 
+      orderId: razorpayOrder.id, 
+      dbOrderId: newOrder.id,
+      amount: razorpayOrder.amount 
+    });
+
+  } catch (error) {
+    console.error("Order Creation Error:", error);
+    return NextResponse.json({ error: "Failed to initialize payment" }, { status: 500 });
+  }
+}
