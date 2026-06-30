@@ -83,7 +83,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {images.map((img: any, idx: number) => {
-            const isZoomed = img.url.includes("do-not-be-afraid") || img.url.includes("christ-cross");
+            const isZoomed = img.url.includes("do-not-be-afraid");
             return (
               <div key={img.id || idx} className="w-full h-full flex-shrink-0 snap-start relative overflow-hidden rounded-2xl">
                 <img

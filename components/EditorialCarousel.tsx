@@ -140,9 +140,7 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
                   src={item.image}
                   alt={item.title}
                   fill
-                  className={`object-cover pointer-events-none object-top rounded-2xl transition-transform duration-300 ${
-                    item.handle.includes("christ") ? "scale-[0.90]" : ""
-                  }`}
+                  className="object-cover pointer-events-none object-top rounded-2xl"
                   sizes="(max-width: 768px) 80vw, 400px"
                   priority={index === 0 || index === 1}
                 />
