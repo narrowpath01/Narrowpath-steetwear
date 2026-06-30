@@ -16,7 +16,7 @@ export default function ExchangeRefundPolicyPage() {
           {/* 1. EXCHANGE POLICY */}
           <div>
             <h3 className="font-black uppercase text-sm">1. EXCHANGE POLICY</h3>
-            <p className="mt-2">You may request an exchange within <strong>3 days</strong> of receiving your order.</p>
+            <p className="mt-2">You may request an exchange within <strong>5 days</strong> of receiving your order.</p>
           </div>
 
           {/* 2. EXCHANGE ELIGIBILITY */}
@@ -53,7 +53,7 @@ export default function ExchangeRefundPolicyPage() {
           <div>
             <h3 className="font-black uppercase text-sm">5. EXCHANGE PROCESS</h3>
             <ul className="list-disc pl-5 mt-2 space-y-1">
-              <li>Once the returned item is received and inspected, we will notify you of the approval or rejection of your exchange request within <strong>3–5 business days</strong>.</li>
+              <li>Once the returned item is received and inspected, we will notify you of the approval or rejection of your exchange request within <strong>3-5 business days</strong>.</li>
               <li>If approved, you may exchange the item for a different size or another product of equal value, subject to availability.</li>
             </ul>
           </div>
@@ -97,7 +97,7 @@ export default function ExchangeRefundPolicyPage() {
           {/* 8. REFUND POLICY */}
           <div>
             <h3 className="font-black uppercase text-sm">8. REFUND POLICY</h3>
-            <p className="mt-2">You may request a refund within <strong>3 days</strong> of receiving your order.</p>
+            <p className="mt-2">You may request a refund within <strong>7 days</strong> of receiving your order.</p>
           </div>
 
           {/* 9. REFUND ELIGIBILITY */}

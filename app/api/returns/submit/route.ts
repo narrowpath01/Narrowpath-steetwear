@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     }
 
     const order = await prisma.order.findUnique({ where: { id: orderId } });
-    
+
     if (!order || order.userId !== session.user.id) {
       return NextResponse.json({ error: "Invalid order" }, { status: 400 });
     }
@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     if (order.deliveredAt) {
       const daysSinceDelivery = (new Date().getTime() - new Date(order.deliveredAt).getTime()) / (1000 * 3600 * 24);
       if (daysSinceDelivery > 3) {
-        return NextResponse.json({ error: "Exchange/Refund window has expired (3 days max)." }, { status: 403 });
+        return NextResponse.json({ error: "Exchange/Refund window has expired (5 days max)." }, { status: 403 });
       }
     }
 
