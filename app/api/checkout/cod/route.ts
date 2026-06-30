@@ -56,23 +56,40 @@ export async function POST(req: Request) {
     console.log("[COD Checkout] Initial addressId:", addressId);
     
     if (!addressId) {
-      console.log("[COD Checkout] Creating new address record...");
-      const newAddress = await prisma.address.create({
-        data: {
+      // Check if an identical address already exists for the user
+      const existingAddress = await prisma.address.findFirst({
+        where: {
           userId: session.user.id,
-          firstName: addressData.firstName,
-          lastName: addressData.lastName,
-          phoneNumber: addressData.phoneNumber,
-          email: addressData.email,
           street: addressData.street,
           city: addressData.city,
           state: addressData.state,
           pinCode: addressData.pinCode,
-          country: "IN",
+          phoneNumber: addressData.phoneNumber || null,
         }
       });
-      addressId = newAddress.id;
-      console.log("[COD Checkout] Created address ID:", addressId);
+
+      if (existingAddress) {
+        addressId = existingAddress.id;
+        console.log("[COD Checkout] Found matching existing address ID:", addressId);
+      } else {
+        console.log("[COD Checkout] Creating new address record...");
+        const newAddress = await prisma.address.create({
+          data: {
+            userId: session.user.id,
+            firstName: addressData.firstName,
+            lastName: addressData.lastName,
+            phoneNumber: addressData.phoneNumber,
+            email: addressData.email,
+            street: addressData.street,
+            city: addressData.city,
+            state: addressData.state,
+            pinCode: addressData.pinCode,
+            country: "IN",
+          }
+        });
+        addressId = newAddress.id;
+        console.log("[COD Checkout] Created address ID:", addressId);
+      }
     }
 
     console.log("[COD Checkout] Final addressId for order:", addressId);

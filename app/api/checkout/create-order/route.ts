@@ -65,21 +65,39 @@ export async function POST(req: Request) {
     
     // If the frontend didn't pass an existing address ID, create a new one
     if (!addressId) {
-      const newAddress = await prisma.address.create({
-        data: {
+      // Check if an identical address already exists for the user
+      const existingAddress = await prisma.address.findFirst({
+        where: {
           userId: session.user.id,
-          firstName: addressData.firstName,
-          lastName: addressData.lastName,
-          phoneNumber: addressData.phoneNumber,
-          email: addressData.email,
           street: addressData.street,
           city: addressData.city,
           state: addressData.state,
           pinCode: addressData.pinCode,
-          country: "IN",
+          phoneNumber: addressData.phoneNumber || null,
         }
       });
-      addressId = newAddress.id;
+
+      if (existingAddress) {
+        addressId = existingAddress.id;
+        console.log("[Create Order] Found matching existing address ID:", addressId);
+      } else {
+        const newAddress = await prisma.address.create({
+          data: {
+            userId: session.user.id,
+            firstName: addressData.firstName,
+            lastName: addressData.lastName,
+            phoneNumber: addressData.phoneNumber,
+            email: addressData.email,
+            street: addressData.street,
+            city: addressData.city,
+            state: addressData.state,
+            pinCode: addressData.pinCode,
+            country: "IN",
+          }
+        });
+        addressId = newAddress.id;
+        console.log("[Create Order] Created new address ID:", addressId);
+      }
     }
 
     // 6. Draft the Order in your Database
