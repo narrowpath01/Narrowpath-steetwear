@@ -21,7 +21,7 @@ export default function AboutUsPage() {
         </div>
 
         {/* Narrative Paragraphs */}
-        <div className="space-y-6 text-neutral-800 text-sm md:text-base leading-relaxed font-normal">
+        <div className="space-y-6 text-neutral-800 text-sm md:text-base leading-relaxed font-normal text-justify">
           <p>
             At Narrow Path, we believe that clothing is more than just what you wear—it's an expression of who you are and the values you choose to live by. Inspired by the timeless principle of <strong>"Walk by Faith, Not by Sight,"</strong> our brand was created for those who choose purpose over trends and authenticity over appearances.
           </p>

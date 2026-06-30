@@ -46,11 +46,10 @@ export default function Navbar() {
     <>
       {/* 1. DESKTOP HEADER (Hidden on mobile) */}
       <header
-        className={`fixed top-0 w-full z-[120] transition-all duration-300 hidden md:block ${
-          isScrolled || !isHome || isSearchOpen
+        className={`fixed top-0 w-full z-[120] transition-all duration-300 hidden md:block ${isScrolled || !isHome || isSearchOpen
             ? "bg-white text-black drop-shadow-md"
             : "bg-transparent text-black"
-        }`}
+          }`}
       >
         <div className="flex justify-between items-center px-6 md:px-12 py-3 w-full h-[72px]">
           {/* LEFT: Hamburger Menu */}
@@ -117,18 +116,16 @@ export default function Navbar() {
 
         {/* INVERTED CORNERS (The Scoop Effect) */}
         <div className="absolute top-full left-0 right-0 pointer-events-none">
-          <svg 
-            className={`absolute top-0 left-0 w-8 h-8 fill-current transition-colors duration-300 ${
-              isScrolled || !isHome || isSearchOpen ? "text-white" : "text-transparent"
-            }`} 
+          <svg
+            className={`absolute top-0 left-0 w-8 h-8 fill-current transition-colors duration-300 ${isScrolled || !isHome || isSearchOpen ? "text-white" : "text-transparent"
+              }`}
             viewBox="0 0 32 32"
           >
             <path d="M0 0h32A32 32 0 000 32V0z" />
           </svg>
-          <svg 
-            className={`absolute top-0 right-0 w-8 h-8 fill-current transition-colors duration-300 ${
-              isScrolled || !isHome || isSearchOpen ? "text-white" : "text-transparent"
-            }`} 
+          <svg
+            className={`absolute top-0 right-0 w-8 h-8 fill-current transition-colors duration-300 ${isScrolled || !isHome || isSearchOpen ? "text-white" : "text-transparent"
+              }`}
             viewBox="0 0 32 32"
           >
             <path d="M32 0H0a32 32 0 0132 32V0z" />
@@ -151,6 +148,7 @@ export default function Navbar() {
             </button>
             <nav className="flex flex-col gap-6 mt-10">
               <Link href="/shop" onClick={() => setIsMenuOpen(false)} className="text-3xl font-black uppercase text-black hover:opacity-50">Shop</Link>
+              <Link href="/customize" onClick={() => setIsMenuOpen(false)} className="text-3xl font-black uppercase text-black hover:opacity-50">Customize Your Tee</Link>
               <Link href="/about" onClick={() => setIsMenuOpen(false)} className="text-3xl font-black uppercase text-black hover:opacity-50">About</Link>
             </nav>
           </div>
@@ -172,11 +170,11 @@ export default function Navbar() {
               className="w-7 h-7 rounded-full bg-neutral-100/90 hover:bg-neutral-200/90 text-black font-black text-lg flex items-center justify-center transition-all duration-300 shadow-sm focus:outline-none"
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             >
-              <svg 
-                className={`w-3.5 h-3.5 transition-transform duration-300 ${isMenuOpen ? "rotate-45" : ""}`} 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth={2.5} 
+              <svg
+                className={`w-3.5 h-3.5 transition-transform duration-300 ${isMenuOpen ? "rotate-45" : ""}`}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2.5}
                 viewBox="0 0 24 24"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -191,9 +189,9 @@ export default function Navbar() {
         {/* Top Right Floating Icons */}
         <div className="fixed top-4 right-4 z-[130] flex items-center gap-2.5 pointer-events-auto">
           {/* Wishlist Bookmark */}
-          <Link 
-            href="/wishlist" 
-            className="bg-white/85 backdrop-blur-md border border-neutral-200/80 rounded-full p-2.5 shadow-sm text-black flex items-center justify-center hover:bg-white transition-all" 
+          <Link
+            href="/wishlist"
+            className="bg-white/85 backdrop-blur-md border border-neutral-200/80 rounded-full p-2.5 shadow-sm text-black flex items-center justify-center hover:bg-white transition-all"
             aria-label="Wishlist"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -202,9 +200,9 @@ export default function Navbar() {
           </Link>
 
           {/* Cart Bag */}
-          <button 
-            onClick={toggleCart} 
-            className="relative bg-white/85 backdrop-blur-md border border-neutral-200/80 rounded-full p-2.5 shadow-sm text-black flex items-center justify-center hover:bg-white transition-all" 
+          <button
+            onClick={toggleCart}
+            className="relative bg-white/85 backdrop-blur-md border border-neutral-200/80 rounded-full p-2.5 shadow-sm text-black flex items-center justify-center hover:bg-white transition-all"
             aria-label="Cart"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -223,8 +221,8 @@ export default function Navbar() {
           {/* The Glassmorphic Navigation Capsule */}
           <div className="w-full bg-white/90 backdrop-blur-md border border-neutral-200/80 rounded-full px-5 py-3.5 shadow-lg flex items-center justify-between pointer-events-auto">
             {/* Explore (Compass) */}
-            <Link 
-              href="/shop" 
+            <Link
+              href="/shop"
               className={`hover:opacity-60 transition-opacity ${pathname === "/shop" ? "text-black scale-110 font-bold" : "text-neutral-400"}`}
               aria-label="Explore Shop"
             >
@@ -235,8 +233,8 @@ export default function Navbar() {
             </Link>
 
             {/* Profile */}
-            <Link 
-              href={session ? "/profile" : "/login"} 
+            <Link
+              href={session ? "/profile" : "/login"}
               className={`hover:opacity-60 transition-opacity ${pathname === "/profile" || pathname === "/login" ? "text-black scale-110 font-bold" : "text-neutral-400"}`}
               aria-label="Profile"
             >
@@ -246,8 +244,8 @@ export default function Navbar() {
             </Link>
 
             {/* Location (Map Pin) -> Links to About page */}
-            <Link 
-              href="/about" 
+            <Link
+              href="/about"
               className={`hover:opacity-60 transition-opacity ${pathname === "/about" ? "text-black scale-110 font-bold" : "text-neutral-400"}`}
               aria-label="Store Location"
             >
@@ -258,8 +256,8 @@ export default function Navbar() {
             </Link>
 
             {/* Search Button */}
-            <button 
-              onClick={() => setIsSearchOpen(true)} 
+            <button
+              onClick={() => setIsSearchOpen(true)}
               className={`hover:opacity-60 transition-opacity ${isSearchOpen ? "text-black scale-110 font-bold" : "text-neutral-400"}`}
               aria-label="Search"
             >
