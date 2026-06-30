@@ -23,7 +23,7 @@ export default async function Home() {
     <main className="min-h-screen bg-white text-black">
 
       {/* 1. Restore the Framer Motion Hero Section */}
-      <Hero />
+      {/* <Hero /> */}
 
       {/* 2. Restore the Scrolling Marquee */}
       {/* <Marquee text="" /> */}
