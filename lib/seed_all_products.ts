@@ -78,6 +78,9 @@ async function main() {
           { url: "/do-not-be-afraid-detail-front.png", altText: "Do Not Be Afraid Heavyweight Tee Chest Logo" },
           { url: "/do-not-be-afraid-back.png", altText: "Do Not Be Afraid Heavyweight Tee Back View" },
           { url: "/do-not-be-afraid-detail-back.png", altText: "Do Not Be Afraid Heavyweight Tee Back Graphic Detail" },
+          { url: "/do-not-be-afraid-side.png", altText: "Do Not Be Afraid Heavyweight Tee Side View" },
+          { url: "/do-not-be-afraid-collar.png", altText: "Do Not Be Afraid Heavyweight Tee Collar Detail" },
+          { url: "/do-not-be-afraid-collage.jpg", altText: "Do Not Be Afraid Heavyweight Tee Lookbook Collage" },
         ]
       },
       variants: {
