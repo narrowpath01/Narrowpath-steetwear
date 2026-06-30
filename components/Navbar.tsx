@@ -219,9 +219,9 @@ export default function Navbar() {
         </div>
 
         {/* Bottom Floating Menu Bar Container */}
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[130] w-[calc(100%-2.5rem)] max-w-sm flex items-center justify-center gap-3 pointer-events-none">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[130] w-full max-w-[280px] flex items-center justify-center pointer-events-none">
           {/* The Glassmorphic Navigation Capsule */}
-          <div className="flex-1 bg-white/90 backdrop-blur-md border border-neutral-200/80 rounded-full px-5 py-3.5 shadow-lg flex items-center justify-between pointer-events-auto">
+          <div className="w-full bg-white/90 backdrop-blur-md border border-neutral-200/80 rounded-full px-5 py-3.5 shadow-lg flex items-center justify-between pointer-events-auto">
             {/* Explore (Compass) */}
             <Link 
               href="/shop" 
@@ -267,20 +267,6 @@ export default function Navbar() {
                 <path strokeLinecap="square" strokeLinejoin="miter" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </button>
-          </div>
-
-          {/* Orders Circle Button (Blue border and white background) */}
-          <div className="pointer-events-auto">
-            <Link 
-              href="/profile/orders" 
-              className="bg-white border-2 border-blue-600 text-blue-600 rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-blue-50 transition-colors flex-shrink-0"
-              aria-label="Orders"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                {/* A package box icon representing orders */}
-                <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-14L4 7m8 4v10M4 7v10l8 4" />
-              </svg>
-            </Link>
           </div>
         </div>
       </div>

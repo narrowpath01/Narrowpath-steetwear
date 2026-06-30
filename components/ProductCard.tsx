@@ -83,14 +83,17 @@ export default function ProductCard({ product }: ProductCardProps) {
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {images.map((img: any, idx: number) => {
-            const isSideView = img.url.includes("do-not-be-afraid-side.png");
+            const isChristCross = img.url.includes("christ-cross");
+            const isDoNotBeAfraid = img.url.includes("do-not-be-afraid");
             return (
               <div key={img.id || idx} className="w-full h-full flex-shrink-0 snap-start relative overflow-hidden rounded-2xl">
                 <img
                   src={img.url}
                   alt={img.altText || `${product.title} view ${idx + 1}`}
-                  className={`w-full h-full object-cover object-top rounded-2xl animate-fade-in transition-all duration-300 ${
-                    isSideView ? "scale-[1.12] origin-top" : ""
+                  className={`w-full h-full object-top rounded-2xl animate-fade-in transition-all duration-300 ${
+                    isChristCross ? "object-contain bg-neutral-100" : "object-cover"
+                  } ${
+                    isDoNotBeAfraid ? "scale-[1.12] origin-top" : ""
                   }`}
                 />
               </div>

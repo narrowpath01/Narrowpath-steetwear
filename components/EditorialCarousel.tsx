@@ -107,7 +107,7 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
   return (
     <section 
       ref={containerRef} 
-      className="relative w-full bg-zinc-50 py-16 md:py-24 overflow-hidden flex flex-col items-center border-t border-neutral-100"
+      className="relative w-full bg-zinc-50 pt-16 pb-6 md:pt-20 md:pb-8 overflow-hidden flex flex-col items-center border-t border-neutral-100"
     >
       <div className="relative w-full max-w-[400px] h-[500px] flex justify-center items-center">
         <AnimatePresence initial={false}>
@@ -165,7 +165,7 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
         </AnimatePresence>
       </div>
 
-      <div className="flex justify-center gap-3 mt-8">
+      <div className="flex justify-center gap-3 mt-4">
         {items.map((_, idx) => {
           // Use modulo to highlight the correct dot out of the original 4
           const isActive = activeIndex % items.length === idx;
