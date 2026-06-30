@@ -9,16 +9,56 @@ export default function LoginPage() {
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [contact, setContact] = useState("");
   const [otp, setOtp] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSendCode = (e: React.FormEvent) => {
+  const handleSendCode = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Trigger your backend API to send Twilio/Email OTP here
-    setStep("otp");
+    setError("");
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/otp/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contact }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to send code");
+      
+      // Output the code in an alert box for easy testing and debugging
+      if (data.code) {
+        alert(`[DEBUG] Verification Code: ${data.code}\n(This code has also been printed in your server terminal)`);
+      }
+      setStep("otp");
+    } catch (err: any) {
+      setError(err.message || "An error occurred.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleVerify = (e: React.FormEvent) => {
+  const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Trigger NextAuth signIn('credentials', { contact, otp }) here
+    setError("");
+    setLoading(true);
+    try {
+      const result = await signIn("credentials", {
+        contact,
+        otp,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+
+      // Successfully signed in! Redirect to homepage.
+      window.location.href = "/";
+    } catch (err: any) {
+      setError(err.message || "Invalid or expired code.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -32,12 +72,19 @@ export default function LoginPage() {
           {step === "phone" ? "Access the Underground" : `Enter code sent to ${contact}`}
         </p>
 
+        {error && (
+          <div className="w-full bg-red-50 text-red-600 rounded-xl p-4 text-xs font-bold uppercase tracking-wider mb-6 text-center border border-red-100">
+            {error}
+          </div>
+        )}
+
         {step === "phone" ? (
-          <div className="w-full w-full">
-            {/* Google OAuth Trigger - Standard Corporate Branding */}
+          <div className="w-full">
+            {/* Google OAuth Trigger */}
             <button
               onClick={() => signIn("google", { callbackUrl: "/" })}
-              className="w-full bg-white text-[#3c4043] border border-[#dadce0] py-3 rounded-full font-medium text-sm hover:bg-[#f8f9fa] transition-colors mb-6 flex items-center justify-center gap-3 shadow-sm"
+              disabled={loading}
+              className="w-full bg-white text-[#3c4043] border border-[#dadce0] py-3 rounded-full font-medium text-sm hover:bg-[#f8f9fa] transition-colors mb-6 flex items-center justify-center gap-3 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {/* Official Multi-colored Google G Logo */}
               <svg className="w-5 h-5" viewBox="0 0 48 48">
@@ -62,16 +109,18 @@ export default function LoginPage() {
               <input
                 type="text"
                 required
+                disabled={loading}
                 value={contact}
                 onChange={(e) => setContact(e.target.value)}
                 placeholder="Email or Phone Number"
-                className="w-full border-2 border-neutral-200 rounded-md p-3 text-sm focus:outline-none focus:border-black transition-colors"
+                className="w-full border-2 border-neutral-200 rounded-md p-3 text-sm focus:outline-none focus:border-black transition-colors disabled:bg-neutral-50"
               />
               <button 
                 type="submit" 
-                className="w-full bg-black text-white font-bold uppercase tracking-widest text-sm py-3 rounded-full hover:bg-neutral-800 transition-colors mt-2"
+                disabled={loading}
+                className="w-full bg-black text-white font-bold uppercase tracking-widest text-sm py-3 rounded-full hover:bg-neutral-800 transition-colors mt-2 disabled:bg-neutral-400 disabled:cursor-not-allowed"
               >
-                Send Code
+                {loading ? "Sending..." : "Send Code"}
               </button>
             </form>
           </div>
@@ -81,21 +130,24 @@ export default function LoginPage() {
               type="text"
               required
               maxLength={6}
+              disabled={loading}
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
               placeholder="000000"
-              className="w-full border-2 border-neutral-200 rounded-md p-3 text-2xl tracking-[1em] text-center focus:outline-none focus:border-black transition-colors"
+              className="w-full border-2 border-neutral-200 rounded-md p-3 text-2xl tracking-[1em] text-center focus:outline-none focus:border-black transition-colors disabled:bg-neutral-50"
             />
             <button 
               type="submit" 
-              className="w-full bg-black text-white font-bold uppercase tracking-widest text-sm py-3 rounded-full hover:bg-neutral-800 transition-colors mt-2"
+              disabled={loading}
+              className="w-full bg-black text-white font-bold uppercase tracking-widest text-sm py-3 rounded-full hover:bg-neutral-800 transition-colors mt-2 disabled:bg-neutral-400 disabled:cursor-not-allowed"
             >
-              Verify & Sign In
+              {loading ? "Verifying..." : "Verify & Sign In"}
             </button>
             <button 
               type="button" 
               onClick={() => setStep("phone")} 
-              className="text-xs text-neutral-500 uppercase font-bold hover:text-black mt-2 underline underline-offset-4"
+              disabled={loading}
+              className="text-xs text-neutral-500 uppercase font-bold hover:text-black mt-2 underline underline-offset-4 disabled:opacity-50"
             >
               Back
             </button>

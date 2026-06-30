@@ -1,3 +1,4 @@
+// components/profile/ProfileClient.tsx
 "use client";
 
 import { useState } from "react";
@@ -6,22 +7,15 @@ import ProfileSettings from "./ProfileSettings";
 import AddressManager from "./AddressManager";
 
 export default function ProfileClient({ user }: { user: any }) {
-  const [activeTab, setActiveTab] = useState<"profile" | "orders">("orders");
+  // Set default tab to "profile" so it opens first
+  const [activeTab, setActiveTab] = useState<"profile" | "orders">("profile");
 
   return (
     <main className="min-h-screen bg-gray-50 text-black pt-24 px-4 sm:px-6 lg:px-8 pb-20 font-sans">
       <div className="max-w-7xl mx-auto bg-white rounded-3xl p-6 md:p-12 shadow-sm border border-gray-100">
         
-        {/* Top Navigation Tabs */}
+        {/* Top Navigation Tabs - Profile shows first, then Orders beside it */}
         <div className="flex gap-8 mb-10 border-b border-gray-200">
-          <button
-            onClick={() => setActiveTab("orders")}
-            className={`pb-4 text-sm font-bold uppercase tracking-widest transition-colors ${
-              activeTab === "orders" ? "border-b-2 border-black text-black" : "text-gray-400 hover:text-black"
-            }`}
-          >
-            Orders
-          </button>
           <button
             onClick={() => setActiveTab("profile")}
             className={`pb-4 text-sm font-bold uppercase tracking-widest transition-colors ${
@@ -30,12 +24,18 @@ export default function ProfileClient({ user }: { user: any }) {
           >
             Profile
           </button>
+          <button
+            onClick={() => setActiveTab("orders")}
+            className={`pb-4 text-sm font-bold uppercase tracking-widest transition-colors ${
+              activeTab === "orders" ? "border-b-2 border-black text-black" : "text-gray-400 hover:text-black"
+            }`}
+          >
+            Orders
+          </button>
         </div>
 
         {/* Render the selected tab */}
-        {activeTab === "orders" ? (
-          <OrdersTab />
-        ) : (
+        {activeTab === "profile" ? (
           <div>
             <ProfileSettings user={user} />
             <AddressManager user={user} />
@@ -45,6 +45,8 @@ export default function ProfileClient({ user }: { user: any }) {
               </a>
             </div>
           </div>
+        ) : (
+          <OrdersTab />
         )}
       </div>
     </main>
