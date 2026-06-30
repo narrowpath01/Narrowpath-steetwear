@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import Marquee from "./Marquee";
 
 interface EditorialCarouselProps {
   products?: any[];
@@ -117,8 +118,17 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
   return (
     <section 
       ref={containerRef} 
-      className="relative w-full bg-zinc-50 pt-16 pb-6 md:pt-20 md:pb-8 overflow-hidden flex flex-col items-center border-t border-neutral-100"
+      className="relative w-full bg-zinc-50 pt-[72px] pb-6 md:pt-20 md:pb-12 overflow-hidden flex flex-col items-center border-t border-neutral-100"
     >
+      {/* Mobile-only Marquee: below the navbar, above the slides */}
+      <div className="w-full px-4 mb-8 block md:hidden">
+        <Marquee 
+          text="Customization Available" 
+          speed="slow" 
+          className="rounded-[32px] overflow-hidden border border-neutral-800" 
+        />
+      </div>
+
       <div className="relative w-full max-w-[400px] h-[500px] flex justify-center items-center">
         <AnimatePresence initial={false}>
           {extendedItems.map((item, index) => {
@@ -184,6 +194,15 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
             />
           );
         })}
+      </div>
+
+      {/* Desktop-only Marquee: below the slides/dots */}
+      <div className="w-full px-12 mt-10 hidden md:block">
+        <Marquee 
+          text="Customization Available" 
+          speed="slow" 
+          className="rounded-[32px] overflow-hidden border border-neutral-800" 
+        />
       </div>
     </section>
   );

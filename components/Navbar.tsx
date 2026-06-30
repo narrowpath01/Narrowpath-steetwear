@@ -274,14 +274,28 @@ export default function Navbar() {
       {/* 4. MOBILE DRAWER NAVIGATION (Slide in full screen menu) */}
       {isMenuOpen && (
         <div className="fixed inset-0 z-[125] flex md:hidden bg-white w-full h-full flex-col">
-          {/* Scrollable category list displaying only Shop and About */}
-          <div className="flex-1 flex flex-col justify-center gap-8 px-12 animate-in fade-in slide-in-from-top-4 duration-300">
+          {/* Scrollable category list */}
+          <div className="flex-1 flex flex-col justify-center gap-6 px-12 animate-in fade-in slide-in-from-top-4 duration-300">
             <Link 
               href="/shop" 
               onClick={() => setIsMenuOpen(false)} 
               className="text-4xl font-black uppercase tracking-tight text-black hover:opacity-50 transition-opacity"
             >
               Shop
+            </Link>
+            <Link 
+              href="/collections" 
+              onClick={() => setIsMenuOpen(false)} 
+              className="text-4xl font-black uppercase tracking-tight text-black hover:opacity-50 transition-opacity"
+            >
+              Collections
+            </Link>
+            <Link 
+              href="/customise" 
+              onClick={() => setIsMenuOpen(false)} 
+              className="text-4xl font-black uppercase tracking-tight text-black hover:opacity-50 transition-opacity text-[#005bd3]"
+            >
+              Customise Your Tee
             </Link>
             <Link 
               href="/about" 
@@ -292,9 +306,20 @@ export default function Navbar() {
             </Link>
           </div>
 
+          {/* About us & Contact info footer */}
+          <div className="px-12 py-6 border-t border-neutral-100 bg-neutral-50/50 text-neutral-500 space-y-2 text-xs">
+            <Link href="/about" onClick={() => setIsMenuOpen(false)} className="block hover:text-black transition-colors font-bold uppercase tracking-wider text-[10px]">
+              About Us
+            </Link>
+            <div className="text-[11px] leading-relaxed">
+              <span className="font-semibold block uppercase tracking-wider text-[10px] text-neutral-400 mb-0.5">Contact Us</span>
+              Email: <a href="mailto:narrowpathtshirts@gmail.com" className="font-mono hover:underline">narrowpathtshirts@gmail.com</a><br />
+              Phone: <span className="font-mono">9315457852</span>
+            </div>
+          </div>
+
           {/* Clean Close Drawer Button at bottom center */}
-          <div className="w-full flex flex-col items-center justify-center py-5 border-t border-neutral-100 bg-neutral-50/50">
-            <div className="w-8 h-[2px] bg-neutral-300 rounded mb-2"></div>
+          <div className="w-full flex flex-col items-center justify-center py-4 border-t border-neutral-100 bg-neutral-50/50">
             <button 
               onClick={() => setIsMenuOpen(false)}
               className="text-[10px] uppercase tracking-widest font-black text-neutral-500 hover:text-black transition-colors focus:outline-none"

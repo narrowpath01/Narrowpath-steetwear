@@ -120,7 +120,35 @@ async function main() {
     }
   });
 
-  console.log("\nDatabase seeded successfully with all 4 products!");
+  // 5. Monochrome Red Heavyweight Tee
+  console.log("Seeding: Monochrome Red Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Monochrome Red Heavyweight Tee",
+      handle: "monochrome-red-heavyweight-tee",
+      description: "Premium heavyweight red monochrome tee. Clean design, boxy relaxed fit, crafted from 100% premium cotton for ultimate comfort, styling, and structural drape. Minimalist stitching details with no graphics.",
+      collection: "MONOCHROME",
+      images: {
+        create: [
+          { url: "/monochrome-red-front.png", altText: "Monochrome Red Heavyweight Tee Front View" },
+          { url: "/monochrome-red-back.png", altText: "Monochrome Red Heavyweight Tee Back View" },
+          { url: "/monochrome-red-detail.png", altText: "Monochrome Red Heavyweight Tee Back View Upper" },
+          { url: "/monochrome-red-collar.png", altText: "Monochrome Red Heavyweight Tee Collar Detail" },
+          { url: "/monochrome-red-fabric.png", altText: "Monochrome Red Heavyweight Tee Fabric Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price, inventory: 100 },
+          { title: "M", price, inventory: 100 },
+          { title: "L", price, inventory: 100 },
+          { title: "XL", price, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  console.log("\nDatabase seeded successfully with all 5 products!");
 }
 
 main()

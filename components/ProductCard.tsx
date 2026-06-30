@@ -67,6 +67,10 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Link href={`/products/${product.handle}`} className="group cursor-pointer block">
+      {/* Collection type tag */}
+      <span className="block text-[9px] font-black uppercase tracking-[0.15em] text-neutral-400 mb-2 pl-0.5">
+        {product.collection || "PRINTED"}
+      </span>
       <div className="relative w-full aspect-[3/4] bg-white mb-4 overflow-hidden rounded-2xl border border-neutral-100/50 group/card">
         {/* Style to hide scrollbar on Webkit browsers */}
         <style dangerouslySetInnerHTML={{ __html: `
