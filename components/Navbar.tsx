@@ -151,6 +151,7 @@ export default function Navbar() {
             </button>
             <nav className="flex flex-col gap-6 mt-10">
               <Link href="/shop" onClick={() => setIsMenuOpen(false)} className="text-3xl font-black uppercase text-black hover:opacity-50">Shop</Link>
+              <Link href="/customize" onClick={() => setIsMenuOpen(false)} className="text-3xl font-black uppercase text-black hover:opacity-50">Customize Your Tee</Link>
               <Link href="/about" onClick={() => setIsMenuOpen(false)} className="text-3xl font-black uppercase text-black hover:opacity-50">About</Link>
             </nav>
           </div>
@@ -284,6 +285,16 @@ export default function Navbar() {
               Shop
             </Link>
             <Link 
+<<<<<<< HEAD
+=======
+              href="/customize" 
+              onClick={() => setIsMenuOpen(false)} 
+              className="text-4xl font-black uppercase tracking-tight text-black hover:opacity-50 transition-opacity"
+            >
+              Customize Your Tee
+            </Link>
+            <Link 
+>>>>>>> 59e4536 (changes fix)
               href="/about" 
               onClick={() => setIsMenuOpen(false)} 
               className="text-4xl font-black uppercase tracking-tight text-black hover:opacity-50 transition-opacity"

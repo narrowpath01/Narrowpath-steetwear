@@ -117,8 +117,7 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
   return (
     <section 
       ref={containerRef} 
-      className="relative w-full bg-zinc-50 pt-16 pb-6 md:pt-20 md:pb-8 overflow-hidden flex flex-col items-center border-t border-neutral-100"
-    >
+      className="relative w-full bg-zinc-50 pt-28 pb-6 md:pt-36 md:pb-8 overflow-hidden flex flex-col items-center border-t border-neutral-100">
       <div className="relative w-full max-w-[400px] h-[500px] flex justify-center items-center">
         <AnimatePresence initial={false}>
           {extendedItems.map((item, index) => {
