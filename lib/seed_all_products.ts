@@ -176,7 +176,34 @@ async function main() {
     }
   });
 
-  console.log("\nDatabase seeded successfully with all 6 products!");
+  // 7. Monochrome Brown Heavyweight Tee
+  console.log("Seeding: Monochrome Brown Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Monochrome Brown Heavyweight Tee",
+      handle: "monochrome-brown-heavyweight-tee",
+      description: "Premium heavyweight brown monochrome tee. Clean design, boxy relaxed fit, crafted from 100% premium cotton for ultimate comfort, styling, and structural drape. Minimalist stitching details with no graphics.",
+      collection: "MONOCHROME",
+      images: {
+        create: [
+          { url: "/monochrome-brown-front.png", altText: "Monochrome Brown Heavyweight Tee Front View" },
+          { url: "/monochrome-brown-fabric.png", altText: "Monochrome Brown Heavyweight Tee Fabric Detail" },
+          { url: "/monochrome-brown-detail.png", altText: "Monochrome Brown Heavyweight Tee Detail View" },
+          { url: "/monochrome-brown-back.png", altText: "Monochrome Brown Heavyweight Tee Back View" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price, inventory: 100 },
+          { title: "M", price, inventory: 100 },
+          { title: "L", price, inventory: 100 },
+          { title: "XL", price, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  console.log("\nDatabase seeded successfully with all 7 products!");
 }
 
 main()

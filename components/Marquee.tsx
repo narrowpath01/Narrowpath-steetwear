@@ -10,8 +10,9 @@ interface MarqueeProps {
 }
 
 export default function Marquee({ text, speed = "medium", className = "" }: MarqueeProps) {
-  // Repeat the text multiple times with wide spacing and no dots
-  const repeatedText = Array(15).fill(text).join("                ");
+  // Repeat the text multiple times with wide spacing using non-breaking spaces to prevent HTML collapsing
+  const spaceSeparator = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0";
+  const repeatedText = Array(15).fill(text).join(spaceSeparator);
 
   // Determine duration based on speed (slow = 200s for extremely slow speed)
   const duration = speed === "slow" ? 200 : speed === "fast" ? 25 : 60;
@@ -23,8 +24,8 @@ export default function Marquee({ text, speed = "medium", className = "" }: Marq
         animate={{ x: ["0%", "-50%"] }}
         transition={{ repeat: Infinity, ease: "linear", duration: duration }}
       >
-        <span className="mr-8">{repeatedText}</span>
-        <span className="mr-8">{repeatedText}</span>
+        <span>{repeatedText}{spaceSeparator}</span>
+        <span>{repeatedText}{spaceSeparator}</span>
       </motion.div>
     </div>
   );
