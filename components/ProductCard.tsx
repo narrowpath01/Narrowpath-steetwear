@@ -1,7 +1,7 @@
 // components/ProductCard.tsx
 "use client";
 
-import Image from "next/image";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import { useCartStore } from "@/store/useCartStore";
 
@@ -10,20 +10,49 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const imageUrl = product.images?.[0]?.url || "https://via.placeholder.com/400x500";
+  // Safe extraction of images
+  const images = product.images && product.images.length > 0 
+    ? product.images 
+    : [{ url: "https://via.placeholder.com/400x500", altText: product.title }];
+
+  const imageUrl = images[0]?.url;
+
   // Always grab the first variant to use for the Quick Add
   const firstVariant = product.variants?.[0];
   const price = firstVariant?.price || 0;
 
   const { addItem, toggleCart } = useCartStore();
 
+  // Carousel States & Handlers
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, clientWidth } = scrollRef.current;
+      const index = Math.round(scrollLeft / clientWidth);
+      setCurrentIndex(index);
+    }
+  };
+
+  const scrollToIndex = (index: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (scrollRef.current && index >= 0 && index < images.length) {
+      const clientWidth = scrollRef.current.clientWidth;
+      scrollRef.current.scrollTo({
+        left: index * clientWidth,
+        behavior: "smooth"
+      });
+      setCurrentIndex(index);
+    }
+  };
+
   const handleQuickAdd = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
-    // CRITICAL FIX: Pass the ID of the specific variant, NOT the product ID
     if (firstVariant?.id) {
-      // Pass the visual data here too!
       addItem(firstVariant.id, {
         variantTitle: firstVariant.title,
         price: firstVariant.price,
@@ -38,12 +67,75 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Link href={`/products/${product.handle}`} className="group cursor-pointer block">
-      <div className="relative w-full aspect-[3/4] bg-white mb-4 overflow-hidden rounded-2xl flex items-center justify-center border border-neutral-100/50">
-        <img
-          src={imageUrl}
-          alt={product.title}
-          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 rounded-2xl"
-        />
+      <div className="relative w-full aspect-[3/4] bg-white mb-4 overflow-hidden rounded-2xl border border-neutral-100/50 group/card">
+        {/* Style to hide scrollbar on Webkit browsers */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          .scrollbar-none::-webkit-scrollbar {
+            display: none;
+          }
+        `}} />
+
+        {/* Horizontal Snap Scroll Container */}
+        <div 
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="w-full h-full flex overflow-x-auto snap-x snap-mandatory scrollbar-none scroll-smooth"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          {images.map((img: any, idx: number) => (
+            <div key={img.id || idx} className="w-full h-full flex-shrink-0 snap-start relative">
+              <img
+                src={img.url}
+                alt={img.altText || `${product.title} view ${idx + 1}`}
+                className="w-full h-full object-cover object-top rounded-2xl animate-fade-in"
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Hover Navigation Arrows (Desktop Only) */}
+        {images.length > 1 && (
+          <>
+            <button
+              onClick={(e) => scrollToIndex(currentIndex - 1, e)}
+              disabled={currentIndex === 0}
+              className={`absolute left-2.5 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-black p-1.5 rounded-full shadow-sm opacity-0 group-hover/card:opacity-100 transition-opacity z-10 flex items-center justify-center ${
+                currentIndex === 0 ? "pointer-events-none opacity-0" : ""
+              }`}
+              aria-label="Previous image"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              onClick={(e) => scrollToIndex(currentIndex + 1, e)}
+              disabled={currentIndex === images.length - 1}
+              className={`absolute right-2.5 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-black p-1.5 rounded-full shadow-sm opacity-0 group-hover/card:opacity-100 transition-opacity z-10 flex items-center justify-center ${
+                currentIndex === images.length - 1 ? "pointer-events-none opacity-0" : ""
+              }`}
+              aria-label="Next image"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </>
+        )}
+
+        {/* Tracking Indicator Dots (Bottom Centered) */}
+        {images.length > 1 && (
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10 bg-black/15 backdrop-blur-[2px] px-2.5 py-1 rounded-full">
+            {images.map((_: any, idx: number) => (
+              <span
+                key={idx}
+                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                  currentIndex === idx ? "bg-white scale-110" : "bg-white/40"
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
       
       <div className="flex justify-between items-end">
