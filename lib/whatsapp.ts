@@ -102,3 +102,100 @@ export async function sendWhatsAppNotification(orderId: string, trackingNumber: 
     console.error(`[WhatsApp API Exception]:`, error);
   }
 }
+
+/**
+ * Sends a WhatsApp notification to the store owner (+91 9315457852) when a new order is paid.
+ */
+export async function sendOwnerWhatsAppNotification(orderId: string) {
+  try {
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      include: { 
+        address: true,
+        items: {
+          include: {
+            variant: {
+              include: {
+                product: true
+              }
+            }
+          }
+        }
+      }
+    });
+
+    if (!order || !order.address) {
+      console.error(`[WhatsApp Owner API] Order ${orderId} or Address record not found.`);
+      return;
+    }
+
+    const shortOrderId = orderId.slice(-8).toUpperCase();
+    const amountStr = `INR ${order.amount}`;
+    const ownerPhone = "+919315457852";
+
+    // Format the items list
+    let itemsStr = "";
+    if (order.items && order.items.length > 0) {
+      itemsStr = order.items.map(item => {
+        const prodTitle = item.variant?.product?.title || "Unknown Product";
+        const varTitle = item.variant?.title || "Standard";
+        return `- ${prodTitle} (${varTitle}) x${item.quantity}`;
+      }).join("\n");
+    } else {
+      itemsStr = "- No items found";
+    }
+
+    const messageText = 
+      `*NARROW PATH - NEW ORDER RECEIVED!*\n\n` +
+      `Order *#${shortOrderId}* has been successfully paid and created!\n\n` +
+      `*Order Items:*\n` +
+      `${itemsStr}\n\n` +
+      `*Details:*\n` +
+      `- Amount: ${amountStr}\n` +
+      `- Customer: ${order.address.firstName} ${order.address.lastName}\n` +
+      `- Phone: ${order.address.phoneNumber}\n` +
+      `- City/State: ${order.address.city}, ${order.address.state}\n` +
+      `- Address: ${order.address.street}\n\n` +
+      `Please prepare the shipment. Delhivery manifest has been generated automatically.`;
+
+    const token = process.env.WHATSAPP_API_TOKEN;
+    const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+
+    if (!token || !phoneNumberId) {
+      console.log(`\n--- [WHATSAPP OWNER NOTIFICATION MOCK SEND] ---`);
+      console.log(`To Owner Number: ${ownerPhone}`);
+      console.log(`Message:\n${messageText}`);
+      console.log(`----------------------------------------------\n`);
+      return;
+    }
+
+    const url = `https://graph.facebook.com/v18.0/${phoneNumberId}/messages`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        messaging_product: "whatsapp",
+        recipient_type: "individual",
+        to: ownerPhone,
+        type: "text",
+        text: {
+          preview_url: false,
+          body: messageText
+        }
+      })
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      console.error(`[WhatsApp Owner API Error]:`, JSON.stringify(data, null, 2));
+    } else {
+      console.log(`[WhatsApp Owner API Success]: Notification sent to owner. Message ID: ${data.messages?.[0]?.id}`);
+    }
+
+  } catch (error) {
+    console.error(`[WhatsApp Owner API Exception]:`, error);
+  }
+}

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import prisma from "@/lib/db";
 import { createDelhiveryShipment } from "@/lib/delhivery";
+import { sendOwnerWhatsAppNotification } from "@/lib/whatsapp";
 
 export async function POST(req: Request) {
   try {
@@ -22,6 +23,13 @@ export async function POST(req: Request) {
           razorpayPaymentId: razorpay_payment_id,
         },
       });
+
+      // 1.5. Trigger WhatsApp notification to Store Owner
+      try {
+        await sendOwnerWhatsAppNotification(dbOrderId);
+      } catch (ownerNotificationError) {
+        console.error("Owner WhatsApp Notification Error:", ownerNotificationError);
+      }
 
       // 2. Trigger Delhivery Manifest API call automatically
       try {
