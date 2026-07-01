@@ -1,7 +1,7 @@
 // app/customise/page.tsx
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { toPng } from "html-to-image";
@@ -15,13 +15,7 @@ export default function CustomisePage() {
   const [activeSlide, setActiveSlide] = useState<"front" | "back">("front");
 
   // Active selected design element
-  const [activeElement, setActiveElement] = useState<"front-graphic" | "front-text" | "back-graphic" | "back-text" | null>(null);
-
-  // Position offset states for design elements
-  const [frontGraphicPos, setFrontGraphicPos] = useState({ x: 0, y: -40 });
-  const [frontTextPos, setFrontTextPos] = useState({ x: 0, y: 60 });
-  const [backGraphicPos, setBackGraphicPos] = useState({ x: 0, y: -40 });
-  const [backTextPos, setBackTextPos] = useState({ x: 0, y: 60 });
+  const [activeElement, setActiveElement] = useState<string | null>(null);
 
   // Export State
   const [isExporting, setIsExporting] = useState(false);
@@ -32,33 +26,44 @@ export default function CustomisePage() {
   // Font Dropdown open state
   const [isFontOpen, setIsFontOpen] = useState(false);
 
-  // FRONT Design States
-  const [frontDesignUrl, setFrontDesignUrl] = useState<string | null>(null);
-  const [frontDesignName, setFrontDesignName] = useState<string>("None");
-  const [frontGraphicSize, setFrontGraphicSize] = useState<number>(100);
-  const [frontGraphicRotation, setFrontGraphicRotation] = useState<number>(0);
+  // Interfaces for multi-layer customization
+  interface CustomiseElement {
+    id: string;
+    type: "graphic" | "text";
+    url?: string;
+    name?: string;
+    text?: string;
+    color?: string;
+    fontFamily?: string;
+    x: number;
+    y: number;
+    rotation: number;
+    size: number;
+  }
 
-  const [frontHasText, setFrontHasText] = useState(false);
-  const [frontCustomText, setFrontCustomText] = useState("");
-  const [frontSelectedFont, setFrontSelectedFont] = useState("Impact, sans-serif");
-  const [frontTextColor, setFrontTextColor] = useState("#FFFFFF");
-  const [frontTextSize, setFrontTextSize] = useState(24);
-  const [frontTextRotation, setFrontTextRotation] = useState(0);
-
-  // BACK Design States
-  const [backDesignUrl, setBackDesignUrl] = useState<string | null>(null);
-  const [backDesignName, setBackDesignName] = useState<string>("None");
-  const [backGraphicSize, setBackGraphicSize] = useState<number>(100);
-  const [backGraphicRotation, setBackGraphicRotation] = useState<number>(0);
-
-  const [backHasText, setBackHasText] = useState(false);
-  const [backCustomText, setBackCustomText] = useState("");
-  const [backSelectedFont, setBackSelectedFont] = useState("Impact, sans-serif");
-  const [backTextColor, setBackTextColor] = useState("#FFFFFF");
-  const [backTextSize, setBackTextSize] = useState(24);
-  const [backTextRotation, setBackTextRotation] = useState(0);
+  // FRONT & BACK Multi-Layer states
+  const [frontElements, setFrontElements] = useState<CustomiseElement[]>([]);
+  const [backElements, setBackElements] = useState<CustomiseElement[]>([]);
 
   const previewContainerRef = useRef<HTMLDivElement>(null);
+
+  // Global pointerdown listener to handle click-outside deselect
+  useEffect(() => {
+    const handleGlobalClick = (e: PointerEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target) return;
+      if (target.closest('.transformer-container') || target.closest('.transformer-handle')) {
+        return;
+      }
+      if (target.closest('.customizer-controls')) {
+        return;
+      }
+      setActiveElement(null);
+    };
+
+    document.addEventListener("pointerdown", handleGlobalClick);
+    return () => document.removeEventListener("pointerdown", handleGlobalClick);
+  }, []);
 
   // Helper images for base monochrome tees
   const teeImages = {
@@ -96,38 +101,96 @@ export default function CustomisePage() {
     { name: "Trebuchet MS (Sleek Geometric)", value: "'Trebuchet MS', sans-serif" },
   ];
 
+  // Helper actions to append graphic layers
+  const addGraphic = (url: string, name: string) => {
+    const newEl: CustomiseElement = {
+      id: `graphic-${Date.now()}`,
+      type: "graphic",
+      url,
+      name,
+      x: 0,
+      y: -40,
+      rotation: 0,
+      size: 100,
+    };
+    if (activeSlide === "front") {
+      setFrontElements(prev => [...prev, newEl]);
+      setActiveElement(newEl.id);
+    } else {
+      setBackElements(prev => [...prev, newEl]);
+      setActiveElement(newEl.id);
+    }
+  };
+
+  // Helper actions to append text layers
+  const addText = () => {
+    const newEl: CustomiseElement = {
+      id: `text-${Date.now()}`,
+      type: "text",
+      text: "HELLO",
+      color: "#FFFFFF",
+      fontFamily: "Impact, sans-serif",
+      x: 0,
+      y: 60,
+      rotation: 0,
+      size: 24,
+    };
+    if (activeSlide === "front") {
+      setFrontElements(prev => [...prev, newEl]);
+      setActiveElement(newEl.id);
+    } else {
+      setBackElements(prev => [...prev, newEl]);
+      setActiveElement(newEl.id);
+    }
+  };
+
+  const updateElement = (id: string, values: Partial<CustomiseElement>) => {
+    if (activeSlide === "front") {
+      setFrontElements(prev => prev.map(el => el.id === id ? { ...el, ...values } : el));
+    } else {
+      setBackElements(prev => prev.map(el => el.id === id ? { ...el, ...values } : el));
+    }
+  };
+
+  const removeElement = (id: string) => {
+    if (activeSlide === "front") {
+      setFrontElements(prev => prev.filter(el => el.id !== id));
+    } else {
+      setBackElements(prev => prev.filter(el => el.id !== id));
+    }
+    setActiveElement(null);
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const url = URL.createObjectURL(file);
-      if (activeSlide === "front") {
-        setFrontDesignUrl(url);
-        setFrontDesignName(file.name);
-        setActiveElement("front-graphic");
-      } else {
-        setBackDesignUrl(url);
-        setBackDesignName(file.name);
-        setActiveElement("back-graphic");
-      }
+      addGraphic(url, file.name);
+      e.target.value = ""; // Clear file target value
     }
   };
 
   const handleWhatsAppSubmit = () => {
+    const frontGraphics = frontElements.filter(e => e.type === "graphic");
+    const frontTexts = frontElements.filter(e => e.type === "text");
+    const backGraphics = backElements.filter(e => e.type === "graphic");
+    const backTexts = backElements.filter(e => e.type === "text");
+
     const textDetails = `Hello Narrow Path! I would like to order a Custom Heavyweight Tee:
 - Base Color: ${baseColor.toUpperCase()}
 - Size: ${size}
 
 FRONT CUSTOMISATION:
-- Graphic Design Uploaded: ${frontDesignUrl ? "Yes" : "No"} (${frontDesignName})
-- Custom Text: ${frontHasText ? (frontCustomText || "ADD YOUR TEXT") : "None"}
-- Text Color: ${frontHasText ? frontTextColor : "N/A"}
-- Chosen Font: ${frontHasText ? fontOptions.find(f => f.value === frontSelectedFont)?.name : "N/A"}
+- Total Photos: ${frontGraphics.length}
+${frontGraphics.map((g, idx) => `  * Photo ${idx + 1}: ${g.name || "Custom Image"}`).join("\n")}
+- Total Texts: ${frontTexts.length}
+${frontTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptions.find(f => f.value === t.fontFamily)?.name || "Standard"}, Color: ${t.color})`).join("\n")}
 
 BACK CUSTOMISATION:
-- Graphic Design Uploaded: ${backDesignUrl ? "Yes" : "No"} (${backDesignName})
-- Custom Text: ${backHasText ? (backCustomText || "ADD YOUR TEXT") : "None"}
-- Text Color: ${backHasText ? backTextColor : "N/A"}
-- Chosen Font: ${backHasText ? fontOptions.find(f => f.value === backSelectedFont)?.name : "N/A"}`;
+- Total Photos: ${backGraphics.length}
+${backGraphics.map((g, idx) => `  * Photo ${idx + 1}: ${g.name || "Custom Image"}`).join("\n")}
+- Total Texts: ${backTexts.length}
+${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptions.find(f => f.value === t.fontFamily)?.name || "Standard"}, Color: ${t.color})`).join("\n")}`;
 
     const encodedText = encodeURIComponent(textDetails);
     window.open(`https://wa.me/919315457852?text=${encodedText}`, "_blank");
@@ -239,11 +302,6 @@ BACK CUSTOMISATION:
             <div
               ref={previewContainerRef}
               className="relative w-full aspect-[4/5] bg-neutral-100 rounded-[24px] border border-neutral-200/80 overflow-hidden flex items-center justify-center group shadow-inner"
-              onPointerDown={(e) => {
-                if (e.target === e.currentTarget) {
-                  setActiveElement(null);
-                }
-              }}
             >
               <div className="absolute inset-0 bg-neutral-100/25 z-0 pointer-events-none"></div>
 
@@ -266,61 +324,41 @@ BACK CUSTOMISATION:
                       priority
                     />
 
-                    {/* Interactive FRONT graphic */}
-                    {frontDesignUrl && (
+                    {frontElements.map((el) => (
                       <Transformer
-                        id="front-graphic"
-                        x={frontGraphicPos.x}
-                        y={frontGraphicPos.y}
-                        rotation={frontGraphicRotation}
-                        size={frontGraphicSize}
-                        isActive={activeElement === "front-graphic"}
-                        onSelect={() => setActiveElement("front-graphic")}
-                        onChange={(vals) => {
-                          setFrontGraphicPos({ x: vals.x, y: vals.y });
-                          setFrontGraphicRotation(vals.rotation);
-                          setFrontGraphicSize(vals.size);
-                        }}
+                        key={el.id}
+                        id={el.id}
+                        x={el.x}
+                        y={el.y}
+                        rotation={el.rotation}
+                        size={el.size}
+                        isText={el.type === "text"}
+                        isActive={activeElement === el.id}
+                        onSelect={() => setActiveElement(el.id)}
+                        onChange={(vals) => updateElement(el.id, vals)}
+                        minSize={el.type === "text" ? 12 : 40}
+                        maxSize={el.type === "text" ? 64 : 260}
                       >
-                        <img
-                          src={frontDesignUrl}
-                          alt="Front Graphic"
-                          className="w-full h-full object-contain pointer-events-none select-none"
-                        />
+                        {el.type === "graphic" ? (
+                          <img
+                            src={el.url}
+                            alt={el.name || "Custom Graphic"}
+                            className="w-full h-full object-contain pointer-events-none select-none"
+                          />
+                        ) : (
+                          <p
+                            style={{
+                              fontFamily: el.fontFamily,
+                              color: el.color,
+                              fontSize: `${el.size}px`
+                            }}
+                            className="font-bold uppercase tracking-wider whitespace-nowrap drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.5)]"
+                          >
+                            {el.text || "ADD TEXT"}
+                          </p>
+                        )}
                       </Transformer>
-                    )}
-
-                    {/* Interactive FRONT text */}
-                    {frontHasText && (
-                      <Transformer
-                        id="front-text"
-                        x={frontTextPos.x}
-                        y={frontTextPos.y}
-                        rotation={frontTextRotation}
-                        size={frontTextSize}
-                        isText={true}
-                        isActive={activeElement === "front-text"}
-                        onSelect={() => setActiveElement("front-text")}
-                        onChange={(vals) => {
-                          setFrontTextPos({ x: vals.x, y: vals.y });
-                          setFrontTextRotation(vals.rotation);
-                          setFrontTextSize(vals.size);
-                        }}
-                        minSize={12}
-                        maxSize={64}
-                      >
-                        <p
-                          style={{
-                            fontFamily: frontSelectedFont,
-                            color: frontTextColor,
-                            fontSize: `${frontTextSize}px`
-                          }}
-                          className="font-bold uppercase tracking-wider whitespace-nowrap drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.5)]"
-                        >
-                          {frontCustomText || "ADD YOUR TEXT"}
-                        </p>
-                      </Transformer>
-                    )}
+                    ))}
                   </motion.div>
                 ) : (
                   <motion.div
@@ -340,61 +378,41 @@ BACK CUSTOMISATION:
                       priority
                     />
 
-                    {/* Interactive BACK graphic */}
-                    {backDesignUrl && (
+                    {backElements.map((el) => (
                       <Transformer
-                        id="back-graphic"
-                        x={backGraphicPos.x}
-                        y={backGraphicPos.y}
-                        rotation={backGraphicRotation}
-                        size={backGraphicSize}
-                        isActive={activeElement === "back-graphic"}
-                        onSelect={() => setActiveElement("back-graphic")}
-                        onChange={(vals) => {
-                          setBackGraphicPos({ x: vals.x, y: vals.y });
-                          setBackGraphicRotation(vals.rotation);
-                          setBackGraphicSize(vals.size);
-                        }}
+                        key={el.id}
+                        id={el.id}
+                        x={el.x}
+                        y={el.y}
+                        rotation={el.rotation}
+                        size={el.size}
+                        isText={el.type === "text"}
+                        isActive={activeElement === el.id}
+                        onSelect={() => setActiveElement(el.id)}
+                        onChange={(vals) => updateElement(el.id, vals)}
+                        minSize={el.type === "text" ? 12 : 40}
+                        maxSize={el.type === "text" ? 64 : 260}
                       >
-                        <img
-                          src={backDesignUrl}
-                          alt="Back Graphic"
-                          className="w-full h-full object-contain pointer-events-none select-none"
-                        />
+                        {el.type === "graphic" ? (
+                          <img
+                            src={el.url}
+                            alt={el.name || "Custom Graphic"}
+                            className="w-full h-full object-contain pointer-events-none select-none"
+                          />
+                        ) : (
+                          <p
+                            style={{
+                              fontFamily: el.fontFamily,
+                              color: el.color,
+                              fontSize: `${el.size}px`
+                            }}
+                            className="font-bold uppercase tracking-wider whitespace-nowrap drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.5)]"
+                          >
+                            {el.text || "ADD TEXT"}
+                          </p>
+                        )}
                       </Transformer>
-                    )}
-
-                    {/* Interactive BACK text */}
-                    {backHasText && (
-                      <Transformer
-                        id="back-text"
-                        x={backTextPos.x}
-                        y={backTextPos.y}
-                        rotation={backTextRotation}
-                        size={backTextSize}
-                        isText={true}
-                        isActive={activeElement === "back-text"}
-                        onSelect={() => setActiveElement("back-text")}
-                        onChange={(vals) => {
-                          setBackTextPos({ x: vals.x, y: vals.y });
-                          setBackTextRotation(vals.rotation);
-                          setBackTextSize(vals.size);
-                        }}
-                        minSize={12}
-                        maxSize={64}
-                      >
-                        <p
-                          style={{
-                            fontFamily: backSelectedFont,
-                            color: backTextColor,
-                            fontSize: `${backTextSize}px`
-                          }}
-                          className="font-bold uppercase tracking-wider whitespace-nowrap drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.5)]"
-                        >
-                          {backCustomText || "ADD YOUR TEXT"}
-                        </p>
-                      </Transformer>
-                    )}
+                    ))}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -407,7 +425,7 @@ BACK CUSTOMISATION:
           </div>
 
           {/* Form Options Column */}
-          <div className="lg:mt-13 space-y-8">
+          <div className="customizer-controls lg:mt-13 space-y-8">
 
             {/* Option 1: Base Color */}
             <div className="space-y-3">
@@ -459,300 +477,255 @@ BACK CUSTOMISATION:
               </div>
             </div>
 
-            {/* Option 3: Upload Graphic from User Gallery */}
+            {/* Option 3: Add Design Layers */}
             <div className="space-y-3 pt-4 border-t border-neutral-100">
               <label className="block text-xs font-black uppercase tracking-wider text-neutral-500">
-                3. Add Graphic Design to {activeSlide === "front" ? "Front" : "Back"}
+                3. Add Design Layers to {activeSlide === "front" ? "Front" : "Back"}
               </label>
 
-              <div className="flex flex-col gap-3">
-                <div className="flex gap-3 items-center">
-                  <label
-                    htmlFor="user-graphic-upload"
-                    className="flex-1 cursor-pointer py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider border-2 border-dashed border-neutral-300 text-center hover:border-neutral-500 bg-neutral-50 hover:bg-neutral-100/50 transition-all flex items-center justify-center gap-2"
-                  >
-                    <svg className="w-4 h-4 text-neutral-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    {(activeSlide === "front" ? frontDesignUrl : backDesignUrl) ? "Change Photo" : "Upload from Gallery"}
-                  </label>
+              <div className="grid grid-cols-2 gap-3">
+                {/* Upload Photo Button */}
+                <label
+                  htmlFor="user-graphic-upload"
+                  className="cursor-pointer py-3.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider border-2 border-dashed border-neutral-300 text-center hover:border-neutral-500 bg-neutral-50 hover:bg-neutral-100/50 transition-all flex items-center justify-center gap-2"
+                >
+                  <svg className="w-4 h-4 text-neutral-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  Add Photo
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="user-graphic-upload"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
 
-                  <input
-                    type="file"
-                    accept="image/*"
-                    id="user-graphic-upload"
-                    className="hidden"
-                    onChange={handleFileChange}
-                  />
-
-                  {(activeSlide === "front" ? frontDesignUrl : backDesignUrl) && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (activeSlide === "front") {
-                          setFrontDesignUrl(null);
-                          setFrontDesignName("None");
-                        } else {
-                          setBackDesignUrl(null);
-                          setBackDesignName("None");
-                        }
-                      }}
-                      className="px-4 py-3 rounded-xl border border-red-200 text-red-500 bg-red-50/50 text-xs font-black uppercase tracking-wider hover:bg-red-50"
-                    >
-                      Clear
-                    </button>
-                  )}
-                </div>
-
-                {/* Graphic controls: Scale & Rotation */}
-                {((activeSlide === "front" ? frontDesignUrl : backDesignUrl)) && (
-                  <div className="space-y-4 p-4 bg-neutral-50 rounded-2xl border border-neutral-150 animate-fade-in">
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-[10px] font-black uppercase tracking-wider text-neutral-400">
-                          Scale Graphic
-                        </span>
-                        <span className="text-[10px] font-mono font-bold text-neutral-600">
-                          {(activeSlide === "front" ? frontGraphicSize : backGraphicSize)}px
-                        </span>
-                      </div>
-                      <input
-                        type="range"
-                        min="40"
-                        max="260"
-                        value={activeSlide === "front" ? frontGraphicSize : backGraphicSize}
-                        onChange={(e) => {
-                          if (activeSlide === "front") {
-                            setFrontGraphicSize(Number(e.target.value));
-                          } else {
-                            setBackGraphicSize(Number(e.target.value));
-                          }
-                        }}
-                        className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-black"
-                      />
-                    </div>
-
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-[10px] font-black uppercase tracking-wider text-neutral-400">
-                          Rotate Graphic
-                        </span>
-                        <span className="text-[10px] font-mono font-bold text-neutral-600">
-                          {(activeSlide === "front" ? frontGraphicRotation : backGraphicRotation)}°
-                        </span>
-                      </div>
-                      <input
-                        type="range"
-                        min="-180"
-                        max="180"
-                        value={activeSlide === "front" ? frontGraphicRotation : backGraphicRotation}
-                        onChange={(e) => {
-                          if (activeSlide === "front") {
-                            setFrontGraphicRotation(Number(e.target.value));
-                          } else {
-                            setBackGraphicRotation(Number(e.target.value));
-                          }
-                        }}
-                        className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-black"
-                      />
-                    </div>
-                  </div>
-                )}
+                {/* Add Custom Text Button */}
+                <button
+                  type="button"
+                  onClick={addText}
+                  className="py-3.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider border-2 border-dashed border-neutral-300 text-center hover:border-neutral-500 bg-neutral-50 hover:bg-neutral-100/50 transition-all flex items-center justify-center gap-2"
+                >
+                  <svg className="w-4 h-4 text-neutral-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  Add Text
+                </button>
               </div>
             </div>
 
-            {/* Option 4: Custom Text Edit Part */}
+            {/* Option 4: Configure Active Layer */}
             <div className="space-y-4 pt-4 border-t border-neutral-100">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-black uppercase tracking-wider text-neutral-500">
-                  4. Add Custom Text to {activeSlide === "front" ? "Front" : "Back"}
-                </label>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (activeSlide === "front") {
-                      const nextHasText = !frontHasText;
-                      setFrontHasText(nextHasText);
-                      if (nextHasText) setActiveElement("front-text");
-                      else if (activeElement === "front-text") setActiveElement(null);
-                    } else {
-                      const nextHasText = !backHasText;
-                      setBackHasText(nextHasText);
-                      if (nextHasText) setActiveElement("back-text");
-                      else if (activeElement === "back-text") setActiveElement(null);
-                    }
-                  }}
-                  className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${(activeSlide === "front" ? frontHasText : backHasText)
-                    ? "bg-red-50 text-red-600 border-red-200 hover:bg-red-100"
-                    : "bg-black text-white border-black hover:bg-neutral-800"
-                    }`}
-                >
-                  {(activeSlide === "front" ? frontHasText : backHasText) ? "Remove Text" : "Add Text"}
-                </button>
-              </div>
+              <label className="block text-xs font-black uppercase tracking-wider text-neutral-500">
+                4. Layer Configuration
+              </label>
 
-              {(activeSlide === "front" ? frontHasText : backHasText) && (
-                <div className="space-y-4 animate-fade-in">
-                  <input
-                    type="text"
-                    placeholder="ADD YOUR TEXT"
-                    value={activeSlide === "front" ? frontCustomText : backCustomText}
-                    onChange={(e) => {
-                      if (activeSlide === "front") {
-                        setFrontCustomText(e.target.value);
-                      } else {
-                        setBackCustomText(e.target.value);
-                      }
-                    }}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-neutral-200 focus:border-black focus:outline-none text-xs sm:text-sm font-black uppercase tracking-wider bg-white text-black placeholder-neutral-400"
-                  />
+              {(() => {
+                const activeEl = (activeSlide === "front" ? frontElements : backElements).find(e => e.id === activeElement);
 
-                  {/* Aesthetic Custom Font Selection Dropdown */}
-                  <div className="space-y-1.5">
-                    <label className="block text-[10px] font-black uppercase tracking-wider text-neutral-400">
-                      Choose Font Style
-                    </label>
+                if (!activeEl) {
+                  return (
+                    <div className="p-5 text-center bg-neutral-50 rounded-2xl border border-neutral-150 border-dashed text-neutral-400 text-xs font-medium uppercase tracking-wider leading-relaxed">
+                      Select a layer on the canvas to configure it, or add new layers above.
+                    </div>
+                  );
+                }
 
-                    <div className="relative">
+                return (
+                  <div className="space-y-5 p-4 bg-neutral-50 rounded-2xl border border-neutral-150 animate-fade-in">
+                    
+                    {/* Header showing layer details and delete option */}
+                    <div className="flex items-center justify-between border-b border-neutral-200 pb-3">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-black">
+                        Active: {activeEl.type === "graphic" ? `Photo (${activeEl.name?.slice(0, 12)}...)` : "Text Layer"}
+                      </span>
                       <button
                         type="button"
-                        onClick={() => setIsFontOpen(!isFontOpen)}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-neutral-200 focus:border-black focus:outline-none text-xs font-black bg-white text-black flex items-center justify-between transition-all"
+                        onClick={() => removeElement(activeEl.id)}
+                        className="px-3 py-1 rounded-lg border border-red-200 text-red-500 bg-red-50/50 text-[9px] font-black uppercase tracking-wider hover:bg-red-50"
                       >
-                        <span>
-                          {fontOptions.find(
-                            f => f.value === (activeSlide === "front" ? frontSelectedFont : backSelectedFont)
-                          )?.name}
-                        </span>
-                        {/* Custom arrow shifted a little to the left */}
-                        <svg className="w-3.5 h-3.5 text-neutral-500 mr-2.5 transition-transform duration-200" style={{ transform: isFontOpen ? "rotate(180deg)" : "rotate(0)" }} fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                        </svg>
+                        Delete Layer
                       </button>
+                    </div>
 
-                      {isFontOpen && (
-                        <div className="absolute top-[105%] left-0 w-full bg-white border border-neutral-200/80 rounded-xl shadow-xl z-[200] overflow-hidden">
-                          {fontOptions.map((font) => (
-                            <button
-                              key={font.value}
-                              type="button"
-                              onClick={() => {
-                                if (activeSlide === "front") {
-                                  setFrontSelectedFont(font.value);
-                                } else {
-                                  setBackSelectedFont(font.value);
-                                }
-                                setIsFontOpen(false);
-                              }}
-                              className="w-full px-4 py-2.5 text-left text-[11px] font-black text-black hover:bg-neutral-50 transition-colors border-b border-neutral-100 last:border-0"
-                            >
-                              {font.name}
-                            </button>
-                          ))}
+                    {/* Graphic specific option settings */}
+                    {activeEl.type === "graphic" && (
+                      <div className="space-y-4">
+                        <div>
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="text-[10px] font-black uppercase tracking-wider text-neutral-400">
+                              Scale Photo
+                            </span>
+                            <span className="text-[10px] font-mono font-bold text-neutral-600">
+                              {activeEl.size}px
+                            </span>
+                          </div>
+                          <input
+                            type="range"
+                            min="40"
+                            max="260"
+                            value={activeEl.size}
+                            onChange={(e) => updateElement(activeEl.id, { size: Number(e.target.value) })}
+                            className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-black"
+                          />
                         </div>
-                      )}
-                    </div>
-                  </div>
 
-                  {/* Text size and rotation scale options */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-[9px] font-black uppercase tracking-wider text-neutral-400">
-                          Text Size
-                        </span>
-                        <span className="text-[9px] font-mono font-bold text-neutral-600">
-                          {(activeSlide === "front" ? frontTextSize : backTextSize)}px
-                        </span>
+                        <div>
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="text-[10px] font-black uppercase tracking-wider text-neutral-400">
+                              Rotate Photo
+                            </span>
+                            <span className="text-[10px] font-mono font-bold text-neutral-600">
+                              {activeEl.rotation}°
+                            </span>
+                          </div>
+                          <input
+                            type="range"
+                            min="-180"
+                            max="180"
+                            value={activeEl.rotation}
+                            onChange={(e) => updateElement(activeEl.id, { rotation: Number(e.target.value) })}
+                            className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-black"
+                          />
+                        </div>
                       </div>
-                      <input
-                        type="range"
-                        min="12"
-                        max="64"
-                        value={activeSlide === "front" ? frontTextSize : backTextSize}
-                        onChange={(e) => {
-                          if (activeSlide === "front") {
-                            setFrontTextSize(Number(e.target.value));
-                          } else {
-                            setBackTextSize(Number(e.target.value));
-                          }
-                        }}
-                        className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-black"
-                      />
-                    </div>
+                    )}
 
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-[9px] font-black uppercase tracking-wider text-neutral-400">
-                          Text Rotation
-                        </span>
-                        <span className="text-[9px] font-mono font-bold text-neutral-600">
-                          {(activeSlide === "front" ? frontTextRotation : backTextRotation)}°
-                        </span>
+                    {/* Text specific option settings */}
+                    {activeEl.type === "text" && (
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-[10px] font-black uppercase tracking-wider text-neutral-400 mb-1">
+                            Edit Text
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="ENTER YOUR TEXT"
+                            value={activeEl.text}
+                            onChange={(e) => updateElement(activeEl.id, { text: e.target.value })}
+                            className="w-full px-4 py-3 rounded-xl border-2 border-neutral-200 focus:border-black focus:outline-none text-xs sm:text-sm font-black uppercase tracking-wider bg-white text-black placeholder-neutral-400"
+                          />
+                        </div>
+
+                        {/* Aesthetic Custom Font Selection Dropdown */}
+                        <div className="space-y-1.5">
+                          <label className="block text-[10px] font-black uppercase tracking-wider text-neutral-400">
+                            Choose Font Style
+                          </label>
+
+                          <div className="relative">
+                            <button
+                              type="button"
+                              onClick={() => setIsFontOpen(!isFontOpen)}
+                              className="w-full px-4 py-3 rounded-xl border-2 border-neutral-200 focus:border-black focus:outline-none text-xs font-black bg-white text-black flex items-center justify-between transition-all"
+                            >
+                              <span>
+                                {fontOptions.find(f => f.value === activeEl.fontFamily)?.name || "Standard"}
+                              </span>
+                              <svg className="w-3.5 h-3.5 text-neutral-500 mr-2.5 transition-transform duration-200" style={{ transform: isFontOpen ? "rotate(180deg)" : "rotate(0)" }} fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                              </svg>
+                            </button>
+
+                            {isFontOpen && (
+                              <div className="absolute top-[105%] left-0 w-full bg-white border border-neutral-200/80 rounded-xl shadow-xl z-[200] overflow-hidden">
+                                {fontOptions.map((font) => (
+                                  <button
+                                    key={font.value}
+                                    type="button"
+                                    onClick={() => {
+                                      updateElement(activeEl.id, { fontFamily: font.value });
+                                      setIsFontOpen(false);
+                                    }}
+                                    className="w-full px-4 py-2.5 text-left text-[11px] font-black text-black hover:bg-neutral-50 transition-colors border-b border-neutral-100 last:border-0"
+                                  >
+                                    {font.name}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Text size and rotation scale options */}
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <div className="flex justify-between items-center mb-1">
+                              <span className="text-[9px] font-black uppercase tracking-wider text-neutral-400">
+                                Text Size
+                              </span>
+                              <span className="text-[9px] font-mono font-bold text-neutral-600">
+                                {activeEl.size}px
+                              </span>
+                            </div>
+                            <input
+                              type="range"
+                              min="12"
+                              max="64"
+                              value={activeEl.size}
+                              onChange={(e) => updateElement(activeEl.id, { size: Number(e.target.value) })}
+                              className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-black"
+                            />
+                          </div>
+
+                          <div>
+                            <div className="flex justify-between items-center mb-1">
+                              <span className="text-[9px] font-black uppercase tracking-wider text-neutral-400">
+                                Text Rotation
+                              </span>
+                              <span className="text-[9px] font-mono font-bold text-neutral-600">
+                                {activeEl.rotation}°
+                              </span>
+                            </div>
+                            <input
+                              type="range"
+                              min="-180"
+                              max="180"
+                              value={activeEl.rotation}
+                              onChange={(e) => updateElement(activeEl.id, { rotation: Number(e.target.value) })}
+                              className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-black"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Text Color Selector */}
+                        <div className="space-y-2">
+                          <label className="block text-[10px] font-black uppercase tracking-wider text-neutral-400">
+                            Select Text Color
+                          </label>
+
+                          <div className="flex flex-wrap gap-2.5 items-center">
+                            {colorOptions.map((color) => (
+                              <button
+                                key={color.value}
+                                type="button"
+                                onClick={() => updateElement(activeEl.id, { color: color.value })}
+                                className={`w-6 h-6 rounded-full border border-neutral-200 transition-all flex items-center justify-center hover:scale-110 ${activeEl.color === color.value ? "ring-2 ring-black scale-110" : ""
+                                  }`}
+                                style={{ backgroundColor: color.value }}
+                                title={color.name}
+                              />
+                            ))}
+
+                            {/* Native Color Picker Option */}
+                            <label className="relative flex items-center gap-1.5 cursor-pointer text-[9px] font-black uppercase tracking-wider text-neutral-500 bg-neutral-50 px-2.5 py-1.5 rounded-full border border-neutral-200 hover:bg-neutral-100">
+                              <input
+                                type="color"
+                                value={activeEl.color}
+                                onChange={(e) => updateElement(activeEl.id, { color: e.target.value })}
+                                className="w-4 h-4 rounded-full border border-neutral-300 p-0 cursor-pointer overflow-hidden bg-transparent"
+                              />
+                              Custom
+                            </label>
+                          </div>
+                        </div>
                       </div>
-                      <input
-                        type="range"
-                        min="-180"
-                        max="180"
-                        value={activeSlide === "front" ? frontTextRotation : backTextRotation}
-                        onChange={(e) => {
-                          if (activeSlide === "front") {
-                            setFrontTextRotation(Number(e.target.value));
-                          } else {
-                            setBackTextRotation(Number(e.target.value));
-                          }
-                        }}
-                        className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-black"
-                      />
-                    </div>
+                    )}
                   </div>
-
-                  {/* Text Color Selector */}
-                  <div className="space-y-2">
-                    <label className="block text-[10px] font-black uppercase tracking-wider text-neutral-400">
-                      Select Text Color
-                    </label>
-
-                    <div className="flex flex-wrap gap-2.5 items-center">
-                      {colorOptions.map((color) => (
-                        <button
-                          key={color.value}
-                          type="button"
-                          onClick={() => {
-                            if (activeSlide === "front") {
-                              setFrontTextColor(color.value);
-                            } else {
-                              setBackTextColor(color.value);
-                            }
-                          }}
-                          className={`w-6 h-6 rounded-full border border-neutral-200 transition-all flex items-center justify-center hover:scale-110 ${(activeSlide === "front" ? frontTextColor : backTextColor) === color.value ? "ring-2 ring-black scale-110" : ""
-                            }`}
-                          style={{ backgroundColor: color.value }}
-                          title={color.name}
-                        />
-                      ))}
-
-                      {/* Native Color Picker Option */}
-                      <label className="relative flex items-center gap-1.5 cursor-pointer text-[9px] font-black uppercase tracking-wider text-neutral-500 bg-neutral-50 px-2.5 py-1.5 rounded-full border border-neutral-200 hover:bg-neutral-100">
-                        <input
-                          type="color"
-                          value={activeSlide === "front" ? frontTextColor : backTextColor}
-                          onChange={(e) => {
-                            if (activeSlide === "front") {
-                              setFrontTextColor(e.target.value);
-                            } else {
-                              setBackTextColor(e.target.value);
-                            }
-                          }}
-                          className="w-4 h-4 rounded-full border border-neutral-300 p-0 cursor-pointer overflow-hidden bg-transparent"
-                        />
-                        Custom
-                      </label>
-                    </div>
-                  </div>
-
-                </div>
-              )}
+                );
+              })()}
             </div>
             <div className="pt-4 border-t border-neutral-150 space-y-3">
               <button

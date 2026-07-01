@@ -141,7 +141,7 @@ export default function Transformer({
         // and not on the handles or buttons.
         handlePointerDown(e, "translate");
       }}
-      className={`absolute select-none ${isActive ? "cursor-grab active:cursor-grabbing" : "cursor-pointer"}`}
+      className={`transformer-container absolute select-none ${isActive ? "cursor-grab active:cursor-grabbing" : "cursor-pointer"}`}
       style={{
         left: "50%",
         top: "50%",

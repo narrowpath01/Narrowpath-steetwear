@@ -22,6 +22,15 @@ export default async function Home() {
   const printedProducts = products.filter((p: any) => p.collection === 'PRINTED' || !p.collection);
   const monochromeProducts = products.filter((p: any) => p.collection === 'MONOCHROME');
 
+  // Swap positions of Kung Fu Panda Tee and Sunflower Tee for all catalog grids
+  const sunflowerIdx = printedProducts.findIndex(p => p.handle.includes("sunflower"));
+  const pandaIdx = printedProducts.findIndex(p => p.handle.includes("panda"));
+  if (sunflowerIdx !== -1 && pandaIdx !== -1) {
+    const temp = printedProducts[sunflowerIdx];
+    printedProducts[sunflowerIdx] = printedProducts[pandaIdx];
+    printedProducts[pandaIdx] = temp;
+  }
+
   return (
     <main className="min-h-screen bg-white text-black">
 

@@ -20,6 +20,15 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   const printedProducts = products.filter((p: any) => p.collection === 'PRINTED' || !p.collection);
   const monochromeProducts = products.filter((p: any) => p.collection === 'MONOCHROME');
 
+  // Swap positions of Kung Fu Panda Tee and Sunflower Tee for all catalog grids
+  const sunflowerIdx = printedProducts.findIndex(p => p.handle.includes("sunflower"));
+  const pandaIdx = printedProducts.findIndex(p => p.handle.includes("panda"));
+  if (sunflowerIdx !== -1 && pandaIdx !== -1) {
+    const temp = printedProducts[sunflowerIdx];
+    printedProducts[sunflowerIdx] = printedProducts[pandaIdx];
+    printedProducts[pandaIdx] = temp;
+  }
+
   const showPrinted = !type || type.toLowerCase() === "printed";
   const showMonochrome = !type || type.toLowerCase() === "monochrome";
 
