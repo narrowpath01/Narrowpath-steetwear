@@ -86,7 +86,55 @@ export default function ProductForm({ product }: ProductFormProps) {
 
       {/* Product Description */}
       <div className="mt-12 space-y-6 text-sm text-neutral-600 leading-relaxed border-t border-neutral-200 pt-8">
-        <div className="whitespace-pre-wrap">{product.description}</div>
+        <div>
+          <h3 className="font-black text-black uppercase tracking-wider text-xs mb-1">Premium Cotton T-Shirt</h3>
+          <p className="text-neutral-500 italic text-xs mb-4">Designed with purpose. Built for daily life.</p>
+          <p className="mb-3">
+            The <strong className="text-black font-semibold">Narrow Path Premium Cotton T-Shirt</strong> brings together classic style and all-day comfort. Made from high-quality cotton, it feels soft, breathable, and gentle against your skin—perfect for staying comfortable from morning to night. Whether you're out running errands, chilling at home, or making a subtle statement, this tee moves with you effortlessly.
+          </p>
+          <p>
+            With a clean cut, sturdy construction, and a fit that feels just right, it’s the kind of staple you’ll reach for again and again. At Narrow Path, we believe what you wear should speak to who you are—rooted in quality, honesty, and self-assurance.
+          </p>
+        </div>
+
+        <div>
+          <h4 className="font-black text-black uppercase tracking-wider text-xs mb-3">Product Highlights</h4>
+          <ul className="list-disc pl-5 space-y-2 text-neutral-600">
+            <li>
+              <strong className="text-black font-semibold">100% Premium 240 GSM Cotton*</strong>
+              <p className="text-xs text-neutral-500 mt-0.5">Premium fabric designed for year-round comfort and lasting durability.</p>
+            </li>
+            <li>Reinforced stitching for added durability</li>
+            <li>Pairs effortlessly with jeans, joggers, shorts, or layered looks</li>
+          </ul>
+          <p className="text-[10px] text-neutral-400 mt-3 italic">*Fabric composition may vary slightly by color.</p>
+        </div>
+
+        <div>
+          <h4 className="font-black text-black uppercase tracking-wider text-xs mb-3">Care Instructions</h4>
+          <ul className="list-disc pl-5 space-y-1.5 text-neutral-600">
+            <li>Machine wash cold with like colors</li>
+            <li>Turn inside out to protect print and fabric</li>
+            <li>Do not bleach</li>
+            <li>Tumble dry low or hang to dry</li>
+            <li>Iron inside out on low heat; avoid ironing directly over the print</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-black text-black uppercase tracking-wider text-xs mb-2">Size & Fit</h4>
+          <ul className="list-disc pl-5 space-y-1 text-neutral-600">
+            <li>Oversized t-shirts</li>
+            <li>Be sure to check our Size Guide before ordering to find your perfect fit</li>
+          </ul>
+        </div>
+
+        <div className="bg-neutral-50 p-4 rounded-2xl border border-neutral-100">
+          <h4 className="font-black text-black uppercase tracking-wider text-[10px] mb-1">Disclaimer</h4>
+          <p className="text-[11px] text-neutral-500 leading-normal">
+            Please note that actual product color may vary slightly due to studio lighting and differences in screen displays.
+          </p>
+        </div>
       </div>
 
       {/* Size Chart Modal */}

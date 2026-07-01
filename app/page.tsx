@@ -4,6 +4,8 @@ import ProductCard from "@/components/ProductCard";
 import Hero from "@/components/Hero";
 import Marquee from "@/components/Marquee";
 import EditorialCarousel from "@/components/EditorialCarousel";
+import { InfoMarquee } from "@/components/InfoMarquee";
+import { TrustBadges } from "@/components/TrustBadges";
 
 export const revalidate = 60;
 
@@ -71,6 +73,9 @@ export default async function Home() {
           </div>
         )}
       </section>
+
+      <InfoMarquee />
+      <TrustBadges />
 
     </main>
   );

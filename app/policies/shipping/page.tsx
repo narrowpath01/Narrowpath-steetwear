@@ -147,7 +147,7 @@ export default function ShippingPolicyPage() {
                         <h3 className="font-black uppercase text-sm">9. Damaged, Missing, or Tampered Packages</h3>
                         <ul className="list-disc pl-5 mt-2 space-y-1">
                             <li className="text-sm">
-                                If your package arrives damaged, tampered with, or contains missing items, please notify us within <strong>48 hours of delivery</strong>.
+                                If your package arrives damaged, tampered with, or contains missing items, please notify us within <strong>24 hours of delivery</strong>.
                             </li>
                             <li className="text-sm">
                                 To help us investigate and resolve the issue, please provide:
