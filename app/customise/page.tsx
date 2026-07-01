@@ -275,8 +275,8 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
           <div className="mt-3.5 inline-block bg-yellow-50 border border-yellow-200 text-yellow-800 text-[10px] sm:text-xs font-black uppercase tracking-widest px-4.5 py-2 rounded-full shadow-sm">
             🔥 Special Offer: Make 2 Tees, Take INR 100 back!
           </div>
-          <p className="text-xl font-medium text-neutral-500 mt-3.5">
-            ₹649
+          <p className="text-xl font-medium text-neutral-600 mt-3.5">
+            INR 649
           </p>
           <div className="h-[2px] w-12 bg-black mx-auto mt-4"></div>
         </div>
@@ -432,7 +432,7 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
           </div>
 
           {/* Form Options Column */}
-          <div className="customizer-controls lg:mt-7 space-y-8">
+          <div className="customizer-controls lg:mt-6 space-y-8">
 
             {/* Option 1: Base Color */}
             <div className="space-y-3">
