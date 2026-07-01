@@ -156,7 +156,7 @@ export default function Navbar() {
                 <span className="font-bold block uppercase tracking-widest text-[10px] text-neutral-400">Contact Us</span>
                 <div className="text-xs leading-relaxed text-neutral-500">
                   Email: <a href="mailto:narrowpathtshirts@gmail.com" className="font-mono hover:underline">narrowpathtshirts@gmail.com</a><br />
-                  Phone: <span className="font-mono">9315457852</span>
+                  Phone: <a href="https://wa.me/919315457852" target="_blank" rel="noopener noreferrer" className="font-mono hover:underline">+91 9315457852</a>
                 </div>
               </div>
             </div>
@@ -305,7 +305,7 @@ export default function Navbar() {
               <span className="font-bold block uppercase tracking-widest text-[10px] text-neutral-400">Contact Us</span>
               <div className="text-xs leading-relaxed text-neutral-500">
                 Email: <a href="mailto:narrowpathtshirts@gmail.com" className="font-mono hover:underline">narrowpathtshirts@gmail.com</a><br />
-                Phone: <span className="font-mono">9315457852</span>
+                Phone: <a href="https://wa.me/919315457852" target="_blank" rel="noopener noreferrer" className="font-mono hover:underline">+91 9315457852</a>
               </div>
             </div>
           </div>

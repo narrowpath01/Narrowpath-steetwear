@@ -10,7 +10,7 @@ export function Footer() {
         <div className="flex flex-col gap-4">
           <h3 className="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-2">Connect</h3>
           <Link href="#" className="text-sm font-medium hover:text-neutral-400 transition-colors">Instagram</Link>
-          <Link href="#" className="text-sm font-medium hover:text-neutral-400 transition-colors">WhatsApp</Link>
+          <a href="https://wa.me/919315457852" target="_blank" rel="noopener noreferrer" className="text-sm font-medium hover:text-neutral-400 transition-colors">WhatsApp</a>
         </div>
 
         {/* Column 2: Support */}
