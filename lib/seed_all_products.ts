@@ -11,7 +11,8 @@ async function main() {
   await prisma.product.deleteMany({});
   console.log("Database cleanup finished.");
 
-  const price = 599;
+  const printedPrice = 599;
+  const monoPrice = 499;
 
   // 1. Sunflower Heavyweight Tee
   console.log("Seeding: Sunflower Heavyweight Tee...");
@@ -30,10 +31,10 @@ async function main() {
       },
       variants: {
         create: [
-          { title: "S", price, inventory: 100 },
-          { title: "M", price, inventory: 100 },
-          { title: "L", price, inventory: 100 },
-          { title: "XL", price, inventory: 100 },
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -56,10 +57,10 @@ async function main() {
       },
       variants: {
         create: [
-          { title: "S", price, inventory: 100 },
-          { title: "M", price, inventory: 100 },
-          { title: "L", price, inventory: 100 },
-          { title: "XL", price, inventory: 100 },
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -84,10 +85,10 @@ async function main() {
       },
       variants: {
         create: [
-          { title: "S", price, inventory: 100 },
-          { title: "M", price, inventory: 100 },
-          { title: "L", price, inventory: 100 },
-          { title: "XL", price, inventory: 100 },
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -111,10 +112,10 @@ async function main() {
       },
       variants: {
         create: [
-          { title: "S", price, inventory: 100 },
-          { title: "M", price, inventory: 100 },
-          { title: "L", price, inventory: 100 },
-          { title: "XL", price, inventory: 100 },
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -139,10 +140,10 @@ async function main() {
       },
       variants: {
         create: [
-          { title: "S", price, inventory: 100 },
-          { title: "M", price, inventory: 100 },
-          { title: "L", price, inventory: 100 },
-          { title: "XL", price, inventory: 100 },
+          { title: "S", price: monoPrice, inventory: 100 },
+          { title: "M", price: monoPrice, inventory: 100 },
+          { title: "L", price: monoPrice, inventory: 100 },
+          { title: "XL", price: monoPrice, inventory: 100 },
         ]
       }
     }
@@ -167,10 +168,10 @@ async function main() {
       },
       variants: {
         create: [
-          { title: "S", price, inventory: 100 },
-          { title: "M", price, inventory: 100 },
-          { title: "L", price, inventory: 100 },
-          { title: "XL", price, inventory: 100 },
+          { title: "S", price: monoPrice, inventory: 100 },
+          { title: "M", price: monoPrice, inventory: 100 },
+          { title: "L", price: monoPrice, inventory: 100 },
+          { title: "XL", price: monoPrice, inventory: 100 },
         ]
       }
     }
@@ -186,19 +187,19 @@ async function main() {
       collection: "MONOCHROME",
       images: {
         create: [
-          { url: "/monochrome-brown-front.png", altText: "Monochrome Brown Heavyweight Tee Front View" },
-          { url: "/monochrome-brown-fabric.png", altText: "Monochrome Brown Heavyweight Tee Fabric Detail" },
-          { url: "/monochrome-brown-back-model.png", altText: "Monochrome Brown Heavyweight Tee Back Model View" },
-          { url: "/monochrome-brown-detail.png", altText: "Monochrome Brown Heavyweight Tee Detail View" },
-          { url: "/monochrome-brown-back.png", altText: "Monochrome Brown Heavyweight Tee Back View" },
+          { url: "/monochrome-brown-1.png", altText: "Monochrome Brown Heavyweight Tee Front View" },
+          { url: "/monochrome-brown-2.png", altText: "Monochrome Brown Heavyweight Tee Back View Upper" },
+          { url: "/monochrome-brown-3.png", altText: "Monochrome Brown Heavyweight Tee Back View Full" },
+          { url: "/monochrome-brown-4.png", altText: "Monochrome Brown Heavyweight Tee Front Detail" },
+          { url: "/monochrome-brown-5.png", altText: "Monochrome Brown Heavyweight Tee Back Detail" },
         ]
       },
       variants: {
         create: [
-          { title: "S", price, inventory: 100 },
-          { title: "M", price, inventory: 100 },
-          { title: "L", price, inventory: 100 },
-          { title: "XL", price, inventory: 100 },
+          { title: "S", price: monoPrice, inventory: 100 },
+          { title: "M", price: monoPrice, inventory: 100 },
+          { title: "L", price: monoPrice, inventory: 100 },
+          { title: "XL", price: monoPrice, inventory: 100 },
         ]
       }
     }
@@ -223,10 +224,10 @@ async function main() {
       },
       variants: {
         create: [
-          { title: "S", price, inventory: 100 },
-          { title: "M", price, inventory: 100 },
-          { title: "L", price, inventory: 100 },
-          { title: "XL", price, inventory: 100 },
+          { title: "S", price: monoPrice, inventory: 100 },
+          { title: "M", price: monoPrice, inventory: 100 },
+          { title: "L", price: monoPrice, inventory: 100 },
+          { title: "XL", price: monoPrice, inventory: 100 },
         ]
       }
     }

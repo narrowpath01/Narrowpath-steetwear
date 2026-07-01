@@ -69,13 +69,13 @@ export default function CustomisePage() {
   const teeImages = {
     front: {
       black: "/monochrome-black-front.png",
-      brown: "/monochrome-brown-front.png",
+      brown: "/monochrome-brown-1.png",
       "off-white": "/monochrome-offwhite-front.png",
       red: "/monochrome-red-front.png"
     },
     back: {
       black: "/monochrome-black-back.png",
-      brown: "/monochrome-brown-back-model.png",
+      brown: "/monochrome-brown-2.png",
       "off-white": "/monochrome-offwhite-back.png",
       red: "/monochrome-red-back.png"
     }
@@ -177,6 +177,7 @@ export default function CustomisePage() {
     const backTexts = backElements.filter(e => e.type === "text");
 
     const textDetails = `Hello Narrow Path! I would like to order a Custom Heavyweight Tee:
+- Price: INR 699
 - Base Color: ${baseColor.toUpperCase()}
 - Size: ${size}
 
@@ -272,7 +273,7 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
             Design your own heavyweight 240 GSM organic cotton drop shoulder tee. Drag, rotate, and scale design elements.
           </p>
           <div className="mt-3.5 inline-block bg-yellow-50 border border-yellow-200 text-yellow-800 text-[10px] sm:text-xs font-black uppercase tracking-widest px-4.5 py-2 rounded-full shadow-sm">
-            🔥 Special Offer: Make 2 Tees, Take INR 100 back!
+            🔥 Customised Tee: INR 699 | Offer: Make 2 Tees, Take INR 100 back!
           </div>
           <div className="h-[2px] w-12 bg-black mx-auto mt-4.5"></div>
         </div>
