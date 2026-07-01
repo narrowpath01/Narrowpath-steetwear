@@ -24,7 +24,7 @@ export async function GET() {
         handle: "distressed-grunge-tee",
         description: "Hand-distressed hems and collar for a worn-in, post-apocalyptic look.",
         image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=800&auto=format&fit=crop&q=80",
-        price: 600,
+        price: 599,
       }
     ];
 

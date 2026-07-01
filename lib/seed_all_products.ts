@@ -11,7 +11,7 @@ async function main() {
   await prisma.product.deleteMany({});
   console.log("Database cleanup finished.");
 
-  const price = 600;
+  const price = 599;
 
   // 1. Sunflower Heavyweight Tee
   console.log("Seeding: Sunflower Heavyweight Tee...");
