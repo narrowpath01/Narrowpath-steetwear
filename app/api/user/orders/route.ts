@@ -19,7 +19,11 @@ export async function GET(req: Request) {
           include: {
             variant: {
               include: {
-                product: true
+                product: {
+                  include: {
+                    images: true
+                  }
+                }
               }
             }
           }

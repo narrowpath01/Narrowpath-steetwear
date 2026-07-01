@@ -33,14 +33,22 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
       }))
     : COLLECTIONS_FALLBACK;
 
-  // Swap sunflower and christ tee positions in the items array
+  // Swap sunflower and panda tee positions in the items array
   const sunflowerIdx = items.findIndex(item => item.handle.includes("sunflower"));
-  const christIdx = items.findIndex(item => item.handle.includes("christ"));
+  const pandaIdx = items.findIndex(item => item.handle.includes("panda"));
 
-  if (sunflowerIdx !== -1 && christIdx !== -1) {
+  if (sunflowerIdx !== -1 && pandaIdx !== -1) {
     const temp = items[sunflowerIdx];
-    items[sunflowerIdx] = items[christIdx];
-    items[christIdx] = temp;
+    items[sunflowerIdx] = items[pandaIdx];
+    items[pandaIdx] = temp;
+  }
+
+  // Ensure the panda tee is at the third position (index 2)
+  const currentPandaIdx = items.findIndex(item => item.handle.includes("panda"));
+  if (currentPandaIdx !== -1 && currentPandaIdx !== 2 && items.length > 2) {
+    const temp = items[2];
+    items[2] = items[currentPandaIdx];
+    items[currentPandaIdx] = temp;
   }
 
   // The Engineering Fix: Double the array to create invisible buffer items
@@ -144,7 +152,7 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.2}
                 onDragEnd={handleDragEnd}
-                className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden cursor-grab active:cursor-grabbing shadow-2xl border border-neutral-100/50"
+                className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden cursor-grab active:cursor-grabbing shadow-2xl"
               >
                 <Image
                   src={item.image}
