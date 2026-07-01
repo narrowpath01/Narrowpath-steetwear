@@ -25,6 +25,9 @@ export default function CustomisePage() {
 
   // Export State
   const [isExporting, setIsExporting] = useState(false);
+  const [showPermissionModal, setShowPermissionModal] = useState(false);
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [generatedMockupUrl, setGeneratedMockupUrl] = useState<string | null>(null);
 
   // Font Dropdown open state
   const [isFontOpen, setIsFontOpen] = useState(false);
@@ -130,24 +133,67 @@ BACK CUSTOMISATION:
     window.open(`https://wa.me/919315457852?text=${encodedText}`, "_blank");
   };
 
-  const handleDownloadMockup = async () => {
+  const handleDownloadMockup = () => {
+    setShowPermissionModal(true);
+  };
+
+  const triggerExport = async () => {
+    setShowPermissionModal(false);
     if (!previewContainerRef.current) return;
     setIsExporting(true);
+    
+    // Save previous active selection & deselect for clean screenshot
+    const prevActiveElement = activeElement;
+    setActiveElement(null);
+
+    // Give React a small paint frame to remove bounding boxes
+    await new Promise((resolve) => setTimeout(resolve, 150));
+
     try {
+      // Warm-up pass for Safari compatibility
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      if (isSafari) {
+        try {
+          await toPng(previewContainerRef.current, {
+            cacheBust: true,
+            backgroundColor: "#f5f5f5",
+            fontEmbedCSS: "",
+            pixelRatio: 1
+          });
+        } catch (e) {
+          // Silent warmup catch
+        }
+      }
+
+      // Capture mockup PNG
       const dataUrl = await toPng(previewContainerRef.current, {
         cacheBust: true,
         quality: 0.95,
-        backgroundColor: "#f5f5f5"
+        backgroundColor: "#f5f5f5",
+        fontEmbedCSS: "", // Solves Safari WebKit sandbox security exceptions when parsing web fonts
+        pixelRatio: window.devicePixelRatio && window.devicePixelRatio > 2 ? 2 : (window.devicePixelRatio || 1)
       });
-      const link = document.createElement("a");
-      link.download = `custom-tee-${activeSlide}-${Date.now()}.png`;
-      link.href = dataUrl;
-      link.click();
+
+      setGeneratedMockupUrl(dataUrl);
+
+      // Mobile check
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+
+      if (isMobile) {
+        setShowSaveModal(true);
+      } else {
+        const link = document.createElement("a");
+        link.download = `custom-tee-${activeSlide}-${Date.now()}.png`;
+        link.href = dataUrl;
+        link.click();
+      }
     } catch (error) {
       console.error("Failed to generate mockup image:", error);
       alert("Failed to export preview. Please take a screenshot of your screen to save your design!");
     } finally {
       setIsExporting(false);
+      // Restore previous user selection
+      setActiveElement(prevActiveElement);
     }
   };
 
@@ -744,6 +790,91 @@ BACK CUSTOMISATION:
         </div>
 
       </div>
+
+      {/* Permission Confirmation Modal */}
+      <AnimatePresence>
+        {showPermissionModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 15 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 15 }}
+              transition={{ type: "spring", duration: 0.4 }}
+              className="bg-white/95 backdrop-blur-md border border-neutral-200/80 rounded-[28px] max-w-sm w-full p-6 text-center shadow-2xl"
+            >
+              <div className="w-12 h-12 bg-blue-50 text-[#005bd3] rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-black uppercase tracking-wider text-black">Save Your Design?</h3>
+              <p className="text-neutral-500 text-xs mt-3 uppercase tracking-wide leading-relaxed">
+                We need your permission to render a high-quality mockup preview of your design to save to your gallery.
+              </p>
+              <div className="flex gap-3 mt-6">
+                <button
+                  onClick={() => setShowPermissionModal(false)}
+                  className="flex-1 py-3 bg-neutral-100 hover:bg-neutral-200 text-neutral-600 rounded-full font-bold uppercase tracking-widest text-[10px] transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={triggerExport}
+                  className="flex-1 py-3 bg-[#005bd3] hover:bg-[#004bb3] text-white rounded-full font-bold uppercase tracking-widest text-[10px] transition-colors shadow-md hover:shadow-lg"
+                >
+                  Allow & Save
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Save Mockup Instruction Modal */}
+      <AnimatePresence>
+        {showSaveModal && generatedMockupUrl && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 15 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 15 }}
+              transition={{ type: "spring", duration: 0.4 }}
+              className="bg-white/95 backdrop-blur-md border border-neutral-200/80 rounded-[32px] max-w-md w-full p-6 text-center shadow-2xl flex flex-col items-center"
+            >
+              <h3 className="text-lg font-black uppercase tracking-wider text-black mb-2">Save to Gallery</h3>
+              <p className="text-neutral-500 text-[10px] font-bold uppercase tracking-wider leading-relaxed mb-4 max-w-sm">
+                Long-press on the image below and select <span className="text-black">"Save to Photos"</span> or <span className="text-black">"Add to Photos"</span> to save it directly to your device gallery!
+              </p>
+              
+              <div className="w-full relative aspect-[4/5] bg-neutral-100 rounded-[20px] overflow-hidden border border-neutral-200 shadow-inner mb-6 flex items-center justify-center">
+                <img
+                  src={generatedMockupUrl}
+                  alt="Custom Tee Mockup Preview"
+                  className="w-full h-full object-contain cursor-pointer"
+                  style={{ WebkitTouchCallout: "default" }}
+                />
+              </div>
+
+              <button
+                onClick={() => setShowSaveModal(false)}
+                className="w-full py-4 bg-black hover:bg-neutral-800 text-white rounded-full font-bold uppercase tracking-widest text-xs transition-colors shadow-md hover:shadow-lg"
+              >
+                Done
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
