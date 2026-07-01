@@ -33,22 +33,20 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
       }))
     : COLLECTIONS_FALLBACK;
 
-  // Swap sunflower and panda tee positions in the items array
+  // Position sunflower tee as 1st image (index 0)
   const sunflowerIdx = items.findIndex(item => item.handle.includes("sunflower"));
-  const pandaIdx = items.findIndex(item => item.handle.includes("panda"));
-
-  if (sunflowerIdx !== -1 && pandaIdx !== -1) {
-    const temp = items[sunflowerIdx];
-    items[sunflowerIdx] = items[pandaIdx];
-    items[pandaIdx] = temp;
+  if (sunflowerIdx !== -1 && sunflowerIdx !== 0) {
+    const temp = items[0];
+    items[0] = items[sunflowerIdx];
+    items[sunflowerIdx] = temp;
   }
 
-  // Ensure the panda tee is at the third position (index 2)
-  const currentPandaIdx = items.findIndex(item => item.handle.includes("panda"));
-  if (currentPandaIdx !== -1 && currentPandaIdx !== 2 && items.length > 2) {
+  // Position kung fu panda tee as 3rd image (index 2)
+  const pandaIdx = items.findIndex(item => item.handle.includes("panda"));
+  if (pandaIdx !== -1 && pandaIdx !== 2 && items.length > 2) {
     const temp = items[2];
-    items[2] = items[currentPandaIdx];
-    items[currentPandaIdx] = temp;
+    items[2] = items[pandaIdx];
+    items[pandaIdx] = temp;
   }
 
   // The Engineering Fix: Double the array to create invisible buffer items

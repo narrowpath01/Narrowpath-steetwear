@@ -204,7 +204,7 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
     setShowPermissionModal(false);
     if (!previewContainerRef.current) return;
     setIsExporting(true);
-    
+
     // Save previous active selection & deselect for clean screenshot
     const prevActiveElement = activeElement;
     setActiveElement(null);
@@ -337,7 +337,7 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
                         onSelect={() => setActiveElement(el.id)}
                         onChange={(vals) => updateElement(el.id, vals)}
                         minSize={el.type === "text" ? 12 : 40}
-                        maxSize={el.type === "text" ? 64 : 260}
+                        maxSize={el.type === "text" ? 200 : 500}
                       >
                         {el.type === "graphic" ? (
                           <img
@@ -391,7 +391,7 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
                         onSelect={() => setActiveElement(el.id)}
                         onChange={(vals) => updateElement(el.id, vals)}
                         minSize={el.type === "text" ? 12 : 40}
-                        maxSize={el.type === "text" ? 64 : 260}
+                        maxSize={el.type === "text" ? 200 : 500}
                       >
                         {el.type === "graphic" ? (
                           <img
@@ -425,7 +425,7 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
           </div>
 
           {/* Form Options Column */}
-          <div className="customizer-controls lg:mt-13 space-y-8">
+          <div className="customizer-controls lg:mt-7 space-y-8">
 
             {/* Option 1: Base Color */}
             <div className="space-y-3">
@@ -535,7 +535,7 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
 
                 return (
                   <div className="space-y-5 p-4 bg-neutral-50 rounded-2xl border border-neutral-150 animate-fade-in">
-                    
+
                     {/* Header showing layer details and delete option */}
                     <div className="flex items-center justify-between border-b border-neutral-200 pb-3">
                       <span className="text-[10px] font-black uppercase tracking-wider text-black">
@@ -565,7 +565,7 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
                           <input
                             type="range"
                             min="40"
-                            max="260"
+                            max="500"
                             value={activeEl.size}
                             onChange={(e) => updateElement(activeEl.id, { size: Number(e.target.value) })}
                             className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-black"
@@ -663,7 +663,7 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
                             <input
                               type="range"
                               min="12"
-                              max="64"
+                              max="200"
                               value={activeEl.size}
                               onChange={(e) => updateElement(activeEl.id, { size: Number(e.target.value) })}
                               className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-black"
@@ -828,7 +828,7 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
               <p className="text-neutral-500 text-[10px] font-bold uppercase tracking-wider leading-relaxed mb-4 max-w-sm">
                 Long-press on the image below and select <span className="text-black">"Save to Photos"</span> or <span className="text-black">"Add to Photos"</span> to save it directly to your device gallery!
               </p>
-              
+
               <div className="w-full relative aspect-[4/5] bg-neutral-100 rounded-[20px] overflow-hidden border border-neutral-200 shadow-inner mb-6 flex items-center justify-center">
                 <img
                   src={generatedMockupUrl}
