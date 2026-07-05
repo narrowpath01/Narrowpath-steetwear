@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 
 const slides = [
   {
@@ -48,8 +47,6 @@ export default function HeroSlider() {
             className="h-full relative overflow-hidden"
             style={{ width: `${100 / slides.length}%` }}
           >
-            {/* Dark overlay to ensure text legibility */}
-            <div className="absolute inset-0 bg-black/40 z-10" />
             <img
               src={slide.image}
               alt={slide.alt}
@@ -57,29 +54,6 @@ export default function HeroSlider() {
             />
           </div>
         ))}
-      </div>
-
-      {/* 2. FIXED STATIONARY TEXT & CTA OVERLAY (Does not slide) */}
-      <div className="absolute inset-0 z-20 flex flex-col items-center justify-end pb-20 md:pb-28 text-center px-6">
-        <div className="max-w-2xl mx-auto flex flex-col items-center space-y-6">
-          <p className="text-[10px] font-black uppercase tracking-[0.25em] text-neutral-300">
-            NARROW PATH COLLECTION
-          </p>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter text-white leading-none">
-            MADE FOR BOLD MOVES<br />AND DIFFERENT MINDS
-          </h1>
-          <p className="text-xs md:text-sm text-neutral-300 font-medium tracking-wide max-w-md">
-            Quiet luxury, timeless refined streetwear designed to move with you. Less noise, more presence.
-          </p>
-          <div className="pt-4">
-            <Link 
-              href="/shop" 
-              className="inline-block bg-white text-black px-10 py-4.5 rounded-full font-black uppercase tracking-widest text-xs hover:bg-neutral-100 transition-all shadow-xl active:scale-[0.98] duration-200"
-            >
-              SHOP COLLECTION
-            </Link>
-          </div>
-        </div>
       </div>
 
       {/* 3. SLIDESHOW CONTROLLER DOTS (Stationary) */}
