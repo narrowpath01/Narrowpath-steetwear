@@ -35,7 +35,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
         {/* Left Side: Scrolling Image Stack with Dots Indicator */}
         <div className="w-full lg:w-[60%] rounded-2xl overflow-hidden lg:h-auto lg:self-stretch lg:relative lg:min-h-[550px]">
           <div className="lg:absolute lg:inset-0">
-            <ProductGalleryWrapper images={images} />
+            <ProductGalleryWrapper images={images} product={product} />
           </div>
         </div>
 

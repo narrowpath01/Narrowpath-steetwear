@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { useCartStore } from "@/store/useCartStore";
+import { useRouter } from "next/navigation";
 
 interface ProductFormProps {
   product: any;
@@ -17,6 +18,7 @@ export default function ProductForm({ product }: ProductFormProps) {
   );
   const [selectedVariant, setSelectedVariant] = useState(variants[0]);
   const [isSizeChartOpen, setIsSizeChartOpen] = useState(false);
+  const router = useRouter();
 
   const { addItem, toggleCart } = useCartStore();
 
@@ -44,6 +46,38 @@ export default function ProductForm({ product }: ProductFormProps) {
           (incl. of all taxes)
         </span>
       </div>
+
+      {/* Color Picker for Plain/Monochrome Tees */}
+      {product.collection === "MONOCHROME" && (
+        <div className="mb-8">
+          <span className="text-sm font-bold uppercase tracking-widest text-black block mb-4">Select Color</span>
+          <div className="flex gap-3">
+            {[
+              { name: "Black", color: "#171717", handle: "monochrome-black-heavyweight-tee" },
+              { name: "Off-White", color: "#FAF9F6", handle: "monochrome-off-white-heavyweight-tee" },
+              { name: "Red", color: "#B91C1C", handle: "monochrome-red-heavyweight-tee" },
+              { name: "Brown", color: "#78350F", handle: "monochrome-brown-heavyweight-tee" },
+            ].map((col) => (
+              <button
+                key={col.handle}
+                onClick={() => {
+                  if (product.handle !== col.handle) {
+                    router.push(`/products/${col.handle}`);
+                  }
+                }}
+                title={col.name}
+                className={`w-9 h-9 rounded-full border transition-all duration-200 ${
+                  product.handle === col.handle
+                    ? "border-black scale-110 ring-2 ring-neutral-200"
+                    : "border-neutral-200 hover:border-neutral-400"
+                }`}
+                style={{ backgroundColor: col.color }}
+                aria-label={`Select ${col.name} color`}
+              />
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="mb-8">
         <div className="flex justify-between items-center mb-4">

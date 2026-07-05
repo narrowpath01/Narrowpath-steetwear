@@ -6,6 +6,7 @@ import CartDrawer from "@/components/CartDrawer";
 import SessionProvider from "@/components/SessionProvider";
 import { Footer } from "@/components/Footer"; 
 import CartInitializer from "@/components/CartInitializer";
+import WishlistInitializer from "@/components/WishlistInitializer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -94,6 +95,7 @@ export default function RootLayout({
           {children}
           <Footer />
           <CartInitializer />
+          <WishlistInitializer />
         </SessionProvider>
       </body>
     </html>

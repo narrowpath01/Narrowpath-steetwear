@@ -233,9 +233,129 @@ async function main() {
     }
   });
 
-  console.log("\nDatabase seeded successfully with all 8 products!");
+  // 9. Space Ship Heavyweight Tee
+  console.log("Seeding: Space Ship Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Space Ship Heavyweight Tee",
+      handle: "space-ship-heavyweight-tee",
+      description: "Premium heavyweight black tee featuring a striking UFO/spaceship abduction graphic print on the back and 'SPACE SHEP' lettering on the chest. Relaxed boxy fit, crafted from 100% premium cotton for ultimate comfort, styling, and structural drape.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/space-ship-front.png", altText: "Space Ship Heavyweight Tee Front View" },
+          { url: "/space-ship-back.png", altText: "Space Ship Heavyweight Tee Back View" },
+          { url: "/space-ship-model.png", altText: "Space Ship Heavyweight Tee Model View" },
+          { url: "/space-ship-detail-front.png", altText: "Space Ship Heavyweight Tee Chest Logo" },
+          { url: "/space-ship-detail-back.png", altText: "Space Ship Heavyweight Tee Back Graphic Detail" },
+          { url: "/space-ship-fabric.png", altText: "Space Ship Heavyweight Tee Fabric Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  // 10. Warrior Heavyweight Tee
+  console.log("Seeding: Warrior Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Warrior Heavyweight Tee",
+      handle: "warrior-heavyweight-tee",
+      description: "Premium heavyweight cream tee featuring a striking warrior graphic print on the back with the quote 'A warrior is more than a fearless fighter, it's a mindset...' and a minimalist katana sword chest graphic. Relaxed boxy fit, crafted from 100% premium cotton for ultimate comfort, styling, and structural drape.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/warrior-front.png", altText: "Warrior Heavyweight Tee Front View" },
+          { url: "/warrior-back.png", altText: "Warrior Heavyweight Tee Back View" },
+          { url: "/warrior-model.png", altText: "Warrior Heavyweight Tee Model View" },
+          { url: "/warrior-detail-front.png", altText: "Warrior Heavyweight Tee Chest Graphic" },
+          { url: "/warrior-detail-back.png", altText: "Warrior Heavyweight Tee Back Graphic Detail" },
+          { url: "/warrior-fabric.png", altText: "Warrior Heavyweight Tee Fabric Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  // 11. Red Moon Heavyweight Tee
+  console.log("Seeding: Red Moon Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Red Moon Heavyweight Tee",
+      handle: "red-moon-heavyweight-tee",
+      description: "Premium heavyweight black tee featuring a striking Red Moon and Solar System graphic print on the back and a minimalist red 'RED MOON' chest graphic. Relaxed boxy fit, crafted from 100% premium cotton for ultimate comfort, styling, and structural drape.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/red-moon-front.png", altText: "Red Moon Heavyweight Tee Front View" },
+          { url: "/red-moon-back.png", altText: "Red Moon Heavyweight Tee Back View" },
+          { url: "/red-moon-model.png", altText: "Red Moon Heavyweight Tee Model View" },
+          { url: "/red-moon-detail-front.png", altText: "Red Moon Heavyweight Tee Chest Graphic" },
+          { url: "/red-moon-detail-back.png", altText: "Red Moon Heavyweight Tee Back Graphic Detail" },
+          { url: "/red-moon-fabric.png", altText: "Red Moon Heavyweight Tee Fabric Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  // 12. Porsche 911 Heavyweight Tee
+  console.log("Seeding: Porsche 911 Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Porsche 911 Heavyweight Tee",
+      handle: "porsche-911-heavyweight-tee",
+      description: "Premium heavyweight cream tee featuring a striking Porsche 911 GT3 RS graphic print on the back and a minimalist '911' chest graphic. Relaxed boxy fit, crafted from 100% premium cotton for ultimate comfort, styling, and structural drape.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/porsche-front.png", altText: "Porsche 911 Heavyweight Tee Front View" },
+          { url: "/porsche-back.png", altText: "Porsche 911 Heavyweight Tee Back View" },
+          { url: "/porsche-model.png", altText: "Porsche 911 Heavyweight Tee Model View" },
+          { url: "/porsche-detail-front.png", altText: "Porsche 911 Heavyweight Tee Chest Graphic" },
+          { url: "/porsche-detail-back.png", altText: "Porsche 911 Heavyweight Tee Back Graphic Detail" },
+          { url: "/porsche-fabric.png", altText: "Porsche 911 Heavyweight Tee Fabric Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  console.log("\nDatabase seeded successfully with all 12 products!");
 }
 
 main()
   .catch((e) => console.error("Error during catalog seed:", e))
   .finally(() => prisma.$disconnect());
+
+
+
+

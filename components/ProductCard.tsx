@@ -4,6 +4,8 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { useCartStore } from "@/store/useCartStore";
+import { useWishlistStore } from "@/store/useWishlistStore";
+import { useSession } from "next-auth/react";
 
 interface ProductCardProps {
   product: any; 
@@ -22,6 +24,16 @@ export default function ProductCard({ product }: ProductCardProps) {
   const price = firstVariant?.price || 0;
 
   const { addItem, toggleCart } = useCartStore();
+  const { data: session } = useSession();
+  const isWishlisted = useWishlistStore((state) => state.isWishlisted);
+  const toggleWishlist = useWishlistStore((state) => state.toggleWishlist);
+  const isProductWishlisted = isWishlisted(product.id);
+
+  const handleWishlistToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWishlist(product, session);
+  };
 
   // Carousel States & Handlers
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -68,6 +80,23 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Link href={`/products/${product.handle}`} className="group cursor-pointer block">
       <div className="relative w-full aspect-[3/4] bg-white mb-4 overflow-hidden rounded-2xl border border-neutral-100/50 group/card">
+        {/* Wishlist Button (Ribbon Overlay) */}
+        <button
+          onClick={handleWishlistToggle}
+          className="absolute top-3.5 right-3.5 p-2 bg-white/70 backdrop-blur-md rounded-full shadow-sm hover:scale-105 hover:bg-white transition-all z-20 flex items-center justify-center text-black"
+          aria-label={isProductWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
+        >
+          <svg
+            className="w-4 h-4 transition-all duration-300"
+            fill={isProductWishlisted ? "black" : "none"}
+            stroke="black"
+            strokeWidth={1.75}
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+          </svg>
+        </button>
+
         {/* Style to hide scrollbar on Webkit browsers */}
         <style dangerouslySetInnerHTML={{ __html: `
           .scrollbar-none::-webkit-scrollbar {
@@ -85,7 +114,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           {images.map((img: any, idx: number) => {
             const isZoomed = img.url.includes("do-not-be-afraid");
             return (
-              <div key={img.id || idx} className="w-full h-full flex-shrink-0 snap-start relative overflow-hidden rounded-2xl">
+              <div key={img.id || idx} className="w-full h-full flex-shrink-0 snap-start snap-always relative overflow-hidden rounded-2xl">
                 <img
                   src={img.url}
                   alt={img.altText || `${product.title} view ${idx + 1}`}

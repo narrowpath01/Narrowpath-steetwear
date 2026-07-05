@@ -2,14 +2,30 @@
 
 import { useState, useRef } from "react";
 import ProductGallery from "./ProductGallery";
+import { useWishlistStore } from "@/store/useWishlistStore";
+import { useSession } from "next-auth/react";
 
 interface ProductGalleryWrapperProps {
   images: any[];
+  product?: any;
 }
 
-export default function ProductGalleryWrapper({ images }: ProductGalleryWrapperProps) {
+export default function ProductGalleryWrapper({ images, product }: ProductGalleryWrapperProps) {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const { data: session } = useSession();
+  const isWishlisted = useWishlistStore((state) => state.isWishlisted);
+  const toggleWishlist = useWishlistStore((state) => state.toggleWishlist);
+  const isProductWishlisted = product ? isWishlisted(product.id) : false;
+
+  const handleWishlistToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (product) {
+      toggleWishlist(product, session);
+    }
+  };
 
   const handleScroll = () => {
     if (!containerRef.current) return;
@@ -50,7 +66,7 @@ export default function ProductGalleryWrapper({ images }: ProductGalleryWrapperP
   };
 
   return (
-    <div className="w-full flex gap-3 sm:gap-6 items-stretch lg:h-full">
+    <div className="w-full flex gap-3 sm:gap-6 items-stretch lg:h-full relative">
       {/* Left Vertical Dots Indicator */}
       {images.length > 1 && (
         <div className="flex flex-col justify-center gap-3 px-3 select-none flex-shrink-0">
@@ -75,6 +91,25 @@ export default function ProductGalleryWrapper({ images }: ProductGalleryWrapperP
       >
         <ProductGallery images={images} />
       </div>
+
+      {/* Wishlist Button (Ribbon Overlay) */}
+      {product && (
+        <button
+          onClick={handleWishlistToggle}
+          className="absolute top-4 right-4 p-2.5 bg-white/70 backdrop-blur-md rounded-full shadow-sm hover:scale-105 hover:bg-white transition-all z-20 flex items-center justify-center text-black"
+          aria-label={isProductWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
+        >
+          <svg
+            className="w-5 h-5 transition-all duration-300"
+            fill={isProductWishlisted ? "black" : "none"}
+            stroke="black"
+            strokeWidth={1.75}
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+          </svg>
+        </button>
+      )}
     </div>
   );
 }
