@@ -37,8 +37,8 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-white text-black">
 
-      {/* Hero Slider Banner */}
-      <HeroSlider />
+      {/* Hero Slider Banner (Hidden) */}
+      {/* <HeroSlider /> */}
 
       {/* Editorial Carousel */}
       <EditorialCarousel products={printedProducts} />
