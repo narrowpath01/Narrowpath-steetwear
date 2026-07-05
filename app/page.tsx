@@ -2,6 +2,7 @@
 import prisma from "@/lib/db";
 import ProductCard from "@/components/ProductCard";
 import Hero from "@/components/Hero";
+import HeroSlider from "@/components/HeroSlider";
 import Marquee from "@/components/Marquee";
 import EditorialCarousel from "@/components/EditorialCarousel";
 import { InfoMarquee } from "@/components/InfoMarquee";
@@ -35,6 +36,9 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-white text-black">
+
+      {/* Hero Slider Banner */}
+      <HeroSlider />
 
       {/* Editorial Carousel */}
       <EditorialCarousel products={printedProducts} />
