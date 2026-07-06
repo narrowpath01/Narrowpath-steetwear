@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
 const slides = [
   {
@@ -34,26 +36,33 @@ export default function HeroSlider() {
   return (
     <section className="relative w-full h-[80vh] md:h-[90vh] bg-neutral-950 overflow-hidden select-none">
       {/* 1. SLIDING BACKGROUND IMAGES */}
-      <div 
-        className="absolute inset-0 flex transition-transform duration-1000 ease-out"
-        style={{ 
-          width: `${slides.length * 100}%`,
-          transform: `translateX(-${(currentSlide * 100) / slides.length}%)` 
-        }}
-      >
-        {slides.map((slide, index) => (
-          <div 
-            key={index} 
-            className="h-full relative overflow-hidden"
-            style={{ width: `${100 / slides.length}%` }}
+      <div className="absolute inset-0 z-0 overflow-hidden w-full h-full">
+        <AnimatePresence initial={false}>
+          <motion.div
+            key={currentSlide}
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
+            transition={{ type: "tween", duration: 0.8, ease: "easeInOut" }}
+            className="absolute inset-0 w-full h-full"
           >
             <img
-              src={slide.image}
-              alt={slide.alt}
-              className="w-full h-full object-cover object-center scale-[1.03] animate-fade-in"
+              src={slides[currentSlide].image}
+              alt={slides[currentSlide].alt}
+              className="w-full h-full object-cover object-top scale-[1.03]"
             />
-          </div>
-        ))}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* 2. FIXED STATIONARY CTA OVERLAY (Does not slide) */}
+      <div className="absolute inset-0 z-20 flex flex-col items-center justify-end pb-16 md:pb-24 text-center px-6">
+        <Link 
+          href="/shop" 
+          className="inline-block bg-white text-black px-10 py-4.5 rounded-full font-black uppercase tracking-widest text-xs hover:bg-neutral-100 transition-all shadow-xl active:scale-[0.98] duration-200"
+        >
+          SHOP NOW
+        </Link>
       </div>
 
       {/* 3. SLIDESHOW CONTROLLER DOTS (Stationary) */}

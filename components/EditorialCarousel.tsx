@@ -124,15 +124,23 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
   return (
     <section 
       ref={containerRef} 
-      className="relative w-full bg-zinc-50 pt-[72px] pb-6 md:pt-20 md:pb-12 overflow-hidden flex flex-col items-center border-t border-neutral-100"
+      className="relative w-full bg-zinc-50 pt-3 pb-6 md:pt-4 md:pb-12 overflow-hidden flex flex-col items-center border-t border-neutral-100"
     >
       {/* Mobile-only Marquee: below the navbar, above the slides */}
-      <div className="w-full px-4 mb-8 block md:hidden">
+      <div className="w-full px-4 mb-8 block md:hidden text-center">
         <Marquee 
           text="Customization Available" 
           speed="slow" 
           className="rounded-[32px] overflow-hidden border border-neutral-800" 
         />
+        <div className="flex justify-center mt-3">
+          <Link
+            href="/customise"
+            className="inline-block bg-yellow-50 border border-yellow-200 text-yellow-800 text-[10px] sm:text-xs font-black uppercase tracking-widest px-6 py-2.5 rounded-full shadow-sm hover:scale-105 hover:bg-yellow-100/50 hover:border-yellow-300 transition-all duration-300 active:scale-95"
+          >
+            🔥Buy 2 Tees, Take INR 100 Back!🔥
+          </Link>
+        </div>
       </div>
 
       <div className="relative w-full max-w-[400px] h-[500px] flex justify-center items-center">
@@ -184,13 +192,6 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
           })}
         </AnimatePresence>
 
-        {/* Fixed white Shop now link sitting on top of the slides viewport */}
-        <Link 
-          href="/shop" 
-          className="absolute bottom-12 z-30 text-white text-lg font-medium tracking-wide hover:opacity-80 transition-opacity cursor-pointer underline underline-offset-8 decoration-neutral-100"
-        >
-          Shop now
-        </Link>
       </div>
 
       <div className="flex justify-center gap-3 mt-4">
@@ -211,12 +212,20 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
       </div>
 
       {/* Desktop-only Marquee: below the slides/dots */}
-      <div className="w-full px-12 mt-10 hidden md:block">
+      <div className="w-full px-12 mt-10 hidden md:block text-center">
         <Marquee 
           text="Customization Available" 
           speed="slow" 
           className="rounded-[32px] overflow-hidden border border-neutral-800" 
         />
+        <div className="flex justify-center mt-3">
+          <Link
+            href="/customise"
+            className="inline-block bg-yellow-50 border border-yellow-200 text-yellow-800 text-[10px] sm:text-xs font-black uppercase tracking-widest px-6 py-2.5 rounded-full shadow-sm hover:scale-105 hover:bg-yellow-100/50 hover:border-yellow-300 transition-all duration-300 active:scale-95"
+          >
+            🔥Buy 2 Tees, Take INR 100 Back!🔥
+          </Link>
+        </div>
       </div>
     </section>
   );

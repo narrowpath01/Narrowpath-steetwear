@@ -7,6 +7,7 @@ import SessionProvider from "@/components/SessionProvider";
 import { Footer } from "@/components/Footer"; 
 import CartInitializer from "@/components/CartInitializer";
 import WishlistInitializer from "@/components/WishlistInitializer";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,8 +35,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <head>
-        <script
+      <body className="min-h-full flex flex-col bg-neutral-50 text-black" suppressHydrationWarning>
+        <Script
+          id="bis-cleaner"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
@@ -86,9 +89,6 @@ export default function RootLayout({
             `
           }}
         />
-      </head>
-      {/* THE FIX: Added bg-neutral-50 text-black here for the global grey background */}
-      <body className="min-h-full flex flex-col bg-neutral-50 text-black" suppressHydrationWarning>
         <SessionProvider>
           <Navbar /> 
           <CartDrawer />

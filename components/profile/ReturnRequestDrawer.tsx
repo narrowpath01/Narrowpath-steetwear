@@ -12,7 +12,9 @@ interface ReturnRequestDrawerProps {
 
 export default function ReturnRequestDrawer({ order, isOpen, onReturnSubmitted }: ReturnRequestDrawerProps) {
   const [returnType, setReturnType] = useState<"EXCHANGE" | "REFUND">("EXCHANGE");
-  const [returnReason, setReturnReason] = useState("Size doesn't fit");
+  const [returnReason, setReturnReason] = useState(
+    order.status !== "DELIVERED" ? "Cancel order / Request Refund" : "Size doesn't fit"
+  );
   const [detailedReason, setDetailedReason] = useState("");
   const [mediaUrl, setMediaUrl] = useState("");
   const [isDefective, setIsDefective] = useState(false);
@@ -23,7 +25,8 @@ export default function ReturnRequestDrawer({ order, isOpen, onReturnSubmitted }
   const handleSubmitReturn = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!mediaUrl) {
+    const isDelivered = order.status === "DELIVERED";
+    if (isDelivered && !mediaUrl) {
       alert("Please provide a photo or video evidence link (e.g. S3, UploadThing or Imgur link) to verify your claim.");
       return;
     }
@@ -40,7 +43,7 @@ export default function ReturnRequestDrawer({ order, isOpen, onReturnSubmitted }
           reason: fullReason,
           type: returnType,
           isDefective,
-          mediaUrl,
+          mediaUrl: mediaUrl || "N/A",
         }),
       });
 
@@ -141,15 +144,15 @@ export default function ReturnRequestDrawer({ order, isOpen, onReturnSubmitted }
             )}
           </div>
         </div>
-      ) : order.status !== "DELIVERED" ? (
-        /* ORDER NOT DELIVERED ERROR BLOCK */
+      ) : !(order.status === "PAID" || order.status === "SHIPPED" || order.status === "DELIVERED") ? (
+        /* ORDER NOT PAID/ELIGIBLE ERROR BLOCK */
         <div className="border border-orange-200 bg-orange-50 rounded-lg p-4 text-center">
           <svg className="w-8 h-8 text-orange-500 mx-auto mb-2" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
           </svg>
           <p className="text-xs font-extrabold text-orange-800 uppercase tracking-wider">Unavailable</p>
           <p className="text-[11px] text-orange-600 mt-1 max-w-md mx-auto leading-normal">
-            Returns & exchanges are only active after the package has been delivered. Once Delhivery flags the tracking status as &quot;Delivered&quot;, the submission form will activate.
+            Returns, cancellations, & exchanges are only active on paid orders. Please ensure your payment has succeeded before attempting a claim.
           </p>
         </div>
       ) : (
@@ -197,11 +200,22 @@ export default function ReturnRequestDrawer({ order, isOpen, onReturnSubmitted }
               onChange={(e) => setReturnReason(e.target.value)}
               className="w-full text-xs font-bold uppercase border border-neutral-300 rounded-lg p-3 bg-white focus:border-black outline-none"
             >
-              <option value="Size doesn't fit">Size doesn&apos;t fit</option>
-              <option value="Defective / Damaged product">Defective / Damaged product</option>
-              <option value="Wrong item sent">Wrong item sent</option>
-              <option value="Quality not as expected">Quality not as expected</option>
-              <option value="Other">Other</option>
+              {order.status !== "DELIVERED" ? (
+                <>
+                  <option value="Cancel order / Request Refund">Cancel order / Request Refund</option>
+                  <option value="Change size / Edit order details">Change size / Edit order details</option>
+                  <option value="Change shipping address">Change shipping address</option>
+                  <option value="Other">Other</option>
+                </>
+              ) : (
+                <>
+                  <option value="Size doesn't fit">Size doesn&apos;t fit</option>
+                  <option value="Defective / Damaged product">Defective / Damaged product</option>
+                  <option value="Wrong item sent">Wrong item sent</option>
+                  <option value="Quality not as expected">Quality not as expected</option>
+                  <option value="Other">Other</option>
+                </>
+              )}
             </select>
           </div>
 
@@ -218,39 +232,43 @@ export default function ReturnRequestDrawer({ order, isOpen, onReturnSubmitted }
             />
           </div>
 
-          {/* Photo / Video evidence */}
-          <div>
-            <label htmlFor="media-url" className="text-[10px] text-neutral-400 uppercase font-black tracking-widest block mb-1">Photo/Video Evidence URL</label>
-            <input
-              id="media-url"
-              type="text"
-              value={mediaUrl}
-              onChange={(e) => setMediaUrl(e.target.value)}
-              placeholder="Paste your unboxing video or photo proof link here (S3, Imgur, etc.)"
-              className="w-full text-xs border border-neutral-300 rounded-lg p-3 outline-none focus:border-black"
-              required
-            />
-            <p className="text-[10px] text-neutral-400 mt-1 leading-normal">
-              * IMPORTANT: To enforce fairness and prevent abuse, we require photo/video evidence of any defects or wrong items before approving returns.
-            </p>
-          </div>
+          {/* Photo / Video evidence & Defect Checkbox (only for delivered orders) */}
+          {order.status === "DELIVERED" ? (
+            <>
+              <div>
+                <label htmlFor="media-url" className="text-[10px] text-neutral-400 uppercase font-black tracking-widest block mb-1">Photo/Video Evidence URL</label>
+                <input
+                  id="media-url"
+                  type="text"
+                  value={mediaUrl}
+                  onChange={(e) => setMediaUrl(e.target.value)}
+                  placeholder="Paste your unboxing video or photo proof link here (S3, Imgur, etc.)"
+                  className="w-full text-xs border border-neutral-300 rounded-lg p-3 outline-none focus:border-black"
+                  required
+                />
+                <p className="text-[10px] text-neutral-400 mt-1 leading-normal">
+                  * IMPORTANT: To enforce fairness and prevent abuse, we require photo/video evidence of any defects or wrong items before approving returns.
+                </p>
+              </div>
 
-          {/* Checkbox: Is Defective */}
-          <div className="flex items-start gap-2.5 bg-white p-3 rounded-lg border border-neutral-200">
-            <input
-              id={`is-defective-${order.id}`}
-              type="checkbox"
-              checked={isDefective}
-              onChange={(e) => setIsDefective(e.target.checked)}
-              className="mt-0.5 rounded accent-black"
-            />
-            <label htmlFor={`is-defective-${order.id}`} className="text-[11px] text-neutral-600 cursor-pointer select-none">
-              <strong>This item arrived defective, damaged, or wrong.</strong>
-              <span className="block text-[10px] text-neutral-400 mt-0.5">
-                If checked, you will not pay the return shipping fee. If unchecked, a standard return shipping fee may apply.
-              </span>
-            </label>
-          </div>
+              {/* Checkbox: Is Defective */}
+              <div className="flex items-start gap-2.5 bg-white p-3 rounded-lg border border-neutral-200">
+                <input
+                  id={`is-defective-${order.id}`}
+                  type="checkbox"
+                  checked={isDefective}
+                  onChange={(e) => setIsDefective(e.target.checked)}
+                  className="mt-0.5 rounded accent-black"
+                />
+                <label htmlFor={`is-defective-${order.id}`} className="text-[11px] text-neutral-600 cursor-pointer select-none">
+                  <strong>This item arrived defective, damaged, or wrong.</strong>
+                  <span className="block text-[10px] text-neutral-400 mt-0.5">
+                    If checked, you will not pay the return shipping fee. If unchecked, a standard return shipping fee may apply.
+                  </span>
+                </label>
+              </div>
+            </>
+          ) : null}
 
           {/* Submit Button */}
           <button

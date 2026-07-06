@@ -7,6 +7,7 @@ import Marquee from "@/components/Marquee";
 import EditorialCarousel from "@/components/EditorialCarousel";
 import { InfoMarquee } from "@/components/InfoMarquee";
 import { TrustBadges } from "@/components/TrustBadges";
+import Link from "next/link";
 
 export const revalidate = 60;
 
@@ -37,8 +38,8 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-white text-black">
 
-      {/* Hero Slider Banner (Hidden) */}
-      {/* <HeroSlider /> */}
+      {/* Hero Slider Banner */}
+      <HeroSlider />
 
       {/* Editorial Carousel */}
       <EditorialCarousel products={printedProducts} />

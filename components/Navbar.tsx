@@ -14,6 +14,8 @@ export default function Navbar() {
   // Search States
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
 
   const pathname = usePathname();
   const router = useRouter();
@@ -24,14 +26,64 @@ export default function Navbar() {
   const wishlistCount = useWishlistStore((state) => state.items.length);
 
   // Search Handler
-  const handleSearchSubmit = (e: React.FormEvent) => {
+  const handleSearchSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/shop?q=${encodeURIComponent(searchQuery.trim())}`);
-      setIsSearchOpen(false);
-      setSearchQuery("");
+    if (!searchQuery.trim()) return;
+
+    try {
+      const res = await fetch(`/api/products/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.length > 0) {
+          // Redirect directly to the first matching product
+          router.push(`/products/${data[0].handle}`);
+          setIsSearchOpen(false);
+          setSearchQuery("");
+          return;
+        }
+      }
+    } catch (err) {
+      console.error("Search failed:", err);
     }
+
+    // Fallback if no matching product
+    router.push(`/shop`);
+    setIsSearchOpen(false);
+    setSearchQuery("");
   };
+
+  // Fetch suggestions as user types with a debounce
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSuggestions([]);
+      return;
+    }
+
+    const delayDebounce = setTimeout(async () => {
+      setLoadingSuggestions(true);
+      try {
+        const res = await fetch(`/api/products/search?q=${encodeURIComponent(searchQuery.trim())}`);
+        if (res.ok) {
+          const data = await res.json();
+          setSuggestions(data);
+        }
+      } catch (err) {
+        console.error("Suggestions fetch error:", err);
+      } finally {
+        setLoadingSuggestions(false);
+      }
+    }, 200);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchQuery]);
+
+  // Clean suggestions state when overlay is closed
+  useEffect(() => {
+    if (!isSearchOpen) {
+      setSearchQuery("");
+      setSuggestions([]);
+    }
+  }, [isSearchOpen]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -168,14 +220,24 @@ export default function Navbar() {
               </Link>
               <div className="space-y-1">
                 <span className="font-bold block uppercase tracking-widest text-[10px] text-neutral-400">Contact Us</span>
-                <div className="text-xs leading-relaxed text-neutral-500">
-                  Email: <a href="mailto:narrowpathtshirts@gmail.com" className="font-mono hover:underline">narrowpathtshirts@gmail.com</a><br />
-                  Phone: <a href="https://wa.me/919315457852" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-mono text-neutral-600 hover:text-[#25D366] transition-colors hover:underline">
-                    <svg className="w-3.5 h-3.5 fill-current text-green-600" viewBox="0 0 16 16">
-                      <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
-                    </svg>
-                    +91 9315457852
-                  </a>
+                <div className="text-xs leading-relaxed text-neutral-500 space-y-1.5 mt-1">
+                  <div>
+                    Email: <a href="mailto:narrowpathtshirts@gmail.com" className="font-mono hover:underline">narrowpathtshirts@gmail.com</a>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <a href="https://wa.me/919315457852" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-mono text-neutral-600 hover:text-[#25D366] transition-colors hover:underline">
+                      <svg className="w-3.5 h-3.5 fill-current text-green-600 flex-shrink-0" viewBox="0 0 16 16">
+                        <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
+                      </svg>
+                      +91 9315457852
+                    </a>
+                    <a href="https://wa.me/919894781426" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-mono text-neutral-600 hover:text-[#25D366] transition-colors hover:underline">
+                      <svg className="w-3.5 h-3.5 fill-current text-green-600 flex-shrink-0" viewBox="0 0 16 16">
+                        <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
+                      </svg>
+                      +91 9894781426
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -257,6 +319,7 @@ export default function Navbar() {
             {/* Explore (Compass) */}
             <Link
               href="/shop"
+              onClick={() => setIsMenuOpen(false)}
               className={`hover:opacity-60 transition-opacity ${pathname === "/shop" ? "text-black scale-110 font-bold" : "text-neutral-400"}`}
               aria-label="Explore Shop"
             >
@@ -269,6 +332,7 @@ export default function Navbar() {
             {/* Profile */}
             <Link
               href={session ? "/profile" : "/login"}
+              onClick={() => setIsMenuOpen(false)}
               className={`hover:opacity-60 transition-opacity ${pathname === "/profile" || pathname === "/login" ? "text-black scale-110 font-bold" : "text-neutral-400"}`}
               aria-label="Profile"
             >
@@ -280,6 +344,7 @@ export default function Navbar() {
             {/* Location (Map Pin) -> Links to About page */}
             <Link
               href="/about"
+              onClick={() => setIsMenuOpen(false)}
               className={`hover:opacity-60 transition-opacity ${pathname === "/about" ? "text-black scale-110 font-bold" : "text-neutral-400"}`}
               aria-label="Store Location"
             >
@@ -291,7 +356,10 @@ export default function Navbar() {
 
             {/* Search Button */}
             <button
-              onClick={() => setIsSearchOpen(true)}
+              onClick={() => {
+                setIsSearchOpen(true);
+                setIsMenuOpen(false);
+              }}
               className={`hover:opacity-60 transition-opacity ${isSearchOpen ? "text-black scale-110 font-bold" : "text-neutral-400"}`}
               aria-label="Search"
             >
@@ -338,14 +406,24 @@ export default function Navbar() {
             </Link>
             <div className="space-y-1">
               <span className="font-bold block uppercase tracking-widest text-[10px] text-neutral-400">Contact Us</span>
-              <div className="text-xs leading-relaxed text-neutral-500">
-                Email: <a href="mailto:narrowpathtshirts@gmail.com" className="font-mono hover:underline">narrowpathtshirts@gmail.com</a><br />
-                Phone: <a href="https://wa.me/919315457852" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-mono text-neutral-600 hover:text-[#25D366] transition-colors hover:underline">
-                  <svg className="w-3.5 h-3.5 fill-current text-green-600" viewBox="0 0 16 16">
-                    <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
-                  </svg>
-                  +91 9315457852
-                </a>
+              <div className="text-xs leading-relaxed text-neutral-500 space-y-1.5 mt-1">
+                <div>
+                  Email: <a href="mailto:narrowpathtshirts@gmail.com" className="font-mono hover:underline">narrowpathtshirts@gmail.com</a>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <a href="https://wa.me/919315457852" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-mono text-neutral-600 hover:text-[#25D366] transition-colors hover:underline">
+                    <svg className="w-3.5 h-3.5 fill-current text-green-600 flex-shrink-0" viewBox="0 0 16 16">
+                      <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
+                    </svg>
+                    +91 9315457852
+                  </a>
+                  <a href="https://wa.me/919894781426" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-mono text-neutral-600 hover:text-[#25D366] transition-colors hover:underline">
+                    <svg className="w-3.5 h-3.5 fill-current text-green-600 flex-shrink-0" viewBox="0 0 16 16">
+                      <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
+                    </svg>
+                    +91 9894781426
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -375,7 +453,7 @@ export default function Navbar() {
           <div className="fixed top-0 md:top-[72px] left-0 w-full bg-white z-[150] px-6 py-6 md:px-12 md:py-8 shadow-xl animate-in slide-in-from-top-2 duration-200">
             <div className="max-w-7xl mx-auto">
               {/* Search Bar Row */}
-              <div className="flex items-center gap-4 mb-4 mt-2 md:mt-0">
+              <div className="flex items-center gap-4 mt-2 md:mt-0">
                 <form onSubmit={handleSearchSubmit} className="flex-1 relative">
                   <svg className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -399,6 +477,55 @@ export default function Navbar() {
                   </svg>
                 </button>
               </div>
+
+              {/* Suggestions List */}
+              {searchQuery.trim() && (
+                <div className="mt-4 border-t border-neutral-100 pt-4 max-h-[300px] overflow-y-auto">
+                  {loadingSuggestions ? (
+                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-400 animate-pulse py-2 pl-2">
+                      Loading suggestions...
+                    </div>
+                  ) : suggestions.length > 0 ? (
+                    <div className="space-y-2">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-2 pl-2">Suggestions</p>
+                      {suggestions.map((suggestion) => {
+                        const image = suggestion.images?.[0]?.url || "https://via.placeholder.com/100x120";
+                        const price = suggestion.variants?.[0]?.price || 0;
+                        return (
+                          <button
+                            key={suggestion.id}
+                            onClick={() => {
+                              router.push(`/products/${suggestion.handle}`);
+                              setIsSearchOpen(false);
+                              setSearchQuery("");
+                            }}
+                            className="w-full flex items-center justify-between p-2 rounded-xl hover:bg-neutral-50 transition-colors text-left"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="relative w-10 h-12 bg-neutral-100 rounded-lg overflow-hidden flex-shrink-0">
+                                <img
+                                  src={image}
+                                  alt={suggestion.title}
+                                  className="w-full h-full object-cover object-top"
+                                />
+                              </div>
+                              <div>
+                                <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-black">{suggestion.title}</h4>
+                                <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-widest">{suggestion.collection || "PRINTED"}</span>
+                              </div>
+                            </div>
+                            <span className="text-xs font-black uppercase text-neutral-800">INR {price}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="text-xs font-bold uppercase tracking-wider text-neutral-400 py-2 pl-2">
+                      No tees found for &quot;{searchQuery}&quot;
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </>
