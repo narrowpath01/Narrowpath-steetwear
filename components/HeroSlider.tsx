@@ -44,13 +44,24 @@ export default function HeroSlider() {
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ type: "tween", duration: 0.8, ease: "easeInOut" }}
-            className="absolute inset-0 w-full h-full"
+            className="absolute inset-0 w-full h-full flex"
           >
-            <img
-              src={slides[currentSlide].image}
-              alt={slides[currentSlide].alt}
-              className="w-full h-full object-cover object-top scale-[1.03]"
-            />
+            {/* Left Image (always shown on mobile, left half on desktop) */}
+            <div className="w-full md:w-1/2 h-full relative overflow-hidden">
+              <img
+                src={slides[currentSlide].image}
+                alt={slides[currentSlide].alt}
+                className="w-full h-full object-cover object-top scale-[1.03]"
+              />
+            </div>
+            {/* Right Image (only shown on desktop/md and up) */}
+            <div className="hidden md:block w-1/2 h-full relative overflow-hidden border-l border-neutral-900">
+              <img
+                src={slides[(currentSlide + 1) % slides.length].image}
+                alt={slides[(currentSlide + 1) % slides.length].alt}
+                className="w-full h-full object-cover object-top scale-[1.03]"
+              />
+            </div>
           </motion.div>
         </AnimatePresence>
       </div>
