@@ -10,6 +10,13 @@ import { useWishlistStore } from "@/store/useWishlistStore";
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCollectionsOpen, setIsCollectionsOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isMenuOpen) {
+      setIsCollectionsOpen(false);
+    }
+  }, [isMenuOpen]);
 
   // Search States
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -106,13 +113,21 @@ export default function Navbar() {
           }`}
       >
         <div className="flex justify-between items-center px-6 md:px-12 py-3 w-full h-[72px]">
-          {/* LEFT: Hamburger Menu */}
-          <div className="flex-1">
+          {/* LEFT: Hamburger Menu + Categories */}
+          <div className="flex-1 flex items-center gap-3">
             <button onClick={() => setIsMenuOpen(true)} className="p-2 -ml-2 hover:opacity-70 transition-opacity text-black">
               <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
+            <div className="hidden md:flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.2em] pl-3">
+              <Link href="/shop?gender=men" className="hover:opacity-50 transition-opacity text-black">
+                Men
+              </Link>
+              <Link href="/shop?gender=women" className="hover:opacity-50 transition-opacity text-black">
+                Women
+              </Link>
+            </div>
           </div>
 
           {/* CENTER: THE LOGO */}
@@ -208,7 +223,52 @@ export default function Navbar() {
               </button>
               <nav className="flex flex-col items-start gap-5 mt-10 pl-2">
                 <Link href="/shop" onClick={() => setIsMenuOpen(false)} className="text-xl font-black uppercase tracking-widest text-black hover:opacity-50 transition-opacity">Shop</Link>
-                <Link href="/collections" onClick={() => setIsMenuOpen(false)} className="text-xl font-black uppercase tracking-widest text-black hover:opacity-50 transition-opacity">Collections</Link>
+                
+                {/* Collections Accordion (Desktop Drawer) */}
+                <div className="w-full flex flex-col items-start">
+                  <button
+                    onClick={() => setIsCollectionsOpen(!isCollectionsOpen)}
+                    className="text-xl font-black uppercase tracking-widest text-black hover:opacity-50 transition-opacity flex items-center gap-2 w-full text-left"
+                  >
+                    Collections
+                    <svg
+                      className={`w-3.5 h-3.5 transform transition-transform duration-200 ${isCollectionsOpen ? "rotate-180" : ""}`}
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2.5}
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </button>
+                  
+                  {isCollectionsOpen && (
+                    <div className="flex flex-col items-start gap-2.5 mt-2.5 pl-3 border-l-2 border-neutral-100">
+                      <Link
+                        href="/shop?gender=men"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="text-sm font-bold uppercase tracking-wider text-neutral-500 hover:text-black transition-colors"
+                      >
+                        Men
+                      </Link>
+                      <Link
+                        href="/shop?gender=women"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="text-sm font-bold uppercase tracking-wider text-neutral-500 hover:text-black transition-colors"
+                      >
+                        Women
+                      </Link>
+                      <Link
+                        href="/shop"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="text-sm font-bold uppercase tracking-wider text-neutral-500 hover:text-black transition-colors"
+                      >
+                        All Products
+                      </Link>
+                    </div>
+                  )}
+                </div>
+
                 <Link href="/customise" onClick={() => setIsMenuOpen(false)} className="text-xl font-black uppercase tracking-widest text-[#005bd3] hover:opacity-50 transition-opacity">Customise Your Tee</Link>
               </nav>
             </div>
@@ -383,13 +443,50 @@ export default function Navbar() {
             >
               Shop
             </Link>
-            <Link 
-              href="/collections" 
-              onClick={() => setIsMenuOpen(false)} 
-              className="text-2xl font-black uppercase tracking-widest text-black hover:opacity-50 transition-opacity"
-            >
-              Collections
-            </Link>
+            {/* Collections Accordion (Mobile Drawer) */}
+            <div className="w-full flex flex-col items-start">
+              <button
+                onClick={() => setIsCollectionsOpen(!isCollectionsOpen)}
+                className="text-2xl font-black uppercase tracking-widest text-black hover:opacity-50 transition-opacity flex items-center gap-2 w-full text-left"
+              >
+                Collections
+                <svg
+                  className={`w-4 h-4 transform transition-transform duration-200 ${isCollectionsOpen ? "rotate-180" : ""}`}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </button>
+              
+              {isCollectionsOpen && (
+                <div className="flex flex-col items-start gap-3 mt-3 pl-4 border-l-2 border-neutral-100">
+                  <Link
+                    href="/shop?gender=men"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="text-base font-bold uppercase tracking-wider text-neutral-500 hover:text-black transition-colors"
+                  >
+                    Men
+                  </Link>
+                  <Link
+                    href="/shop?gender=women"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="text-base font-bold uppercase tracking-wider text-neutral-500 hover:text-black transition-colors"
+                  >
+                    Women
+                  </Link>
+                  <Link
+                    href="/shop"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="text-base font-bold uppercase tracking-wider text-neutral-500 hover:text-black transition-colors"
+                  >
+                    All Products
+                  </Link>
+                </div>
+              )}
+            </div>
             <Link 
               href="/customise" 
               onClick={() => setIsMenuOpen(false)} 

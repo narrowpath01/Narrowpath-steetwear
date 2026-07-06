@@ -1,7 +1,7 @@
 // components/ProductCard.tsx
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useCartStore } from "@/store/useCartStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
@@ -9,30 +9,41 @@ import { useSession } from "next-auth/react";
 
 interface ProductCardProps {
   product: any; 
+  womenProduct?: any;
+  defaultGender?: "men" | "women";
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, womenProduct, defaultGender = "men" }: ProductCardProps) {
+  const [selectedGender, setSelectedGender] = useState<"men" | "women">(defaultGender);
+
+  // Sync selectedGender with defaultGender prop changes
+  useEffect(() => {
+    setSelectedGender(defaultGender);
+  }, [defaultGender]);
+
+  const currentProduct = selectedGender === "women" && womenProduct ? womenProduct : product;
+
   // Safe extraction of images
-  const images = product.images && product.images.length > 0 
-    ? product.images 
-    : [{ url: "https://via.placeholder.com/400x500", altText: product.title }];
+  const images = currentProduct.images && currentProduct.images.length > 0 
+    ? currentProduct.images 
+    : [{ url: "https://via.placeholder.com/400x500", altText: currentProduct.title }];
 
   const imageUrl = images[0]?.url;
 
   // Always grab the first variant to use for the Quick Add
-  const firstVariant = product.variants?.[0];
+  const firstVariant = currentProduct.variants?.[0];
   const price = firstVariant?.price || 0;
 
   const { addItem, toggleCart } = useCartStore();
   const { data: session } = useSession();
   const isWishlisted = useWishlistStore((state) => state.isWishlisted);
   const toggleWishlist = useWishlistStore((state) => state.toggleWishlist);
-  const isProductWishlisted = isWishlisted(product.id);
+  const isProductWishlisted = isWishlisted(currentProduct.id);
 
   const handleWishlistToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    toggleWishlist(product, session);
+    toggleWishlist(currentProduct, session);
   };
 
   // Carousel States & Handlers
@@ -65,10 +76,10 @@ export default function ProductCard({ product }: ProductCardProps) {
     e.stopPropagation();
 
     if (firstVariant?.id) {
-      addItem(firstVariant.id, {
+        addItem(firstVariant.id, {
         variantTitle: firstVariant.title,
         price: firstVariant.price,
-        productTitle: product.title,
+        productTitle: currentProduct.title,
         image: imageUrl
       });
       toggleCart();
@@ -78,7 +89,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <Link href={`/products/${product.handle}`} className="group cursor-pointer block">
+    <Link href={`/products/${currentProduct.handle}`} className="group cursor-pointer block">
       <div className="relative w-full aspect-[3/4] bg-white mb-4 overflow-hidden rounded-2xl border border-neutral-100/50 group/card">
         {/* Wishlist Button (Ribbon Overlay) */}
         <button
@@ -117,7 +128,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               <div key={img.id || idx} className="w-full h-full flex-shrink-0 snap-start snap-always relative overflow-hidden rounded-2xl">
                 <img
                   src={img.url}
-                  alt={img.altText || `${product.title} view ${idx + 1}`}
+                  alt={img.altText || `${currentProduct.title} view ${idx + 1}`}
                   className={`w-full h-full object-cover object-top rounded-2xl animate-fade-in transition-all duration-300 ${
                     isZoomed ? "scale-[1.12] origin-top" : ""
                   }`}
@@ -171,11 +182,45 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
       </div>
-      
+
+      {/* Gender Toggle for Plain Tees */}
+      {womenProduct && (
+        <div className="flex gap-2 mb-2.5 px-0.5 text-[9px] font-black uppercase tracking-widest">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setSelectedGender("men");
+            }}
+            className={`px-3 py-1 rounded-full border transition-all ${
+              selectedGender === "men"
+                ? "bg-black text-white border-black"
+                : "bg-white text-neutral-400 border-neutral-200 hover:text-black hover:border-neutral-300"
+            }`}
+          >
+            Men
+          </button>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setSelectedGender("women");
+            }}
+            className={`px-3 py-1 rounded-full border transition-all ${
+              selectedGender === "women"
+                ? "bg-black text-white border-black"
+                : "bg-white text-neutral-400 border-neutral-200 hover:text-black hover:border-neutral-300"
+            }`}
+          >
+            Women
+          </button>
+        </div>
+      )}
+
       <div className="flex justify-between items-end">
         <div className="flex flex-col gap-1 flex-1 min-w-0 pr-1 sm:pr-2">
           <h3 className="font-bold text-xs sm:text-sm uppercase tracking-wide line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] leading-tight text-black">
-            {product.title}
+            {currentProduct.title}
           </h3>
           <p className="text-xs sm:text-sm font-medium text-neutral-500">
             INR {price}

@@ -3,11 +3,12 @@ import prisma from "@/lib/db";
 import ProductCard from "@/components/ProductCard";
 
 interface ShopPageProps {
-  searchParams: Promise<{ type?: string }>;
+  searchParams: Promise<{ type?: string; gender?: string }>;
 }
 
 export default async function ShopPage({ searchParams }: ShopPageProps) {
-  const { type } = await searchParams;
+  const { type, gender } = await searchParams;
+  const activeGender = gender?.toLowerCase() || "all";
 
   const products = await prisma.product.findMany({
     include: {
@@ -20,6 +21,9 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   const printedProducts = products.filter((p: any) => p.collection === 'PRINTED' || !p.collection);
   const monochromeProducts = products.filter((p: any) => p.collection === 'MONOCHROME');
 
+  const womenMono = monochromeProducts.filter((p: any) => p.handle.startsWith("women-"));
+  const menMono = monochromeProducts.filter((p: any) => !p.handle.startsWith("women-"));
+
   // Swap positions of Kung Fu Panda Tee and Sunflower Tee for all catalog grids
   const sunflowerIdx = printedProducts.findIndex(p => p.handle.includes("sunflower"));
   const pandaIdx = printedProducts.findIndex(p => p.handle.includes("panda"));
@@ -29,7 +33,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
     printedProducts[pandaIdx] = temp;
   }
 
-  const showPrinted = !type || type.toLowerCase() === "printed";
+  const showPrinted = activeGender !== "women" && (!type || type.toLowerCase() === "printed");
   const showMonochrome = !type || type.toLowerCase() === "monochrome";
 
   return (
@@ -43,9 +47,9 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400">Narrow Path</span>
             <h1 className="text-2xl md:text-3xl font-black uppercase tracking-widest text-black mt-1">Shop Catalog</h1>
           </div>
-          {type && (
+          {(type || gender) && (
             <span className="text-[10px] font-bold uppercase tracking-wider bg-neutral-100 text-neutral-600 px-3 py-1 rounded-full">
-              Filtered: {type}
+              Filtered: {type || ""} {gender ? `Gender: ${gender}` : ""}
             </span>
           )}
         </div>
@@ -54,7 +58,9 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
         {showPrinted && printedProducts.length > 0 && (
           <div className="space-y-6">
             <div className="flex items-center gap-4">
-              <h2 className="text-lg font-black uppercase tracking-wider text-black">Printed Tees</h2>
+              <h2 className="text-lg font-black uppercase tracking-wider text-black">
+                {activeGender === "men" ? "Men's Printed Tees" : "Printed Tees"}
+              </h2>
               <div className="h-[1px] flex-1 bg-neutral-100"></div>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10">
@@ -66,28 +72,43 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
         )}
 
         {/* Spacer if both are shown */}
-        {!type && printedProducts.length > 0 && monochromeProducts.length > 0 && (
+        {!type && activeGender !== "women" && printedProducts.length > 0 && menMono.length > 0 && (
           <div className="h-6"></div>
         )}
 
-        {/* 2. Monochrome Collection Section */}
-        {showMonochrome && monochromeProducts.length > 0 && (
+        {/* 2. Plain/Monochrome Collection Section */}
+        {showMonochrome && menMono.length > 0 && (
           <div className="space-y-6">
             <div className="flex items-center gap-4">
-              <h2 className="text-lg font-black uppercase tracking-wider text-black">Monochrome Tees</h2>
+              <h2 className="text-lg font-black uppercase tracking-wider text-black">
+                {activeGender === "women"
+                  ? "Women's Plain Tees"
+                  : activeGender === "men"
+                  ? "Men's Plain Tees"
+                  : "Monochrome Tees"}
+              </h2>
               <div className="h-[1px] flex-1 bg-neutral-100"></div>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10">
-              {monochromeProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+              {menMono.map((product) => {
+                const baseColor = product.handle.replace("monochrome-", "").replace("-heavyweight-tee", "");
+                const womenProduct = womenMono.find((wp: any) => wp.handle.includes(baseColor));
+                return (
+                  <ProductCard 
+                    key={product.id} 
+                    product={product} 
+                    womenProduct={womenProduct}
+                    defaultGender={activeGender === "women" ? "women" : "men"}
+                  />
+                );
+              })}
             </div>
           </div>
         )}
 
         {/* No Products Fallback */}
-        {((showPrinted && printedProducts.length === 0) || (showMonochrome && monochromeProducts.length === 0)) && 
-         (printedProducts.length === 0 && monochromeProducts.length === 0) && (
+        {((showPrinted && printedProducts.length === 0) || (showMonochrome && menMono.length === 0)) && 
+         (printedProducts.length === 0 && menMono.length === 0) && (
           <div className="text-center py-20">
             <p className="text-neutral-400 font-bold uppercase tracking-widest text-xs">No products found in this category.</p>
           </div>

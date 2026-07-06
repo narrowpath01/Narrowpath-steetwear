@@ -25,6 +25,8 @@ export default async function Home() {
 
   const printedProducts = products.filter((p: any) => p.collection === 'PRINTED' || !p.collection);
   const monochromeProducts = products.filter((p: any) => p.collection === 'MONOCHROME');
+  const womenMono = monochromeProducts.filter((p: any) => p.handle.startsWith("women-"));
+  const menMono = monochromeProducts.filter((p: any) => !p.handle.startsWith("women-"));
 
   // Swap positions of Kung Fu Panda Tee and Sunflower Tee for all catalog grids
   const sunflowerIdx = printedProducts.findIndex(p => p.handle.includes("sunflower"));
@@ -65,15 +67,24 @@ export default async function Home() {
         </div>
 
         {/* Monochrome Collection */}
-        {monochromeProducts.length > 0 && (
+        {menMono.length > 0 && (
           <div className="space-y-4 pt-4 border-t border-neutral-100">
             <div className="text-[11px] font-normal text-black uppercase tracking-widest pl-0.5">
               Monochrome
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-2 gap-y-8">
-              {monochromeProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+              {menMono.map((product) => {
+                const baseColor = product.handle.replace("monochrome-", "").replace("-heavyweight-tee", "");
+                const womenProduct = womenMono.find((wp: any) => wp.handle.includes(baseColor));
+                return (
+                  <ProductCard 
+                    key={product.id} 
+                    product={product} 
+                    womenProduct={womenProduct}
+                    defaultGender="men"
+                  />
+                );
+              })}
             </div>
           </div>
         )}
