@@ -34,7 +34,7 @@ export default function HeroSlider() {
   }, []);
 
   return (
-    <section className="relative w-full h-[80vh] md:h-[90vh] bg-neutral-950 overflow-hidden select-none">
+    <section className="relative w-full h-screen bg-neutral-950 overflow-hidden select-none">
       {/* 1. SLIDING BACKGROUND IMAGES */}
       <div className="absolute inset-0 z-0 overflow-hidden w-full h-full">
         <AnimatePresence initial={false}>

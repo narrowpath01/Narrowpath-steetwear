@@ -77,7 +77,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
         )}
 
         {/* 2. Plain/Monochrome Collection Section */}
-        {showMonochrome && menMono.length > 0 && (
+        {showMonochrome && (activeGender === "women" ? womenMono.length > 0 : menMono.length > 0) && (
           <div className="space-y-6">
             <div className="flex items-center gap-4">
               <h2 className="text-lg font-black uppercase tracking-wider text-black">
@@ -90,18 +90,33 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
               <div className="h-[1px] flex-1 bg-neutral-100"></div>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10">
-              {menMono.map((product) => {
-                const baseColor = product.handle.replace("monochrome-", "").replace("-heavyweight-tee", "");
-                const womenProduct = womenMono.find((wp: any) => wp.handle.includes(baseColor));
-                return (
-                  <ProductCard 
-                    key={product.id} 
-                    product={product} 
-                    womenProduct={womenProduct}
-                    defaultGender={activeGender === "women" ? "women" : "men"}
-                  />
-                );
-              })}
+              {activeGender === "women"
+                ? womenMono.map((womenProd) => {
+                    const baseColor = womenProd.handle
+                      .replace("women-monochrome-", "")
+                      .replace("-heavyweight-tee", "");
+                    const menProduct = menMono.find((mp: any) => mp.handle.includes(baseColor));
+                    return (
+                      <ProductCard 
+                        key={womenProd.id} 
+                        product={menProduct || womenProd} 
+                        womenProduct={menProduct ? womenProd : undefined}
+                        defaultGender="women"
+                      />
+                    );
+                  })
+                : menMono.map((product) => {
+                    const baseColor = product.handle.replace("monochrome-", "").replace("-heavyweight-tee", "");
+                    const womenProduct = womenMono.find((wp: any) => wp.handle.includes(baseColor));
+                    return (
+                      <ProductCard 
+                        key={product.id} 
+                        product={product} 
+                        womenProduct={womenProduct}
+                        defaultGender="men"
+                      />
+                    );
+                  })}
             </div>
           </div>
         )}
