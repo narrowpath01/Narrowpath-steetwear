@@ -41,7 +41,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
 
         {/* Right Side: Sticky Info Panel */}
         <div className="w-full lg:w-[40%] text-black">
-          <div className="lg:sticky lg:top-32">
+          <div className="lg:sticky lg:top-32 z-30">
             <h1 className="text-4xl lg:text-5xl font-black uppercase tracking-tighter mb-6 leading-none">
               {product.title}
             </h1>

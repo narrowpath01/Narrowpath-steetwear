@@ -209,7 +209,7 @@ export default function ProductCard({ product, womenProduct, defaultGender = "me
             className={`px-3 py-1 rounded-full border transition-all ${
               selectedGender === "women"
                 ? "bg-black text-white border-black"
-                : "bg-white text-neutral-400 border-neutral-200 hover:text-black hover:border-neutral-300"
+                : "bg-white text-black border-neutral-200 hover:text-neutral-400 hover:border-neutral-300"
             }`}
           >
             Women

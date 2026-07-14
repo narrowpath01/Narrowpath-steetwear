@@ -182,7 +182,7 @@ export default function ProductForm({ product }: ProductFormProps) {
 
       {/* Size Chart Modal */}
       {isSizeChartOpen && (
-        <div className="fixed inset-0 z-[160] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="relative bg-white text-black w-full max-w-md p-6 rounded-3xl shadow-2xl border border-neutral-100 animate-in zoom-in-95 duration-200">
             {/* Modal Header */}
             <div className="flex justify-between items-center mb-6">

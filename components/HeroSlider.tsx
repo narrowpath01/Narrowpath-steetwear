@@ -10,16 +10,32 @@ const slides = [
     alt: "Porsche 911 Heavyweight Tee Model View",
   },
   {
+    image: "/women-love-peace-patience-1.png",
+    alt: "Women's Love Peace Patience Heavyweight Tee Model View",
+  },
+  {
     image: "/space-ship-model.png",
     alt: "Space Ship Heavyweight Tee Model View",
+  },
+  {
+    image: "/women-glow-different-1.png",
+    alt: "Women's Glow Different Heavyweight Tee Model View",
   },
   {
     image: "/red-moon-model.png",
     alt: "Red Moon Heavyweight Tee Model View",
   },
   {
+    image: "/women-year-of-dragon-3.png",
+    alt: "Women's Year of Dragon Heavyweight Tee Model View",
+  },
+  {
     image: "/warrior-model.png",
     alt: "Warrior Heavyweight Tee Model View",
+  },
+  {
+    image: "/women-happiness-3.png",
+    alt: "Women's Happiness Heavyweight Tee Model View",
   },
 ];
 
@@ -57,8 +73,8 @@ export default function HeroSlider() {
             {/* Right Image (only shown on desktop/md and up) */}
             <div className="hidden md:block w-1/2 h-full relative overflow-hidden border-l border-neutral-900">
               <img
-                src={slides[(currentSlide + 2) % slides.length].image}
-                alt={slides[(currentSlide + 2) % slides.length].alt}
+                src={slides[(currentSlide + 3) % slides.length].image}
+                alt={slides[(currentSlide + 3) % slides.length].alt}
                 className="w-full h-full object-cover object-top scale-[1.03]"
               />
             </div>

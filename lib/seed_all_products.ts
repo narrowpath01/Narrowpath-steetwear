@@ -792,6 +792,11 @@ async function main() {
       images: {
         create: [
           { url: "/women-happiness-1.png", altText: "Women's Happiness Heavyweight Tee Front Model View" },
+          { url: "/women-happiness-2.png", altText: "Women's Happiness Heavyweight Tee Back Model View" },
+          { url: "/women-happiness-3.png", altText: "Women's Happiness Heavyweight Tee Model View" },
+          { url: "/women-happiness-4.png", altText: "Women's Happiness Heavyweight Tee Chest Graphic" },
+          { url: "/women-happiness-5.png", altText: "Women's Happiness Heavyweight Tee Back Print Close-up" },
+          { url: "/women-happiness-6.png", altText: "Women's Happiness Heavyweight Tee Collar Detail View" },
         ]
       },
       variants: {
@@ -806,7 +811,151 @@ async function main() {
     }
   });
 
-  console.log("\nDatabase seeded successfully with all 29 products!");
+  console.log("Seeding: Women's Love Peace Patience Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Women's Love Peace Patience Heavyweight Tee",
+      handle: "women-love-peace-patience-heavyweight-tee",
+      description: "Premium heavyweight women's printed tee. Features a detailed sketch of a pomegranate tree on the back in golden-brown and a terracotta-brown 'LOVE PEACE PATIENCE' text graphic on the chest. Relaxed boxy fit, crafted from 100% premium cotton for structural drape and comfort.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/women-love-peace-patience-1.png", altText: "Women's Love Peace Patience Heavyweight Tee Front View" },
+          { url: "/women-love-peace-patience-2.png", altText: "Women's Love Peace Patience Heavyweight Tee Back View" },
+          { url: "/women-love-peace-patience-3.png", altText: "Women's Love Peace Patience Heavyweight Tee Model View" },
+          { url: "/women-love-peace-patience-4.png", altText: "Women's Love Peace Patience Heavyweight Tee Chest Detail" },
+          { url: "/women-love-peace-patience-5.png", altText: "Women's Love Peace Patience Heavyweight Tee Back Print Detail" },
+          { url: "/women-love-peace-patience-6.png", altText: "Women's Love Peace Patience Heavyweight Tee Collar Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  console.log("Seeding: Women's Kung Fu Panda Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Women's Kung Fu Panda Heavyweight Tee",
+      handle: "women-kung-fu-panda-heavyweight-tee",
+      description: "Premium heavyweight women's printed tee. Features a striking, custom Kung Fu Panda graphic print on the back and a minimalist white 'the kung fu PANDA' text graphic on the chest. Relaxed boxy fit, crafted from 100% premium cotton for structural drape and comfort.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/women-kung-fu-panda-1.png", altText: "Women's Kung Fu Panda Heavyweight Tee Front View" },
+          { url: "/women-kung-fu-panda-2.png", altText: "Women's Kung Fu Panda Heavyweight Tee Back View" },
+          { url: "/women-kung-fu-panda-3.png", altText: "Women's Kung Fu Panda Heavyweight Tee Model View" },
+          { url: "/women-kung-fu-panda-4.png", altText: "Women's Kung Fu Panda Heavyweight Tee Model Full View" },
+          { url: "/women-kung-fu-panda-5.png", altText: "Women's Kung Fu Panda Heavyweight Tee Chest Detail" },
+          { url: "/women-kung-fu-panda-6.png", altText: "Women's Kung Fu Panda Heavyweight Tee Sleeve Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  console.log("Seeding: Women's Social Introvert Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Women's Social Introvert Heavyweight Tee",
+      handle: "women-social-introvert-heavyweight-tee",
+      description: "Premium heavyweight women's printed tee. Features a cute anime style social introvert graphic print on the back with 'SOCIAL INTROVERT COMFORT ZONE' lettering and a small matching graphic on the chest. Relaxed boxy fit, crafted from 100% premium cotton for structural drape and comfort.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/women-social-introvert-1.png", altText: "Women's Social Introvert Heavyweight Tee Front View" },
+          { url: "/women-social-introvert-2.png", altText: "Women's Social Introvert Heavyweight Tee Back View" },
+          { url: "/women-social-introvert-3.png", altText: "Women's Social Introvert Heavyweight Tee Front Detail View" },
+          { url: "/women-social-introvert-4.png", altText: "Women's Social Introvert Heavyweight Tee Back Print Detail" },
+          { url: "/women-social-introvert-5.png", altText: "Women's Social Introvert Heavyweight Tee Collar Detail" },
+          { url: "/women-social-introvert-6.png", altText: "Women's Social Introvert Heavyweight Tee Model View" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  console.log("Seeding: Women's Sunflower Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Women's Sunflower Heavyweight Tee",
+      handle: "women-sunflower-heavyweight-tee",
+      description: "Premium heavyweight women's printed tee. Features a simple curved 'SUNFLOWER' text graphic in yellow-orange outline on both chest and back, with the signature 'NP NARROW PATH' logo printed on the sleeve. Relaxed boxy fit, crafted from 100% premium cotton for structural drape and comfort.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/women-sunflower-1.png", altText: "Women's Sunflower Heavyweight Tee Front View" },
+          { url: "/women-sunflower-2.png", altText: "Women's Sunflower Heavyweight Tee Back View" },
+          { url: "/women-sunflower-3.png", altText: "Women's Sunflower Heavyweight Tee Model View" },
+          { url: "/women-sunflower-4.png", altText: "Women's Sunflower Heavyweight Tee Sleeve Detail" },
+          { url: "/women-sunflower-5.png", altText: "Women's Sunflower Heavyweight Tee Chest Detail" },
+          { url: "/women-sunflower-6.png", altText: "Women's Sunflower Heavyweight Tee Back Graphic Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  console.log("Seeding: Women's Christ Cross Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Women's Christ Cross Heavyweight Tee",
+      handle: "women-christ-cross-heavyweight-tee",
+      description: "Premium heavyweight women's printed tee. Features a bold red cross graphic print on the back constructed of the text 'I CAN DO ALL THINGS THROUGH CHRIST WHO STRENGTHENS ME PHIL 04:13' and 'NP WALK BY FAITH, NOT BY SIGHT' at the lower hem, with a matching NP chest print. Relaxed boxy fit, crafted from 100% premium cotton for structural drape and comfort.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/women-christ-cross-1.png", altText: "Women's Christ Cross Heavyweight Tee Front View" },
+          { url: "/women-christ-cross-2.png", altText: "Women's Christ Cross Heavyweight Tee Model View" },
+          { url: "/women-christ-cross-3.png", altText: "Women's Christ Cross Heavyweight Tee Back Print Detail" },
+          { url: "/women-christ-cross-4.png", altText: "Women's Christ Cross Heavyweight Tee Side View" },
+          { url: "/women-christ-cross-5.png", altText: "Women's Christ Cross Heavyweight Tee Collar Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  console.log("\nDatabase seeded successfully with all 34 products!");
 }
 
 main()
