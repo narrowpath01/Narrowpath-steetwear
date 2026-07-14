@@ -765,6 +765,9 @@ async function main() {
         create: [
           { url: "/women-glow-different-1.png", altText: "Women's Glow Different Heavyweight Tee Front View" },
           { url: "/women-glow-different-2.png", altText: "Women's Glow Different Heavyweight Tee Back View" },
+          { url: "/women-glow-different-3.png", altText: "Women's Glow Different Heavyweight Tee Model Back View" },
+          { url: "/women-glow-different-4.png", altText: "Women's Glow Different Heavyweight Tee Front Logo Close-up" },
+          { url: "/women-glow-different-5.png", altText: "Women's Glow Different Heavyweight Tee Back Print Close-up" },
         ]
       },
       variants: {
@@ -779,7 +782,31 @@ async function main() {
     }
   });
 
-  console.log("\nDatabase seeded successfully with all 28 products!");
+  console.log("Seeding: Women's Happiness Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Women's Happiness Heavyweight Tee",
+      handle: "women-happiness-heavyweight-tee",
+      description: "Premium heavyweight women's printed tee. Minimalist chest print that reads 'Happiness Lives In Small Moments'. Relaxed boxy fit, crafted from 100% premium cotton for structural drape and comfort.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/women-happiness-1.png", altText: "Women's Happiness Heavyweight Tee Front Model View" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  console.log("\nDatabase seeded successfully with all 29 products!");
 }
 
 main()
