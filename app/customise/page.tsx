@@ -359,13 +359,10 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
                     transition={{ duration: 0.3 }}
                     className="absolute inset-0 w-full h-full"
                   >
-                    <Image
+                    <img
                       src={teeImages.front[baseColor]}
                       alt="Tee Front Preview"
-                      fill
-                      className="object-cover object-top rounded-[24px] pointer-events-none select-none"
-                      sizes="(max-width: 768px) 100vw, 500px"
-                      priority
+                      className="absolute inset-0 w-full h-full object-cover object-top rounded-[24px] pointer-events-none select-none"
                     />
 
                     {frontElements.map((el) => (
@@ -413,13 +410,10 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
                     transition={{ duration: 0.3 }}
                     className="absolute inset-0 w-full h-full"
                   >
-                    <Image
+                    <img
                       src={teeImages.back[baseColor]}
                       alt="Tee Back Preview"
-                      fill
-                      className="object-cover object-top rounded-[24px] pointer-events-none select-none"
-                      sizes="(max-width: 768px) 100vw, 500px"
-                      priority
+                      className="absolute inset-0 w-full h-full object-cover object-top rounded-[24px] pointer-events-none select-none"
                     />
 
                     {backElements.map((el) => (
