@@ -126,8 +126,8 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
       ref={containerRef} 
       className="relative w-full bg-zinc-50 pt-3 pb-6 md:pt-4 md:pb-12 overflow-hidden flex flex-col items-center border-t border-neutral-100"
     >
-      {/* Mobile-only Marquee: below the navbar, above the slides */}
-      <div className="w-full px-4 mb-8 block md:hidden text-center">
+      {/* Marquee: below the navbar/title, above the slides (on all viewports) */}
+      <div className="w-full px-4 md:px-12 mb-8 text-center">
         <Marquee 
           text={"Customization Available" + "\u00A0".repeat(16) + "Buy 2 Tees, Take INR 100 Back!"} 
           speed="slow" 
@@ -201,15 +201,6 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
             />
           );
         })}
-      </div>
-
-      {/* Desktop-only Marquee: below the slides/dots */}
-      <div className="w-full px-12 mt-10 hidden md:block text-center">
-        <Marquee 
-          text={"Customization Available" + "\u00A0".repeat(16) + "Buy 2 Tees, Take INR 100 Back!"} 
-          speed="slow" 
-          className="rounded-[32px] overflow-hidden border border-neutral-800" 
-        />
       </div>
     </section>
   );
