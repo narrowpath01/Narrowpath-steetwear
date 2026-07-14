@@ -7,6 +7,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toPng } from "html-to-image";
 import Transformer from "@/components/customise/Transformer";
 
+const base64ToBlob = (base64: string, mimeType: string) => {
+  if (typeof window === "undefined") return new Blob();
+  const byteCharacters = atob(base64.split(',')[1]);
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  return new Blob([byteArray], { type: mimeType });
+};
+
 export default function CustomisePage() {
   const [baseColor, setBaseColor] = useState<"black" | "brown" | "off-white" | "red">("black");
   const [size, setSize] = useState<"S" | "M" | "L" | "XL">("M");
@@ -197,6 +208,33 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
     window.open(`https://wa.me/919315457852?text=${encodedText}`, "_blank");
   };
 
+  const handleDownloadImageDirectly = (url: string) => {
+    const link = document.createElement("a");
+    link.download = `custom-tee-${activeSlide}-${Date.now()}.png`;
+    link.href = url;
+    link.click();
+  };
+
+  const handleShareOrSave = async () => {
+    if (!generatedMockupUrl) return;
+    try {
+      const blob = base64ToBlob(generatedMockupUrl, 'image/png');
+      const file = new File([blob], `custom-tee-${activeSlide}.png`, { type: 'image/png' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: 'Custom Tee Design',
+          text: 'Here is my custom streetwear design!',
+        });
+      } else {
+        handleDownloadImageDirectly(generatedMockupUrl);
+      }
+    } catch (e) {
+      console.error("Sharing failed", e);
+      handleDownloadImageDirectly(generatedMockupUrl);
+    }
+  };
+
   const handleDownloadMockup = () => {
     setShowPermissionModal(true);
   };
@@ -244,12 +282,14 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
 
       if (isMobile) {
+        try {
+          handleDownloadImageDirectly(dataUrl);
+        } catch (e) {
+          // Silent fallback
+        }
         setShowSaveModal(true);
       } else {
-        const link = document.createElement("a");
-        link.download = `custom-tee-${activeSlide}-${Date.now()}.png`;
-        link.href = dataUrl;
-        link.click();
+        handleDownloadImageDirectly(dataUrl);
       }
     } catch (error) {
       console.error("Failed to generate mockup image:", error);
@@ -831,10 +871,28 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
               transition={{ type: "spring", duration: 0.4 }}
               className="bg-white/95 backdrop-blur-md border border-neutral-200/80 rounded-[32px] max-w-md w-full p-6 text-center shadow-2xl flex flex-col items-center"
             >
-              <h3 className="text-lg font-black uppercase tracking-wider text-black mb-2">Save to Gallery</h3>
+              <h3 className="text-lg font-black uppercase tracking-wider text-black mb-2">Save Your Design</h3>
               <p className="text-neutral-500 text-[10px] font-bold uppercase tracking-wider leading-relaxed mb-4 max-w-sm">
-                Long-press on the image below and select <span className="text-black">"Save to Photos"</span> or <span className="text-black">"Add to Photos"</span> to save it directly to your device gallery!
+                Use the buttons below to save or share your high-quality design. You can also long-press the preview image.
               </p>
+
+              <div className="w-full flex flex-col gap-2.5 mb-4">
+                <button
+                  onClick={handleShareOrSave}
+                  className="w-full py-3.5 bg-[#005bd3] hover:bg-[#004bb3] text-white rounded-full font-bold uppercase tracking-widest text-[10px] transition-colors shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                >
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z" />
+                  </svg>
+                  Share / Save to Photos
+                </button>
+                <button
+                  onClick={() => handleDownloadImageDirectly(generatedMockupUrl)}
+                  className="w-full py-3.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-full font-bold uppercase tracking-widest text-[10px] transition-colors"
+                >
+                  Direct PNG Download
+                </button>
+              </div>
 
               <div className="w-full relative aspect-[4/5] bg-neutral-100 rounded-[20px] overflow-hidden border border-neutral-200 shadow-inner mb-6 flex items-center justify-center">
                 <img
@@ -849,7 +907,7 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
                 onClick={() => setShowSaveModal(false)}
                 className="w-full py-4 bg-black hover:bg-neutral-800 text-white rounded-full font-bold uppercase tracking-widest text-xs transition-colors shadow-md hover:shadow-lg"
               >
-                Done
+                Close
               </button>
             </motion.div>
           </motion.div>

@@ -1,11 +1,15 @@
 // app/login/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
-export default function LoginPage() {
+function LoginForm() {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
+
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [contact, setContact] = useState("");
   const [otp, setOtp] = useState("");
@@ -52,8 +56,8 @@ export default function LoginPage() {
         throw new Error(result.error);
       }
 
-      // Successfully signed in! Redirect to homepage.
-      window.location.href = "/";
+      // Successfully signed in! Redirect to the callbackUrl.
+      window.location.href = callbackUrl;
     } catch (err: any) {
       setError(err.message || "Invalid or expired code.");
     } finally {
@@ -82,7 +86,7 @@ export default function LoginPage() {
           <div className="w-full">
             {/* Google OAuth Trigger */}
             <button
-              onClick={() => signIn("google", { callbackUrl: "/" })}
+              onClick={() => signIn("google", { callbackUrl })}
               disabled={loading}
               className="w-full bg-white text-[#3c4043] border border-[#dadce0] py-3 rounded-full font-medium text-sm hover:bg-[#f8f9fa] transition-colors flex items-center justify-center gap-3 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -96,37 +100,6 @@ export default function LoginPage() {
               </svg>
               Continue with Google
             </button>
-
-            {/* Divider (Commented out until SMS OTP is set up) */}
-            {/* 
-            <div className="flex items-center w-full mb-6">
-              <div className="flex-1 border-t border-neutral-200"></div>
-              <span className="px-3 text-neutral-400 text-xs font-bold uppercase tracking-widest">Or</span>
-              <div className="flex-1 border-t border-neutral-200"></div>
-            </div>
-            */}
-
-            {/* Phone / Email Form (Commented out until SMS OTP is set up) */}
-            {/* 
-            <form onSubmit={handleSendCode} className="flex flex-col gap-4 w-full">
-              <input
-                type="text"
-                required
-                disabled={loading}
-                value={contact}
-                onChange={(e) => setContact(e.target.value)}
-                placeholder="Email or Phone Number"
-                className="w-full border-2 border-neutral-200 rounded-md p-3 text-sm focus:outline-none focus:border-black transition-colors disabled:bg-neutral-50"
-              />
-              <button 
-                type="submit" 
-                disabled={loading}
-                className="w-full bg-black text-white font-bold uppercase tracking-widest text-sm py-3 rounded-full hover:bg-neutral-800 transition-colors mt-2 disabled:bg-neutral-400 disabled:cursor-not-allowed"
-              >
-                {loading ? "Sending..." : "Send Code"}
-              </button>
-            </form>
-            */}
           </div>
         ) : (
           <form onSubmit={handleVerify} className="flex flex-col gap-4 w-full">
@@ -164,5 +137,20 @@ export default function LoginPage() {
         
       </div>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen w-full bg-gray-50 text-black flex flex-col items-center justify-center p-6 font-sans">
+        <div className="w-full max-w-md flex flex-col items-center border border-neutral-200 rounded-3xl p-10 shadow-lg bg-white">
+          <h1 className="text-4xl font-black uppercase tracking-tighter mb-2">NARROW PATH</h1>
+          <p className="text-xs font-bold uppercase tracking-widest text-neutral-400 animate-pulse">Loading secure gateway...</p>
+        </div>
+      </main>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }

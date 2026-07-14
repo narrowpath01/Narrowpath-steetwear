@@ -23,10 +23,12 @@ async function main() {
       description: "Premium heavyweight cream tee featuring our custom sunflower graphic print on the back and minimalist SUNFLOWER lettering on the chest. Relaxed boxy fit, crafted from 100% premium cotton for ultimate comfort and durability.",
       images: {
         create: [
-          { url: "/sunflower-front.png", altText: "Sunflower Heavyweight Tee Front View" },
-          { url: "/sunflower-back.png", altText: "Sunflower Heavyweight Tee Back View" },
-          { url: "/sunflower-detail-text.png", altText: "Sunflower Heavyweight Tee Detail Text" },
-          { url: "/sunflower-detail-graphic.png", altText: "Sunflower Heavyweight Tee Detail Graphic" },
+          { url: "/sunflower-1.png", altText: "Sunflower Heavyweight Tee Front View" },
+          { url: "/sunflower-2.png", altText: "Sunflower Heavyweight Tee Back View" },
+          { url: "/sunflower-3.png", altText: "Sunflower Heavyweight Tee Model View" },
+          { url: "/sunflower-4.png", altText: "Sunflower Heavyweight Tee Sleeve Logo Detail" },
+          { url: "/sunflower-5.png", altText: "Sunflower Heavyweight Tee Chest Graphic Detail" },
+          { url: "/sunflower-6.png", altText: "Sunflower Heavyweight Tee Back Graphic Detail" },
         ]
       },
       variants: {
@@ -50,9 +52,11 @@ async function main() {
       images: {
         create: [
           { url: "/christ-cross-front-detail.png", altText: "Christ Cross Heavyweight Tee Chest Logo" },
-          { url: "/christ-cross-side.png", altText: "Christ Cross Heavyweight Tee Side View" },
           { url: "/christ-cross-back-body.png", altText: "Christ Cross Heavyweight Tee Back View" },
+          { url: "/christ-cross-front-body.png", altText: "Christ Cross Heavyweight Tee Front View" },
+          { url: "/christ-cross-side.png", altText: "Christ Cross Heavyweight Tee Side View" },
           { url: "/christ-cross-back-detail.png", altText: "Christ Cross Heavyweight Tee Back Graphic Detail" },
+          { url: "/christ-cross-collar.png", altText: "Christ Cross Heavyweight Tee Collar Detail" },
         ]
       },
       variants: {
@@ -75,12 +79,12 @@ async function main() {
       description: "Premium heavyweight cream tee featuring our custom red and black Isaiah 41:10 typographic cross print on the back that reads 'AFRAID DO NOT BE ISA 41:10' and a minimalist black 'NP NARROW PATH' chest logo. Relaxed boxy fit, crafted from 100% premium cotton for structural drape and breathability.",
       images: {
         create: [
-          { url: "/do-not-be-afraid-front.png", altText: "Do Not Be Afraid Heavyweight Tee Front View" },
-          { url: "/do-not-be-afraid-detail-front.png", altText: "Do Not Be Afraid Heavyweight Tee Chest Logo" },
-          { url: "/do-not-be-afraid-back.png", altText: "Do Not Be Afraid Heavyweight Tee Back View" },
-          { url: "/do-not-be-afraid-detail-back.png", altText: "Do Not Be Afraid Heavyweight Tee Back Graphic Detail" },
-          { url: "/do-not-be-afraid-side.png", altText: "Do Not Be Afraid Heavyweight Tee Side View" },
-          { url: "/do-not-be-afraid-collar.png", altText: "Do Not Be Afraid Heavyweight Tee Collar Detail" },
+          { url: "/do-not-be-afraid-1.png", altText: "Do Not Be Afraid Heavyweight Tee Front View" },
+          { url: "/do-not-be-afraid-2.png", altText: "Do Not Be Afraid Heavyweight Tee Back View" },
+          { url: "/do-not-be-afraid-3.png", altText: "Do Not Be Afraid Heavyweight Tee Model View" },
+          { url: "/do-not-be-afraid-4.png", altText: "Do Not Be Afraid Heavyweight Tee Detail View" },
+          { url: "/do-not-be-afraid-5.png", altText: "Do Not Be Afraid Heavyweight Tee Back Graphic Detail" },
+          { url: "/do-not-be-afraid-6.png", altText: "Do Not Be Afraid Heavyweight Tee Collar Detail" },
         ]
       },
       variants: {
@@ -103,11 +107,12 @@ async function main() {
       description: "Premium heavyweight red tee featuring a bold graphic print of Kung Fu Panda in a martial arts stance set inside a yellow crescent circle on the back, and a minimalist black and white 'the kung fu PANDA' chest lettering. Relaxed boxy fit, crafted from 100% premium cotton for comfort and style.",
       images: {
         create: [
-          { url: "/panda-side.png", altText: "Kung Fu Panda Heavyweight Tee Side View" },
-          { url: "/panda-front.png", altText: "Kung Fu Panda Heavyweight Tee Front View" },
-          { url: "/panda-detail-front.png", altText: "Kung Fu Panda Heavyweight Tee Chest Logo" },
-          { url: "/panda-back.png", altText: "Kung Fu Panda Heavyweight Tee Back View" },
-          { url: "/panda-detail-back.png", altText: "Kung Fu Panda Heavyweight Tee Back Graphic Detail" },
+          { url: "/panda-1.png", altText: "Kung Fu Panda Heavyweight Tee Front Model View" },
+          { url: "/panda-2.png", altText: "Kung Fu Panda Heavyweight Tee Back View" },
+          { url: "/panda-3.png", altText: "Kung Fu Panda Heavyweight Tee Front Model View Full" },
+          { url: "/panda-4.png", altText: "Kung Fu Panda Heavyweight Tee Sleeve Logo Detail" },
+          { url: "/panda-5.png", altText: "Kung Fu Panda Heavyweight Tee Chest Graphic Detail" },
+          { url: "/panda-6.png", altText: "Kung Fu Panda Heavyweight Tee Back Graphic Detail" },
         ]
       },
       variants: {
@@ -301,12 +306,11 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/red-moon-front.png", altText: "Red Moon Heavyweight Tee Front View" },
-          { url: "/red-moon-back.png", altText: "Red Moon Heavyweight Tee Back View" },
-          { url: "/red-moon-model.png", altText: "Red Moon Heavyweight Tee Model View" },
-          { url: "/red-moon-detail-front.png", altText: "Red Moon Heavyweight Tee Chest Graphic" },
-          { url: "/red-moon-detail-back.png", altText: "Red Moon Heavyweight Tee Back Graphic Detail" },
-          { url: "/red-moon-fabric.png", altText: "Red Moon Heavyweight Tee Fabric Detail" },
+          { url: "/red-moon-1.png", altText: "Red Moon Heavyweight Tee Front Model View" },
+          { url: "/red-moon-2.png", altText: "Red Moon Heavyweight Tee Back View" },
+          { url: "/red-moon-3.png", altText: "Red Moon Heavyweight Tee Front Model View Full" },
+          { url: "/red-moon-4.png", altText: "Red Moon Heavyweight Tee Sleeve Logo Detail" },
+          { url: "/red-moon-5.png", altText: "Red Moon Heavyweight Tee Chest Graphic Detail" },
         ]
       },
       variants: {
@@ -330,12 +334,13 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/porsche-front.png", altText: "Porsche 911 Heavyweight Tee Front View" },
-          { url: "/porsche-back.png", altText: "Porsche 911 Heavyweight Tee Back View" },
-          { url: "/porsche-model.png", altText: "Porsche 911 Heavyweight Tee Model View" },
-          { url: "/porsche-detail-front.png", altText: "Porsche 911 Heavyweight Tee Chest Graphic" },
-          { url: "/porsche-detail-back.png", altText: "Porsche 911 Heavyweight Tee Back Graphic Detail" },
-          { url: "/porsche-fabric.png", altText: "Porsche 911 Heavyweight Tee Fabric Detail" },
+          { url: "/porsche-1.png", altText: "Porsche 911 Heavyweight Tee Front View" },
+          { url: "/porsche-2.png", altText: "Porsche 911 Heavyweight Tee Back View" },
+          { url: "/porsche-3.png", altText: "Porsche 911 Heavyweight Tee Model View" },
+          { url: "/porsche-4.png", altText: "Porsche 911 Heavyweight Tee Sleeve Logo Detail" },
+          { url: "/porsche-5.png", altText: "Porsche 911 Heavyweight Tee Back Graphic Detail" },
+          { url: "/porsche-6.png", altText: "Porsche 911 Heavyweight Tee Chest Graphic Detail" },
+          { url: "/porsche-7.png", altText: "Porsche 911 Heavyweight Tee Sleeve Text Detail" },
         ]
       },
       variants: {
@@ -349,7 +354,207 @@ async function main() {
     }
   });
 
-  console.log("\nDatabase seeded successfully with all 12 products!");
+  // 13. Social Introvert Heavyweight Tee
+  console.log("Seeding: Social Introvert Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Social Introvert Heavyweight Tee",
+      handle: "social-introvert-heavyweight-tee",
+      description: "Premium heavyweight white tee featuring a bold 'SOCIAL INTROVERT' graphic print on the back with our custom boy cartoon character, and a minimalist boy cartoon chest graphic. Relaxed boxy fit, crafted from 100% premium cotton for structural drape and comfort.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/social-introvert-1.png", altText: "Social Introvert Heavyweight Tee Front View" },
+          { url: "/social-introvert-2.png", altText: "Social Introvert Heavyweight Tee Back View" },
+          { url: "/social-introvert-3.png", altText: "Social Introvert Heavyweight Tee Model View" },
+          { url: "/social-introvert-4.png", altText: "Social Introvert Heavyweight Tee Chest Graphic Detail" },
+          { url: "/social-introvert-5.png", altText: "Social Introvert Heavyweight Tee Collar Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  // 14. Year of Dragon Heavyweight Tee
+  console.log("Seeding: Year of Dragon Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Year of Dragon Heavyweight Tee",
+      handle: "year-of-dragon-heavyweight-tee",
+      description: "Premium heavyweight red tee featuring a striking Year of Dragon graphic print on the back and 'GONG XI FA CAI 恭喜发财' yellow Chinese lettering on the chest. Relaxed boxy fit, crafted from 100% premium cotton for structural drape and comfort.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/dragon-1.png", altText: "Year of Dragon Heavyweight Tee Front View" },
+          { url: "/dragon-2.png", altText: "Year of Dragon Heavyweight Tee Back View" },
+          { url: "/dragon-3.png", altText: "Year of Dragon Heavyweight Tee Model View" },
+          { url: "/dragon-4.png", altText: "Year of Dragon Heavyweight Tee Chest Graphic Detail" },
+          { url: "/dragon-5.png", altText: "Year of Dragon Heavyweight Tee Back Graphic Detail" },
+          { url: "/dragon-6.png", altText: "Year of Dragon Heavyweight Tee Collar Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  // 15. Floral Dreams Heavyweight Tee
+  console.log("Seeding: Floral Dreams Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Floral Dreams Heavyweight Tee",
+      handle: "floral-dreams-heavyweight-tee",
+      description: "Premium heavyweight white tee featuring a beautiful 'FLORAL DREAMS' rose-wrapped heart graphic print on the back and minimalist 'floral dreams' chest lettering in yellow-green. Relaxed boxy fit, crafted from 100% premium cotton for ultimate comfort and structural drape.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/floral-dreams-1.png", altText: "Floral Dreams Heavyweight Tee Front View" },
+          { url: "/floral-dreams-2.png", altText: "Floral Dreams Heavyweight Tee Back View" },
+          { url: "/floral-dreams-5.png", altText: "Floral Dreams Heavyweight Tee Model View" },
+          { url: "/floral-dreams-3.png", altText: "Floral Dreams Heavyweight Tee Chest Graphic Detail" },
+          { url: "/floral-dreams-4.png", altText: "Floral Dreams Heavyweight Tee Back Graphic Detail" },
+          { url: "/floral-dreams-6.png", altText: "Floral Dreams Heavyweight Tee Collar Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  // 16. Glow Different Heavyweight Tee
+  console.log("Seeding: Glow Different Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Glow Different Heavyweight Tee",
+      handle: "glow-different-heavyweight-tee",
+      description: "Premium heavyweight red tee featuring a playful black cat wrapped in glowing Christmas lights graphic print on the back and a minimalist white 'GLOW DIFFERENT' chest graphic. Relaxed boxy fit, crafted from 100% premium cotton for ultimate style and comfort.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/glow-different-1.png", altText: "Glow Different Heavyweight Tee Front View" },
+          { url: "/glow-different-2.png", altText: "Glow Different Heavyweight Tee Back View" },
+          { url: "/glow-different-3.png", altText: "Glow Different Heavyweight Tee Model View" },
+          { url: "/glow-different-4.png", altText: "Glow Different Heavyweight Tee Chest Graphic Detail" },
+          { url: "/glow-different-5.png", altText: "Glow Different Heavyweight Tee Back Graphic Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  // 17. Goku Heavyweight Tee
+  console.log("Seeding: Goku Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Goku Heavyweight Tee",
+      handle: "goku-heavyweight-tee",
+      description: "Premium heavyweight cream tee featuring a stunning Goku and Shenron graphic print on the back and minimalist 'Goku' chest lettering in orange-red. Relaxed boxy fit, crafted from 100% premium cotton for structural drape and comfort.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/goku-1.png", altText: "Goku Heavyweight Tee Front View" },
+          { url: "/goku-2.png", altText: "Goku Heavyweight Tee Back View" },
+          { url: "/goku-3.png", altText: "Goku Heavyweight Tee Model View" },
+          { url: "/goku-4.png", altText: "Goku Heavyweight Tee Chest Graphic Detail" },
+          { url: "/goku-5.png", altText: "Goku Heavyweight Tee Back Graphic Detail" },
+          { url: "/goku-6.png", altText: "Goku Heavyweight Tee Collar Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  // 18. Happiness Heavyweight Tee
+  console.log("Seeding: Happiness Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Happiness Heavyweight Tee",
+      handle: "happiness-heavyweight-tee",
+      description: "Premium heavyweight cream tee featuring a whimsical anime-style illustration of a girl walking with a cat in a daisy field on the back and 'Happiness Lives In Small Moments' chest print in forest green. Relaxed boxy fit, crafted from 100% premium cotton for structural drape and comfort.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/happiness-1.png", altText: "Happiness Heavyweight Tee Front View" },
+          { url: "/happiness-2.png", altText: "Happiness Heavyweight Tee Back View" },
+          { url: "/happiness-3.png", altText: "Happiness Heavyweight Tee Model View" },
+          { url: "/happiness-4.png", altText: "Happiness Heavyweight Tee Chest Graphic Detail" },
+          { url: "/happiness-5.png", altText: "Happiness Heavyweight Tee Back Graphic Detail" },
+          { url: "/happiness-6.png", altText: "Happiness Heavyweight Tee Collar Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  // 19. Love Peace Patience Heavyweight Tee
+  console.log("Seeding: Love Peace Patience Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Love Peace Patience Heavyweight Tee",
+      handle: "love-peace-patience-heavyweight-tee",
+      description: "Premium heavyweight cream tee featuring a detailed golden-brown sketch of a pomegranate tree on the back and a minimalist 'LOVE PEACE PATIENCE' chest graphic in terracotta brown. Relaxed boxy fit, crafted from 100% premium cotton for structural drape and comfort.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/love-peace-patience-1.png", altText: "Love Peace Patience Heavyweight Tee Front View" },
+          { url: "/love-peace-patience-2.png", altText: "Love Peace Patience Heavyweight Tee Back View" },
+          { url: "/love-peace-patience-3.png", altText: "Love Peace Patience Heavyweight Tee Model View" },
+          { url: "/love-peace-patience-4.png", altText: "Love Peace Patience Heavyweight Tee Chest Graphic Detail" },
+          { url: "/love-peace-patience-5.png", altText: "Love Peace Patience Heavyweight Tee Back Graphic Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  console.log("\nDatabase seeded successfully with all 19 products!");
 }
 
 main()
