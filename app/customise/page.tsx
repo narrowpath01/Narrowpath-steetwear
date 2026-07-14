@@ -18,6 +18,22 @@ const base64ToBlob = (base64: string, mimeType: string) => {
   return new Blob([byteArray], { type: mimeType });
 };
 
+const imageUrlToBase64 = async (url: string): Promise<string> => {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (error) {
+    console.error("Failed to convert image to base64:", error);
+    return url;
+  }
+};
+
 export default function CustomisePage() {
   const [baseColor, setBaseColor] = useState<"black" | "brown" | "off-white" | "red">("black");
   const [size, setSize] = useState<"S" | "M" | "L" | "XL">("M");
@@ -175,8 +191,13 @@ export default function CustomisePage() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      const url = URL.createObjectURL(file);
-      addGraphic(url, file.name);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          addGraphic(event.target.result as string, file.name);
+        }
+      };
+      reader.readAsDataURL(file);
       e.target.value = ""; // Clear file target value
     }
   };
@@ -251,7 +272,29 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
     // Give React a small paint frame to remove bounding boxes
     await new Promise((resolve) => setTimeout(resolve, 150));
 
+    let baseImgEl: HTMLImageElement | null = null;
+    let originalSrc = "";
+    const graphicImages = Array.from(previewContainerRef.current.querySelectorAll("img[alt*='Graphic']") || []) as HTMLImageElement[];
+    const originalGraphicSrcs = new Map<HTMLImageElement, string>();
+
     try {
+      // 1. Temporarily swap base image to Base64 to bypass Safari WebKit SVG limitations
+      baseImgEl = previewContainerRef.current.querySelector("img[alt*='Preview']") as HTMLImageElement | null;
+      if (baseImgEl && baseImgEl.src) {
+        originalSrc = baseImgEl.src;
+        const base64Src = await imageUrlToBase64(baseImgEl.src);
+        baseImgEl.src = base64Src;
+      }
+
+      // 2. Temporarily swap all custom graphics to Base64 to bypass Safari WebKit SVG limitations
+      for (const img of graphicImages) {
+        if (img.src && !img.src.startsWith("data:")) {
+          originalGraphicSrcs.set(img, img.src);
+          const base64Src = await imageUrlToBase64(img.src);
+          img.src = base64Src;
+        }
+      }
+
       // Warm-up pass for Safari compatibility
       const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
       if (isSafari) {
@@ -295,6 +338,14 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
       console.error("Failed to generate mockup image:", error);
       alert("Failed to export preview. Please take a screenshot of your screen to save your design!");
     } finally {
+      // 3. Restore all original image sources
+      if (baseImgEl && originalSrc) {
+        baseImgEl.src = originalSrc;
+      }
+      originalGraphicSrcs.forEach((src, img) => {
+        img.src = src;
+      });
+
       setIsExporting(false);
       // Restore previous user selection
       setActiveElement(prevActiveElement);
