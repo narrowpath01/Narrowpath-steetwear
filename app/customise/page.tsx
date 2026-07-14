@@ -257,9 +257,9 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
       if (isSafari) {
         try {
           await toPng(previewContainerRef.current, {
-            cacheBust: true,
+            cacheBust: false,
+            skipFonts: true,
             backgroundColor: "#f5f5f5",
-            fontEmbedCSS: "",
             pixelRatio: 1
           });
         } catch (e) {
@@ -269,10 +269,10 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
 
       // Capture mockup PNG
       const dataUrl = await toPng(previewContainerRef.current, {
-        cacheBust: true,
+        cacheBust: false,
+        skipFonts: true,
         quality: 0.95,
         backgroundColor: "#f5f5f5",
-        fontEmbedCSS: "", // Solves Safari WebKit sandbox security exceptions when parsing web fonts
         pixelRatio: window.devicePixelRatio && window.devicePixelRatio > 2 ? 2 : (window.devicePixelRatio || 1)
       });
 
@@ -868,26 +868,20 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
               transition={{ type: "spring", duration: 0.4 }}
               className="bg-white/95 backdrop-blur-md border border-neutral-200/80 rounded-[32px] max-w-md w-full p-6 text-center shadow-2xl flex flex-col items-center"
             >
-              <h3 className="text-lg font-black uppercase tracking-wider text-black mb-2">Save Your Design</h3>
+              <h3 className="text-lg font-black uppercase tracking-wider text-black mb-2">Saved to Downloads!</h3>
               <p className="text-neutral-500 text-[10px] font-bold uppercase tracking-wider leading-relaxed mb-4 max-w-sm">
-                Use the buttons below to save or share your high-quality design. You can also long-press the preview image.
+                Your design has been saved to your device's Downloads folder as a high-quality PNG. If the download did not trigger automatically, tap the button below or long-press the image to save it.
               </p>
 
               <div className="w-full flex flex-col gap-2.5 mb-4">
                 <button
-                  onClick={handleShareOrSave}
-                  className="w-full py-3.5 bg-[#005bd3] hover:bg-[#004bb3] text-white rounded-full font-bold uppercase tracking-widest text-[10px] transition-colors shadow-md hover:shadow-lg flex items-center justify-center gap-2"
-                >
-                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                    <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z" />
-                  </svg>
-                  Share / Save to Photos
-                </button>
-                <button
                   onClick={() => handleDownloadImageDirectly(generatedMockupUrl)}
-                  className="w-full py-3.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-full font-bold uppercase tracking-widest text-[10px] transition-colors"
+                  className="w-full py-3.5 bg-black hover:bg-neutral-800 text-white rounded-full font-bold uppercase tracking-widest text-[10px] transition-colors shadow-md hover:shadow-lg flex items-center justify-center gap-2"
                 >
-                  Direct PNG Download
+                  <svg className="w-4 h-4 fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                  </svg>
+                  Download PNG
                 </button>
               </div>
 
@@ -902,7 +896,7 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
 
               <button
                 onClick={() => setShowSaveModal(false)}
-                className="w-full py-4 bg-black hover:bg-neutral-800 text-white rounded-full font-bold uppercase tracking-widest text-xs transition-colors shadow-md hover:shadow-lg"
+                className="w-full py-4 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded-full font-bold uppercase tracking-widest text-xs transition-colors"
               >
                 Close
               </button>
