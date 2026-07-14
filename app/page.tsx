@@ -36,6 +36,10 @@ export default async function Home() {
     printedProducts[sunflowerIdx] = printedProducts[pandaIdx];
     printedProducts[pandaIdx] = temp;
   }
+  // Hide the last product to only keep even number of rows if there is an odd number of printed products
+  const printedGridProducts = printedProducts.length % 2 !== 0 
+    ? printedProducts.slice(0, -1) 
+    : printedProducts;
 
   return (
     <main className="min-h-screen bg-white text-black">
@@ -59,7 +63,7 @@ export default async function Home() {
               Printed
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-2 gap-y-8">
-              {printedProducts.map((product) => (
+              {printedGridProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
