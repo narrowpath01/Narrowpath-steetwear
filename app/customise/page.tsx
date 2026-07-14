@@ -312,9 +312,6 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
           <p className="text-neutral-500 text-xs mt-2 max-w-md mx-auto uppercase tracking-wide">
             Design your own heavyweight 240 GSM organic cotton drop shoulder tee. Drag, rotate, and scale design elements.
           </p>
-          <div className="mt-3.5 inline-block bg-yellow-50 border border-yellow-200 text-yellow-800 text-[10px] sm:text-xs font-black uppercase tracking-widest px-4.5 py-2 rounded-full shadow-sm">
-            🔥Buy 2 Tees, Take INR 100 Back!🔥
-          </div>
           <p className="text-xl font-medium text-neutral-600 mt-3.5">
             INR 649
           </p>
