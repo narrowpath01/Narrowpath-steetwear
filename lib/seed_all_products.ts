@@ -37,6 +37,7 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -65,6 +66,7 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -93,6 +95,7 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -121,6 +124,7 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -149,6 +153,7 @@ async function main() {
           { title: "M", price: monoPrice, inventory: 100 },
           { title: "L", price: monoPrice, inventory: 100 },
           { title: "XL", price: monoPrice, inventory: 100 },
+          { title: "XXL", price: monoPrice, inventory: 100 },
         ]
       }
     }
@@ -177,6 +182,7 @@ async function main() {
           { title: "M", price: monoPrice, inventory: 100 },
           { title: "L", price: monoPrice, inventory: 100 },
           { title: "XL", price: monoPrice, inventory: 100 },
+          { title: "XXL", price: monoPrice, inventory: 100 },
         ]
       }
     }
@@ -205,6 +211,7 @@ async function main() {
           { title: "M", price: monoPrice, inventory: 100 },
           { title: "L", price: monoPrice, inventory: 100 },
           { title: "XL", price: monoPrice, inventory: 100 },
+          { title: "XXL", price: monoPrice, inventory: 100 },
         ]
       }
     }
@@ -233,6 +240,7 @@ async function main() {
           { title: "M", price: monoPrice, inventory: 100 },
           { title: "L", price: monoPrice, inventory: 100 },
           { title: "XL", price: monoPrice, inventory: 100 },
+          { title: "XXL", price: monoPrice, inventory: 100 },
         ]
       }
     }
@@ -262,6 +270,7 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -291,6 +300,7 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -319,6 +329,7 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -349,6 +360,7 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -377,6 +389,7 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -406,6 +419,7 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -435,6 +449,7 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -463,6 +478,7 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -492,6 +508,7 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -521,6 +538,7 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -549,12 +567,106 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
   });
 
-  console.log("\nDatabase seeded successfully with all 19 products!");
+  // --- WOMEN'S MONOCHROME TEES ---
+  const womenTees = [
+    {
+      color: "black",
+      title: "Women's Monochrome Black Heavyweight Tee",
+      handle: "women-monochrome-black-heavyweight-tee",
+      images: [
+        { url: "/women-plain-black-front.png", altText: "Women's Monochrome Black Heavyweight Tee Front View" },
+        { url: "/women-plain-black-back.png", altText: "Women's Monochrome Black Heavyweight Tee Back View" },
+        { url: "/women-plain-black-full.png", altText: "Women's Monochrome Black Heavyweight Tee Full View" },
+        { url: "/women-plain-black-side.png", altText: "Women's Monochrome Black Heavyweight Tee Side View" },
+        { url: "/women-plain-black-collar.png", altText: "Women's Monochrome Black Heavyweight Tee Collar Detail" },
+        { url: "/women-plain-black-detail.png", altText: "Women's Monochrome Black Heavyweight Tee Fabric Detail" },
+      ]
+    },
+    {
+      color: "brown",
+      title: "Women's Monochrome Brown Heavyweight Tee",
+      handle: "women-monochrome-brown-heavyweight-tee",
+      images: [
+        { url: "/women-plain-brown-front.png", altText: "Women's Monochrome Brown Heavyweight Tee Front View" },
+        { url: "/women-plain-brown-back.png", altText: "Women's Monochrome Brown Heavyweight Tee Back View" },
+        { url: "/women-plain-brown-full.png", altText: "Women's Monochrome Brown Heavyweight Tee Full View" },
+        { url: "/women-plain-brown-side.png", altText: "Women's Monochrome Brown Heavyweight Tee Side View" },
+        { url: "/women-plain-brown-collar.png", altText: "Women's Monochrome Brown Heavyweight Tee Collar Detail" },
+        { url: "/women-plain-brown-detail.png", altText: "Women's Monochrome Brown Heavyweight Tee Fabric Detail" },
+      ]
+    },
+    {
+      color: "off-white",
+      title: "Women's Monochrome Off-White Heavyweight Tee",
+      handle: "women-monochrome-off-white-heavyweight-tee",
+      images: [
+        { url: "/women-plain-offwhite-front.png", altText: "Women's Monochrome Off-White Heavyweight Tee Front View" },
+        { url: "/women-plain-offwhite-back.png", altText: "Women's Monochrome Off-White Heavyweight Tee Back View" },
+        { url: "/women-plain-offwhite-full.png", altText: "Women's Monochrome Off-White Heavyweight Tee Full View" },
+        { url: "/women-plain-offwhite-side.png", altText: "Women's Monochrome Off-White Heavyweight Tee Side View" },
+        { url: "/women-plain-offwhite-collar.png", altText: "Women's Monochrome Off-White Heavyweight Tee Collar Detail" },
+        { url: "/women-plain-offwhite-detail.png", altText: "Women's Monochrome Off-White Heavyweight Tee Fabric Detail" },
+      ]
+    },
+    {
+      color: "red",
+      title: "Women's Monochrome Red Heavyweight Tee",
+      handle: "women-monochrome-red-heavyweight-tee",
+      images: [
+        { url: "/women-plain-red-front.png", altText: "Women's Monochrome Red Heavyweight Tee Front View" },
+        { url: "/women-plain-red-back.png", altText: "Women's Monochrome Red Heavyweight Tee Back View" },
+        { url: "/women-plain-red-full.png", altText: "Women's Monochrome Red Heavyweight Tee Full View" },
+        { url: "/women-plain-red-side.png", altText: "Women's Monochrome Red Heavyweight Tee Side View" },
+        { url: "/women-plain-red-collar.png", altText: "Women's Monochrome Red Heavyweight Tee Collar Detail" },
+        { url: "/women-plain-red-detail.png", altText: "Women's Monochrome Red Heavyweight Tee Fabric Detail" },
+      ]
+    },
+    {
+      color: "white",
+      title: "Women's Monochrome White Heavyweight Tee",
+      handle: "women-monochrome-white-heavyweight-tee",
+      images: [
+        { url: "/women-plain-white-front.png", altText: "Women's Monochrome White Heavyweight Tee Front View" },
+        { url: "/women-plain-white-back.png", altText: "Women's Monochrome White Heavyweight Tee Back View" },
+        { url: "/women-plain-white-full.png", altText: "Women's Monochrome White Heavyweight Tee Full View" },
+        { url: "/women-plain-white-side.png", altText: "Women's Monochrome White Heavyweight Tee Side View" },
+        { url: "/women-plain-white-collar.png", altText: "Women's Monochrome White Heavyweight Tee Collar Detail" },
+        { url: "/women-plain-white-detail.png", altText: "Women's Monochrome White Heavyweight Tee Fabric Detail" },
+      ]
+    }
+  ];
+
+  for (const tee of womenTees) {
+    console.log(`Seeding: ${tee.title}...`);
+    await prisma.product.create({
+      data: {
+        title: tee.title,
+        handle: tee.handle,
+        description: `Premium heavyweight women's monochrome tee. Clean design, boxy relaxed fit, crafted from 100% premium cotton for ultimate comfort, styling, and structural drape. Minimalist stitching details with no graphics.`,
+        collection: "MONOCHROME",
+        images: {
+          create: tee.images
+        },
+        variants: {
+          create: [
+            { title: "S", price: monoPrice, inventory: 100 },
+            { title: "M", price: monoPrice, inventory: 100 },
+            { title: "L", price: monoPrice, inventory: 100 },
+            { title: "XL", price: monoPrice, inventory: 100 },
+            { title: "XXL", price: monoPrice, inventory: 100 },
+          ]
+        }
+      }
+    });
+  }
+
+  console.log("\nDatabase seeded successfully with all 24 products!");
 }
 
 main()
