@@ -36,10 +36,9 @@ export default async function Home() {
     printedProducts[sunflowerIdx] = printedProducts[pandaIdx];
     printedProducts[pandaIdx] = temp;
   }
-  // Hide the last product to only keep even number of rows if there is an odd number of printed products
-  const printedGridProducts = printedProducts.length % 2 !== 0 
-    ? printedProducts.slice(0, -1) 
-    : printedProducts;
+  // Hide trailing items to keep the grid perfectly filled/even on both mobile (2 columns) and desktop (4 columns)
+  const printedGridCount = printedProducts.length - (printedProducts.length % 4);
+  const printedGridProducts = printedProducts.slice(0, printedGridCount);
 
   return (
     <main className="min-h-screen bg-white text-black">
