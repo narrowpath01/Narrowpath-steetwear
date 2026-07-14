@@ -129,7 +129,7 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
       {/* Mobile-only Marquee: below the navbar, above the slides */}
       <div className="w-full px-4 mb-8 block md:hidden text-center">
         <Marquee 
-          text="Customization Available • Buy 2 Tees, Take INR 100 Back!" 
+          text={"Customization Available" + "\u00A0".repeat(16) + "Buy 2 Tees, Take INR 100 Back!"} 
           speed="slow" 
           className="rounded-[32px] overflow-hidden border border-neutral-800" 
         />
@@ -206,7 +206,7 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
       {/* Desktop-only Marquee: below the slides/dots */}
       <div className="w-full px-12 mt-10 hidden md:block text-center">
         <Marquee 
-          text="Customization Available • Buy 2 Tees, Take INR 100 Back!" 
+          text={"Customization Available" + "\u00A0".repeat(16) + "Buy 2 Tees, Take INR 100 Back!"} 
           speed="slow" 
           className="rounded-[32px] overflow-hidden border border-neutral-800" 
         />
