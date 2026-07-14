@@ -23,7 +23,9 @@ export default async function Home() {
     }
   });
 
-  const printedProducts = products.filter((p: any) => p.collection === 'PRINTED' || !p.collection);
+  const printedAll = products.filter((p: any) => p.collection === 'PRINTED' || !p.collection);
+  const womenPrinted = printedAll.filter((p: any) => p.handle.startsWith("women-"));
+  const printedProducts = printedAll.filter((p: any) => !p.handle.startsWith("women-"));
   const monochromeProducts = products.filter((p: any) => p.collection === 'MONOCHROME');
   const womenMono = monochromeProducts.filter((p: any) => p.handle.startsWith("women-"));
   const menMono = monochromeProducts.filter((p: any) => !p.handle.startsWith("women-"));
@@ -62,9 +64,18 @@ export default async function Home() {
               Printed
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-2 gap-y-8">
-              {printedGridProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+              {printedGridProducts.map((product) => {
+                const baseName = product.handle.replace("-heavyweight-tee", "");
+                const womenProduct = womenPrinted.find((wp: any) => wp.handle.includes(baseName));
+                return (
+                  <ProductCard 
+                    key={product.id} 
+                    product={product} 
+                    womenProduct={womenProduct}
+                    defaultGender="men"
+                  />
+                );
+              })}
             </div>
           </div>
         </div>

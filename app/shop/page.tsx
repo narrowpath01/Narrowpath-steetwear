@@ -18,7 +18,10 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
     orderBy: { createdAt: 'desc' }
   });
 
-  const printedProducts = products.filter((p: any) => p.collection === 'PRINTED' || !p.collection);
+  const printedAll = products.filter((p: any) => p.collection === 'PRINTED' || !p.collection);
+  const womenPrinted = printedAll.filter((p: any) => p.handle.startsWith("women-"));
+  const printedProducts = printedAll.filter((p: any) => !p.handle.startsWith("women-"));
+
   const monochromeProducts = products.filter((p: any) => p.collection === 'MONOCHROME');
 
   const womenMono = monochromeProducts.filter((p: any) => p.handle.startsWith("women-"));
@@ -33,7 +36,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
     printedProducts[pandaIdx] = temp;
   }
 
-  const showPrinted = activeGender !== "women" && (!type || type.toLowerCase() === "printed");
+  const showPrinted = !type || type.toLowerCase() === "printed";
   const showMonochrome = !type || type.toLowerCase() === "monochrome";
 
   return (
@@ -55,24 +58,52 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
         </div>
 
         {/* 1. Printed Collection Section */}
-        {showPrinted && printedProducts.length > 0 && (
+        {showPrinted && (activeGender === "women" ? womenPrinted.length > 0 : printedProducts.length > 0) && (
           <div className="space-y-6">
             <div className="flex items-center gap-4">
               <h2 className="text-lg font-black uppercase tracking-wider text-black">
-                {activeGender === "men" ? "Men's Printed Tees" : "Printed Tees"}
+                {activeGender === "women"
+                  ? "Women's Printed Tees"
+                  : activeGender === "men"
+                  ? "Men's Printed Tees"
+                  : "Printed Tees"}
               </h2>
               <div className="h-[1px] flex-1 bg-neutral-100"></div>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10">
-              {printedProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+              {activeGender === "women"
+                ? womenPrinted.map((womenProd) => {
+                    const baseName = womenProd.handle
+                      .replace("women-", "")
+                      .replace("-heavyweight-tee", "");
+                    const menProduct = printedProducts.find((mp: any) => mp.handle.includes(baseName));
+                    return (
+                      <ProductCard 
+                        key={womenProd.id} 
+                        product={menProduct || womenProd} 
+                        womenProduct={menProduct ? womenProd : undefined}
+                        defaultGender="women"
+                      />
+                    );
+                  })
+                : printedProducts.map((product) => {
+                    const baseName = product.handle.replace("-heavyweight-tee", "");
+                    const womenProduct = womenPrinted.find((wp: any) => wp.handle.includes(baseName));
+                    return (
+                      <ProductCard 
+                        key={product.id} 
+                        product={product} 
+                        womenProduct={womenProduct}
+                        defaultGender="men"
+                      />
+                    );
+                  })}
             </div>
           </div>
         )}
 
         {/* Spacer if both are shown */}
-        {!type && activeGender !== "women" && printedProducts.length > 0 && menMono.length > 0 && (
+        {!type && (activeGender === "women" ? womenPrinted.length > 0 && womenMono.length > 0 : printedProducts.length > 0 && menMono.length > 0) && (
           <div className="h-6"></div>
         )}
 
@@ -122,8 +153,9 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
         )}
 
         {/* No Products Fallback */}
-        {((showPrinted && printedProducts.length === 0) || (showMonochrome && menMono.length === 0)) && 
-         (printedProducts.length === 0 && menMono.length === 0) && (
+        {((showPrinted && (activeGender === "women" ? womenPrinted.length === 0 : printedProducts.length === 0)) || 
+          (showMonochrome && (activeGender === "women" ? womenMono.length === 0 : menMono.length === 0))) && 
+         (activeGender === "women" ? (womenPrinted.length === 0 && womenMono.length === 0) : (printedProducts.length === 0 && menMono.length === 0)) && (
           <div className="text-center py-20">
             <p className="text-neutral-400 font-bold uppercase tracking-widest text-xs">No products found in this category.</p>
           </div>

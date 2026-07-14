@@ -666,7 +666,120 @@ async function main() {
     });
   }
 
-  console.log("\nDatabase seeded successfully with all 24 products!");
+  // --- WOMEN'S PRINTED TEES ---
+  console.log("Seeding: Women's Do Not Be Afraid Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Women's Do Not Be Afraid Heavyweight Tee",
+      handle: "women-do-not-be-afraid-heavyweight-tee",
+      description: "Premium heavyweight women's printed tee featuring our custom red and black Isaiah 41:10 typographic cross print on the back that reads 'AFRAID DO NOT BE ISA 41:10' and a minimalist black 'NP NARROW PATH' chest logo. Relaxed boxy fit, crafted from 100% premium cotton for structural drape and breathability.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/women-do-not-be-afraid-1.png", altText: "Women's Do Not Be Afraid Heavyweight Tee Front View" },
+          { url: "/women-do-not-be-afraid-2.png", altText: "Women's Do Not Be Afraid Heavyweight Tee Back View" },
+          { url: "/women-do-not-be-afraid-3.png", altText: "Women's Do Not Be Afraid Heavyweight Tee Model View" },
+          { url: "/women-do-not-be-afraid-4.png", altText: "Women's Do Not Be Afraid Heavyweight Tee Chest Logo" },
+          { url: "/women-do-not-be-afraid-5.png", altText: "Women's Do Not Be Afraid Heavyweight Tee Back Graphic Detail" },
+          { url: "/women-do-not-be-afraid-6.png", altText: "Women's Do Not Be Afraid Heavyweight Tee Collar Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  console.log("Seeding: Women's Year of Dragon Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Women's Year of Dragon Heavyweight Tee",
+      handle: "women-year-of-dragon-heavyweight-tee",
+      description: "Premium heavyweight women's printed tee. Features a striking Year of Dragon graphic print on the back and 'GONG XI FA CAI 恭喜发财' yellow Chinese lettering on the chest. Relaxed boxy fit, crafted from 100% premium cotton for structural drape and comfort.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/women-year-of-dragon-1.png", altText: "Women's Year of Dragon Heavyweight Tee Front View" },
+          { url: "/women-year-of-dragon-2.png", altText: "Women's Year of Dragon Heavyweight Tee Back View" },
+          { url: "/women-year-of-dragon-3.png", altText: "Women's Year of Dragon Heavyweight Tee Model View" },
+          { url: "/women-year-of-dragon-4.png", altText: "Women's Year of Dragon Heavyweight Tee Chest Detail" },
+          { url: "/women-year-of-dragon-5.png", altText: "Women's Year of Dragon Heavyweight Tee Back Graphic Detail" },
+          { url: "/women-year-of-dragon-6.png", altText: "Women's Year of Dragon Heavyweight Tee Collar Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  console.log("Seeding: Women's Floral Dreams Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Women's Floral Dreams Heavyweight Tee",
+      handle: "women-floral-dreams-heavyweight-tee",
+      description: "Premium heavyweight women's printed tee. Features a striking, colorful custom 'floral dreams heart' graphic print on the back and a Gothic-style 'floral dreams' typography curved across the chest in olive green. Relaxed boxy fit, crafted from 100% premium cotton for structural drape and comfort.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/women-floral-dreams-1.png", altText: "Women's Floral Dreams Heavyweight Tee Front View" },
+          { url: "/women-floral-dreams-2.png", altText: "Women's Floral Dreams Heavyweight Tee Back View" },
+          { url: "/women-floral-dreams-3.png", altText: "Women's Floral Dreams Heavyweight Tee Model View" },
+          { url: "/women-floral-dreams-4.png", altText: "Women's Floral Dreams Heavyweight Tee Back Graphic Detail" },
+          { url: "/women-floral-dreams-5.png", altText: "Women's Floral Dreams Heavyweight Tee Collar Detail View 1" },
+          { url: "/women-floral-dreams-6.png", altText: "Women's Floral Dreams Heavyweight Tee Collar Detail View 2" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  console.log("Seeding: Women's Glow Different Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Women's Glow Different Heavyweight Tee",
+      handle: "women-glow-different-heavyweight-tee",
+      description: "Premium heavyweight women's printed tee. Features a whimsical black cat wrapped in colorful glowing Christmas string lights on the back and a clean white 'GLOWDIFFERENT' typographic text on the chest. Relaxed boxy fit, crafted from 100% premium cotton for structural drape and comfort.",
+      collection: "PRINTED",
+      images: {
+        create: [
+          { url: "/women-glow-different-1.png", altText: "Women's Glow Different Heavyweight Tee Front View" },
+          { url: "/women-glow-different-2.png", altText: "Women's Glow Different Heavyweight Tee Back View" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: printedPrice, inventory: 100 },
+          { title: "M", price: printedPrice, inventory: 100 },
+          { title: "L", price: printedPrice, inventory: 100 },
+          { title: "XL", price: printedPrice, inventory: 100 },
+          { title: "XXL", price: printedPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
+  console.log("\nDatabase seeded successfully with all 28 products!");
 }
 
 main()
