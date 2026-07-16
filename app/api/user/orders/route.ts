@@ -11,7 +11,10 @@ export async function GET(req: Request) {
     }
 
     const orders = await prisma.order.findMany({
-      where: { userId: session.user.id },
+      where: {
+        userId: session.user.id,
+        status: { not: "PENDING" }
+      },
       orderBy: { createdAt: "desc" }, // Newest orders first
       include: {
         returnRequest: true, // We need this to show the return status on the UI

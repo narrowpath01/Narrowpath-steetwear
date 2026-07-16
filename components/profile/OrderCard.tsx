@@ -91,14 +91,22 @@ export default function OrderCard({ order, onOrderUpdate }: OrderCardProps) {
           <span className="text-neutral-400 uppercase font-bold tracking-wider block mb-1">Payment Status</span>
           <span
             className={`inline-block px-2.5 py-0.5 rounded-full font-extrabold uppercase tracking-wider text-[10px] ${
-              isPaid
+              order.status === "REFUNDED"
+                ? "bg-blue-100 text-blue-700 border border-blue-200"
+                : isPaid
                 ? "bg-green-100 text-green-700 border border-green-200"
                 : order.status === "CANCELLED"
                 ? "bg-red-100 text-red-700 border border-red-200"
                 : "bg-amber-100 text-amber-700 border border-amber-200"
             }`}
           >
-            {order.status === "PAID" ? "PAID" : order.status === "PENDING" ? "PENDING" : order.status}
+            {order.status === "PAID" 
+              ? "PAID" 
+              : order.status === "PENDING" 
+              ? "PENDING" 
+              : order.status === "REFUNDED" 
+              ? "REFUND INITIATED" 
+              : order.status}
           </span>
         </div>
         <div className="text-left md:text-right">

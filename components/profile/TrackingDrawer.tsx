@@ -20,9 +20,22 @@ export default function TrackingDrawer({ order, isOpen }: TrackingDrawerProps) {
   // Stepper progress logic
   const isPlaced = true;
   const isPaid = order.status === "PAID" || order.status === "SHIPPED" || order.status === "DELIVERED";
-  const isProcessed = hasAwb || order.status === "SHIPPED" || order.status === "DELIVERED";
-  const isShipped = order.status === "SHIPPED" || order.status === "DELIVERED";
-  const isDelivered = order.status === "DELIVERED";
+
+  // Packed (Step 3): Only marked as packed if either:
+  // - Delhivery status API returns updates and the status is NOT "Manifested" or "Pending PickUp"
+  // - Or order status in DB is manually marked as SHIPPED or DELIVERED.
+  const isProcessed = trackingData
+    ? (trackingData.currentStatus && !["manifested", "pending pickup"].includes(trackingData.currentStatus.toLowerCase()))
+    : (order.status === "SHIPPED" || order.status === "DELIVERED");
+
+  // Shipped (Step 4): Only when the package is in transit/out for delivery or scans exist
+  const isShipped = trackingData
+    ? (trackingData.scans && trackingData.scans.length > 0 && trackingData.currentStatus && !["manifested", "pending pickup"].includes(trackingData.currentStatus.toLowerCase()))
+    : (order.status === "SHIPPED" || order.status === "DELIVERED");
+
+  const isDelivered = trackingData
+    ? (trackingData.currentStatus && trackingData.currentStatus.toLowerCase() === "delivered")
+    : (order.status === "DELIVERED");
 
   useEffect(() => {
     if (!isOpen || !waybillCode) return;

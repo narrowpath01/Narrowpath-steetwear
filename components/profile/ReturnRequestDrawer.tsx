@@ -88,14 +88,20 @@ export default function ReturnRequestDrawer({ order, isOpen, onReturnSubmitted }
             <h4 className="text-xs font-black uppercase tracking-widest text-neutral-400">Return / Exchange Details</h4>
             <span
               className={`inline-block px-2.5 py-0.5 rounded-full font-extrabold uppercase tracking-wider text-[10px] ${
-                retReq.status === "APPROVED"
+                order.status === "REFUNDED"
+                  ? "bg-blue-100 text-blue-700 border border-blue-200"
+                  : retReq.status === "APPROVED"
                   ? "bg-green-100 text-green-700 border border-green-200"
                   : retReq.status === "REJECTED"
                   ? "bg-red-100 text-red-700 border border-red-200"
                   : "bg-orange-100 text-orange-700 border border-orange-200"
               }`}
             >
-              {retReq.status.replace("_", " ")}
+              {order.status === "REFUNDED"
+                ? "REFUND INITIATED"
+                : retReq.status === "REJECTED"
+                ? "ORDER CANCELLED"
+                : retReq.status.replace("_", " ")}
             </span>
           </div>
 
@@ -127,19 +133,24 @@ export default function ReturnRequestDrawer({ order, isOpen, onReturnSubmitted }
           </div>
 
           <div className="bg-white border border-neutral-200 rounded-lg p-4 mt-6 text-xs leading-relaxed text-neutral-600">
-            {retReq.status === "PENDING_REVIEW" && (
+            {order.status === "REFUNDED" && (
+              <p className="text-blue-800 font-bold">
+                ✓ Refund has been successfully initiated. The amount will be credited back to your account according to your bank's policies.
+              </p>
+            )}
+            {order.status !== "REFUNDED" && retReq.status === "PENDING_REVIEW" && (
               <p>
                 Our verification team is reviewing your claim and unboxing evidence. We enforce a strict quality check. If approved, we will manifest a return pickup from your registered address via Delhivery.
               </p>
             )}
-            {retReq.status === "APPROVED" && (
+            {order.status !== "REFUNDED" && retReq.status === "APPROVED" && (
               <p className="text-green-800 font-bold">
                 ✓ Your request has been approved. A return pickup is being scheduled. We will process your exchange/refund once the item reaches our Delhi warehouse.
               </p>
             )}
-            {retReq.status === "REJECTED" && (
+            {order.status !== "REFUNDED" && retReq.status === "REJECTED" && (
               <p className="text-red-800 font-bold">
-                ✕ Your request has been rejected. Claims require clear proof of defect or mismatch. Contact support if you believe this is an error.
+                ✕ Your claim request was declined by the administrator. The order return has been cancelled.
               </p>
             )}
           </div>
@@ -161,6 +172,12 @@ export default function ReturnRequestDrawer({ order, isOpen, onReturnSubmitted }
           <h4 className="text-xs font-black uppercase tracking-widest text-neutral-400 border-b border-neutral-200 pb-2">
             Submit Return / Exchange Request
           </h4>
+
+          {(order.status === "SHIPPED" || order.status === "DELIVERED") && (
+            <div className="bg-red-50 border border-red-200 text-red-800 p-3.5 rounded-lg text-[11px] font-bold leading-normal">
+              ⚠️ Shipping Policy Notice: As this order has already been shipped, you will be responsible for both the initial shipping fee and the return shipping fee (unless the item arrived defective or incorrect).
+            </div>
+          )}
           
           {/* Selector for EXCHANGE vs REFUND */}
           <div>
@@ -263,7 +280,7 @@ export default function ReturnRequestDrawer({ order, isOpen, onReturnSubmitted }
                 <label htmlFor={`is-defective-${order.id}`} className="text-[11px] text-neutral-600 cursor-pointer select-none">
                   <strong>This item arrived defective, damaged, or wrong.</strong>
                   <span className="block text-[10px] text-neutral-400 mt-0.5">
-                    If checked, you will not pay the return shipping fee. If unchecked, a standard return shipping fee may apply.
+                    If checked and verified, return fees are waived. If unchecked, since the order is already shipped, you must pay both the initial and return shipping amounts.
                   </span>
                 </label>
               </div>

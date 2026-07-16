@@ -65,6 +65,8 @@ export async function sendWhatsAppNotification(orderId: string, trackingNumber: 
     const itemsStr = buildItemsString(order.items);
     const customerName = `${order.address.firstName} ${order.address.lastName}`;
     const fullAddress = `${order.address.street}, ${order.address.city}, ${order.address.state} - ${order.address.pinCode}`;
+    const nextAuthUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
+    const invoiceUrl = `${nextAuthUrl}/profile`;
 
     const token = process.env.WHATSAPP_API_TOKEN;
     const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
@@ -80,6 +82,8 @@ export async function sendWhatsAppNotification(orderId: string, trackingNumber: 
       `*Tracking Info:*\n` +
       `- Courier: Delhivery\n` +
       `- Tracking AWB: ${trackingNumber}\n\n` +
+      `*View Full Invoice:*\n` +
+      `${invoiceUrl}\n\n` +
       `We've shipped your package. You can track its movement directly in your dashboard.\n\n` +
       `Thank you for choosing Narrow Path.`;
 
@@ -119,8 +123,11 @@ export async function sendWhatsAppNotification(orderId: string, trackingNumber: 
                     type: "body",
                     parameters: [
                       { type: "text", text: shortOrderId },
+                      { type: "text", text: itemsStr },
+                      { type: "text", text: fullAddress },
+                      { type: "text", text: trackingNumber },
                       { type: "text", text: amountStr },
-                      { type: "text", text: trackingNumber }
+                      { type: "text", text: invoiceUrl }
                     ]
                   }
                 ]
