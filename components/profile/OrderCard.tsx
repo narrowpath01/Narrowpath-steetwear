@@ -16,6 +16,7 @@ export default function OrderCard({ order, onOrderUpdate }: OrderCardProps) {
   const [isTrackingOpen, setIsTrackingOpen] = useState(false);
   const [isReturnOpen, setIsReturnOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -42,6 +43,38 @@ export default function OrderCard({ order, onOrderUpdate }: OrderCardProps) {
     setIsReturnOpen(false);
   };
 
+  // Determine if order was placed within last 15 minutes and is eligible for cancellation
+  const orderTime = new Date(order.createdAt).getTime();
+  const currentTime = new Date().getTime();
+  const diffInMinutes = (currentTime - orderTime) / (1000 * 60);
+  const isCancellable = diffInMinutes <= 15 && (order.status === "PAID" || order.status === "PENDING");
+
+  const handleCancelOrder = async () => {
+    if (!confirm("Are you sure you want to cancel this order? This action cannot be undone.")) {
+      return;
+    }
+    setCancelling(true);
+    try {
+      const res = await fetch("/api/orders/cancel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: order.id }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        alert("Order cancelled successfully!");
+        onOrderUpdate({ ...order, status: "CANCELLED" });
+      } else {
+        alert(data.error || "Failed to cancel order.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("An unexpected error occurred.");
+    } finally {
+      setCancelling(false);
+    }
+  };
+
   return (
     <div className="bg-white border border-neutral-200 rounded-xl shadow-sm overflow-hidden">
       {/* Order Top Panel */}
@@ -60,6 +93,8 @@ export default function OrderCard({ order, onOrderUpdate }: OrderCardProps) {
             className={`inline-block px-2.5 py-0.5 rounded-full font-extrabold uppercase tracking-wider text-[10px] ${
               isPaid
                 ? "bg-green-100 text-green-700 border border-green-200"
+                : order.status === "CANCELLED"
+                ? "bg-red-100 text-red-700 border border-red-200"
                 : "bg-amber-100 text-amber-700 border border-amber-200"
             }`}
           >
@@ -95,6 +130,19 @@ export default function OrderCard({ order, onOrderUpdate }: OrderCardProps) {
 
       {/* Control Panel Buttons */}
       <div className="border-t border-neutral-100 p-4 sm:p-6 bg-neutral-50/50 flex flex-wrap gap-3 justify-end items-center">
+        {isCancellable && (
+          <button
+            disabled={cancelling}
+            onClick={handleCancelOrder}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 hover:text-red-700 hover:border-red-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            {cancelling ? "Cancelling..." : "Cancel Order"}
+          </button>
+        )}
+
         <button
           onClick={() => {
             setIsTrackingOpen(!isTrackingOpen);

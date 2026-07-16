@@ -24,19 +24,20 @@ export async function POST(req: Request) {
         },
       });
 
-      // 1.5. Trigger WhatsApp notification to Store Owner
+      // 1.5. Trigger Delhivery Manifest API call automatically
+      let awbNumber: string | null = null;
       try {
-        await sendOwnerWhatsAppNotification(dbOrderId);
-      } catch (ownerNotificationError) {
-        console.error("Owner WhatsApp Notification Error:", ownerNotificationError);
-      }
-
-      // 2. Trigger Delhivery Manifest API call automatically
-      try {
-        await createDelhiveryShipment(dbOrderId);
+        awbNumber = await createDelhiveryShipment(dbOrderId);
       } catch (shippingError) {
         console.error("Auto Delhivery Shipment Error (Prepaid):", shippingError);
         // We log the error but don't fail the verification since the payment was already successful.
+      }
+
+      // 2. Trigger WhatsApp notification to Store Owner
+      try {
+        await sendOwnerWhatsAppNotification(dbOrderId, awbNumber);
+      } catch (ownerNotificationError) {
+        console.error("Owner WhatsApp Notification Error:", ownerNotificationError);
       }
 
       // 3. Clear user's cart in database
