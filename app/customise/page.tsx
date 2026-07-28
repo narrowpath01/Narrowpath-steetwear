@@ -735,63 +735,6 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
                       </button>
                     </div>
 
-                    {/* Layer Positioning (Z-Index / Reorder) */}
-                    <div className="space-y-2 pb-3 border-b border-neutral-200">
-                      <label className="block text-[9px] font-black uppercase tracking-wider text-neutral-400">
-                        Layer Position (Arrange Stack)
-                      </label>
-                      <div className="grid grid-cols-4 gap-1.5">
-                        <button
-                          type="button"
-                          disabled={elements.findIndex(el => el.id === activeEl.id) === 0}
-                          onClick={() => moveElement(activeEl.id, "bottom")}
-                          className="py-2.5 px-1 rounded-xl text-[9px] font-black uppercase tracking-wider border border-neutral-200 bg-white text-neutral-700 hover:border-black hover:text-black transition disabled:opacity-30 disabled:hover:border-neutral-200 disabled:hover:text-neutral-700 flex flex-col items-center gap-1.5"
-                          title="Send to Back (Bottom layer)"
-                        >
-                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                          </svg>
-                          To Back
-                        </button>
-                        <button
-                          type="button"
-                          disabled={elements.findIndex(el => el.id === activeEl.id) === 0}
-                          onClick={() => moveElement(activeEl.id, "down")}
-                          className="py-2.5 px-1 rounded-xl text-[9px] font-black uppercase tracking-wider border border-neutral-200 bg-white text-neutral-700 hover:border-black hover:text-black transition disabled:opacity-30 disabled:hover:border-neutral-200 disabled:hover:text-neutral-700 flex flex-col items-center gap-1.5"
-                          title="Move Down (Send Backward)"
-                        >
-                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 13l-7 7-7-7" />
-                          </svg>
-                          Send Back
-                        </button>
-                        <button
-                          type="button"
-                          disabled={elements.findIndex(el => el.id === activeEl.id) === elements.length - 1}
-                          onClick={() => moveElement(activeEl.id, "up")}
-                          className="py-2.5 px-1 rounded-xl text-[9px] font-black uppercase tracking-wider border border-neutral-200 bg-white text-neutral-700 hover:border-black hover:text-black transition disabled:opacity-30 disabled:hover:border-neutral-200 disabled:hover:text-neutral-700 flex flex-col items-center gap-1.5"
-                          title="Move Up (Bring Forward)"
-                        >
-                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 11l7-7 7 7" />
-                          </svg>
-                          Bring Fwd
-                        </button>
-                        <button
-                          type="button"
-                          disabled={elements.findIndex(el => el.id === activeEl.id) === elements.length - 1}
-                          onClick={() => moveElement(activeEl.id, "top")}
-                          className="py-2.5 px-1 rounded-xl text-[9px] font-black uppercase tracking-wider border border-neutral-200 bg-white text-neutral-700 hover:border-black hover:text-black transition disabled:opacity-30 disabled:hover:border-neutral-200 disabled:hover:text-neutral-700 flex flex-col items-center gap-1.5"
-                          title="Bring to Front (Top layer)"
-                        >
-                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l7-7 7 7" />
-                          </svg>
-                          To Front
-                        </button>
-                      </div>
-                    </div>
-
                     {/* Graphic specific option settings */}
                     {activeEl.type === "graphic" && (
                       <div className="space-y-4">
