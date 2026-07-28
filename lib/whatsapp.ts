@@ -66,7 +66,7 @@ export async function sendWhatsAppNotification(orderId: string, trackingNumber: 
     const customerName = `${order.address.firstName} ${order.address.lastName}`;
     const fullAddress = `${order.address.street}, ${order.address.city}, ${order.address.state} - ${order.address.pinCode}`;
     const nextAuthUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
-    const invoiceUrl = `${nextAuthUrl}/profile`;
+    const invoiceUrl = `${nextAuthUrl}/profile/orders`;
 
     const token = process.env.WHATSAPP_API_TOKEN;
     const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
