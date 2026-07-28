@@ -188,6 +188,31 @@ export default function CustomisePage() {
     setActiveElement(null);
   };
 
+  const moveElement = (id: string, direction: "up" | "down" | "top" | "bottom") => {
+    const elements = activeSlide === "front" ? frontElements : backElements;
+    const setElements = activeSlide === "front" ? setFrontElements : setBackElements;
+    
+    const index = elements.findIndex(el => el.id === id);
+    if (index === -1) return;
+
+    const newElements = [...elements];
+    const [element] = newElements.splice(index, 1);
+
+    if (direction === "top") {
+      newElements.push(element);
+    } else if (direction === "bottom") {
+      newElements.unshift(element);
+    } else if (direction === "up") {
+      const targetIndex = Math.min(newElements.length, index + 1);
+      newElements.splice(targetIndex, 0, element);
+    } else if (direction === "down") {
+      const targetIndex = Math.max(0, index - 1);
+      newElements.splice(targetIndex, 0, element);
+    }
+
+    setElements(newElements);
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -613,11 +638,82 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
 
               {(() => {
                 const activeEl = (activeSlide === "front" ? frontElements : backElements).find(e => e.id === activeElement);
+                const elements = activeSlide === "front" ? frontElements : backElements;
 
                 if (!activeEl) {
+                  if (elements.length === 0) {
+                    return (
+                      <div className="p-5 text-center bg-neutral-50 rounded-2xl border border-neutral-150 border-dashed text-neutral-400 text-xs font-medium uppercase tracking-wider leading-relaxed">
+                        Select a layer on the canvas to configure it, or add new layers above.
+                      </div>
+                    );
+                  }
+
                   return (
-                    <div className="p-5 text-center bg-neutral-50 rounded-2xl border border-neutral-150 border-dashed text-neutral-400 text-xs font-medium uppercase tracking-wider leading-relaxed">
-                      Select a layer on the canvas to configure it, or add new layers above.
+                    <div className="space-y-3">
+                      <div className="text-[10px] font-black uppercase tracking-wider text-neutral-400 mb-1">
+                        Active layers ({activeSlide === "front" ? "Front" : "Back"})
+                      </div>
+                      <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+                        {[...elements].reverse().map((el, revIdx) => {
+                          const originalIdx = elements.length - 1 - revIdx;
+                          const displayName = el.type === "graphic" ? `Photo: ${el.name || "Custom Graphic"}` : `Text: "${el.text}"`;
+                          
+                          return (
+                            <div 
+                              key={el.id} 
+                              className="flex items-center justify-between p-3 bg-neutral-50 hover:bg-neutral-100/70 border border-neutral-250 rounded-xl transition-all group"
+                            >
+                              <button
+                                onClick={() => setActiveElement(el.id)}
+                                className="flex-1 text-left text-xs font-bold text-neutral-800 truncate pr-2 flex items-center gap-2"
+                              >
+                                <span className="w-4.5 h-4.5 rounded-full bg-neutral-200 text-neutral-600 flex items-center justify-center text-[9px] font-mono font-black shrink-0">
+                                  {originalIdx + 1}
+                                </span>
+                                <span className="truncate">{displayName}</span>
+                              </button>
+                              
+                              <div className="flex items-center gap-1 shrink-0">
+                                <button
+                                  type="button"
+                                  disabled={originalIdx === 0}
+                                  onClick={() => moveElement(el.id, "down")}
+                                  className="p-1 hover:bg-white border border-neutral-200 rounded text-neutral-500 hover:text-black transition disabled:opacity-30 disabled:hover:bg-transparent"
+                                  title="Move Down (Send Backward)"
+                                >
+                                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 13l-7 7-7-7m14-6l-7 7-7-7" />
+                                  </svg>
+                                </button>
+                                
+                                <button
+                                  type="button"
+                                  disabled={originalIdx === elements.length - 1}
+                                  onClick={() => moveElement(el.id, "up")}
+                                  className="p-1 hover:bg-white border border-neutral-200 rounded text-neutral-500 hover:text-black transition disabled:opacity-30 disabled:hover:bg-transparent"
+                                  title="Move Up (Bring Forward)"
+                                >
+                                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 11l7-7 7 7M5 19l7-7 7 7" />
+                                  </svg>
+                                </button>
+                                
+                                <button
+                                  type="button"
+                                  onClick={() => removeElement(el.id)}
+                                  className="p-1 hover:bg-red-50 border border-neutral-200 hover:border-red-200 rounded text-neutral-400 hover:text-red-500 transition"
+                                  title="Delete Layer"
+                                >
+                                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   );
                 }
@@ -637,6 +733,63 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
                       >
                         Delete Layer
                       </button>
+                    </div>
+
+                    {/* Layer Positioning (Z-Index / Reorder) */}
+                    <div className="space-y-2 pb-3 border-b border-neutral-200">
+                      <label className="block text-[9px] font-black uppercase tracking-wider text-neutral-400">
+                        Layer Position (Arrange Stack)
+                      </label>
+                      <div className="grid grid-cols-4 gap-1.5">
+                        <button
+                          type="button"
+                          disabled={elements.findIndex(el => el.id === activeEl.id) === 0}
+                          onClick={() => moveElement(activeEl.id, "bottom")}
+                          className="py-2.5 px-1 rounded-xl text-[9px] font-black uppercase tracking-wider border border-neutral-200 bg-white text-neutral-700 hover:border-black hover:text-black transition disabled:opacity-30 disabled:hover:border-neutral-200 disabled:hover:text-neutral-700 flex flex-col items-center gap-1.5"
+                          title="Send to Back (Bottom layer)"
+                        >
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                          </svg>
+                          To Back
+                        </button>
+                        <button
+                          type="button"
+                          disabled={elements.findIndex(el => el.id === activeEl.id) === 0}
+                          onClick={() => moveElement(activeEl.id, "down")}
+                          className="py-2.5 px-1 rounded-xl text-[9px] font-black uppercase tracking-wider border border-neutral-200 bg-white text-neutral-700 hover:border-black hover:text-black transition disabled:opacity-30 disabled:hover:border-neutral-200 disabled:hover:text-neutral-700 flex flex-col items-center gap-1.5"
+                          title="Move Down (Send Backward)"
+                        >
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 13l-7 7-7-7" />
+                          </svg>
+                          Send Back
+                        </button>
+                        <button
+                          type="button"
+                          disabled={elements.findIndex(el => el.id === activeEl.id) === elements.length - 1}
+                          onClick={() => moveElement(activeEl.id, "up")}
+                          className="py-2.5 px-1 rounded-xl text-[9px] font-black uppercase tracking-wider border border-neutral-200 bg-white text-neutral-700 hover:border-black hover:text-black transition disabled:opacity-30 disabled:hover:border-neutral-200 disabled:hover:text-neutral-700 flex flex-col items-center gap-1.5"
+                          title="Move Up (Bring Forward)"
+                        >
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 11l7-7 7 7" />
+                          </svg>
+                          Bring Fwd
+                        </button>
+                        <button
+                          type="button"
+                          disabled={elements.findIndex(el => el.id === activeEl.id) === elements.length - 1}
+                          onClick={() => moveElement(activeEl.id, "top")}
+                          className="py-2.5 px-1 rounded-xl text-[9px] font-black uppercase tracking-wider border border-neutral-200 bg-white text-neutral-700 hover:border-black hover:text-black transition disabled:opacity-30 disabled:hover:border-neutral-200 disabled:hover:text-neutral-700 flex flex-col items-center gap-1.5"
+                          title="Bring to Front (Top layer)"
+                        >
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l7-7 7 7" />
+                          </svg>
+                          To Front
+                        </button>
+                      </div>
                     </div>
 
                     {/* Graphic specific option settings */}
