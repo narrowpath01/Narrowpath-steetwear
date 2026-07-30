@@ -118,17 +118,21 @@ export default function ReturnRequestDrawer({ order, isOpen, onReturnSubmitted }
             </div>
             <div className="md:col-span-2">
               <span className="text-neutral-400 uppercase font-bold tracking-wider block mb-1">Supportive Evidence</span>
-              <a
-                href={retReq.mediaUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="font-extrabold text-neutral-800 hover:text-black underline flex items-center gap-1.5"
-              >
-                <svg className="w-3.5 h-3.5 text-neutral-500" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                </svg>
-                View Photo/Video Attachment
-              </a>
+              {retReq.mediaUrl && retReq.mediaUrl !== "N/A" && retReq.mediaUrl.trim() !== "" ? (
+                <a
+                  href={retReq.mediaUrl.startsWith("http") ? retReq.mediaUrl : `https://${retReq.mediaUrl}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-extrabold text-neutral-800 hover:text-black underline flex items-center gap-1.5 w-fit"
+                >
+                  <svg className="w-3.5 h-3.5 text-neutral-500" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+                  </svg>
+                  View Photo/Video Attachment
+                </a>
+              ) : (
+                <span className="text-neutral-500 font-bold">No attachment provided</span>
+              )}
             </div>
           </div>
 
@@ -155,15 +159,15 @@ export default function ReturnRequestDrawer({ order, isOpen, onReturnSubmitted }
             )}
           </div>
         </div>
-      ) : !(order.status === "PAID" || order.status === "SHIPPED" || order.status === "DELIVERED") ? (
-        /* ORDER NOT PAID/ELIGIBLE ERROR BLOCK */
+      ) : order.status !== "DELIVERED" ? (
+        /* ORDER NOT DELIVERED ERROR BLOCK */
         <div className="border border-orange-200 bg-orange-50 rounded-lg p-4 text-center">
           <svg className="w-8 h-8 text-orange-500 mx-auto mb-2" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
           </svg>
           <p className="text-xs font-extrabold text-orange-800 uppercase tracking-wider">Unavailable</p>
           <p className="text-[11px] text-orange-600 mt-1 max-w-md mx-auto leading-normal">
-            Returns, cancellations, & exchanges are only active on paid orders. Please ensure your payment has succeeded before attempting a claim.
+            Returns, cancellations, & exchanges are only active on delivered orders. Please ensure your package has been delivered before attempting a claim.
           </p>
         </div>
       ) : (
@@ -173,11 +177,9 @@ export default function ReturnRequestDrawer({ order, isOpen, onReturnSubmitted }
             Submit Return / Exchange Request
           </h4>
 
-          {(order.status === "SHIPPED" || order.status === "DELIVERED") && (
-            <div className="bg-red-50 border border-red-200 text-red-800 p-3.5 rounded-lg text-[11px] font-bold leading-normal">
-              ⚠️ Shipping Policy Notice: As this order has already been shipped, you will be responsible for both the initial shipping fee and the return shipping fee (unless the item arrived defective or incorrect).
-            </div>
-          )}
+          <div className="bg-red-50 border border-red-200 text-red-800 p-3.5 rounded-lg text-[11px] font-bold leading-normal">
+            ⚠️ Shipping Policy Notice: As this order has already been shipped, you will be responsible for both the initial shipping fee and the return shipping fee (unless the item arrived defective or incorrect).
+          </div>
           
           {/* Selector for EXCHANGE vs REFUND */}
           <div>

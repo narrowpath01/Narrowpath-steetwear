@@ -101,56 +101,73 @@ export async function sendWhatsAppNotification(orderId: string, trackingNumber: 
     
     // Fallback: If WHATSAPP_USE_TEMPLATE is disabled, send custom text, otherwise template
     const useTemplate = process.env.WHATSAPP_USE_TEMPLATE === "true";
+    let templateFailed = false;
+    let data;
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(
-        useTemplate 
-          ? {
-              messaging_product: "whatsapp",
-              recipient_type: "individual",
-              to: formattedPhone,
-              type: "template",
-              template: {
-                name: "order_confirmation",
-                language: { code: "en" },
-                components: [
-                  {
-                    type: "body",
-                    parameters: [
-                      { type: "text", text: shortOrderId },
-                      { type: "text", text: itemsStr },
-                      { type: "text", text: fullAddress },
-                      { type: "text", text: trackingNumber },
-                      { type: "text", text: amountStr },
-                      { type: "text", text: invoiceUrl }
-                    ]
-                  }
+    if (useTemplate) {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          recipient_type: "individual",
+          to: formattedPhone,
+          type: "template",
+          template: {
+            name: "order_confirmation",
+            language: { code: "en" },
+            components: [
+              {
+                type: "body",
+                parameters: [
+                  { type: "text", text: customerName },
+                  { type: "text", text: shortOrderId },
+                  { type: "text", text: itemsStr },
+                  { type: "text", text: fullAddress },
+                  { type: "text", text: trackingNumber },
+                  { type: "text", text: amountStr }
                 ]
               }
-            }
-          : {
-              messaging_product: "whatsapp",
-              recipient_type: "individual",
-              to: formattedPhone,
-              type: "text",
-              text: {
-                preview_url: false,
-                body: messageText
-              }
-            }
-      )
-    });
+            ]
+          }
+        })
+      });
+      data = await response.json();
+      if (!response.ok) {
+        console.error(`[WhatsApp API Template Error, falling back to text]:`, JSON.stringify(data, null, 2));
+        templateFailed = true;
+      } else {
+        console.log(`[WhatsApp API Success (Template)]: Confirmation sent to ${formattedPhone}. Message ID: ${data.messages?.[0]?.id}`);
+      }
+    }
 
-    const data = await response.json();
-    if (!response.ok) {
-      console.error(`[WhatsApp API Error]:`, JSON.stringify(data, null, 2));
-    } else {
-      console.log(`[WhatsApp API Success]: Confirmation sent to ${formattedPhone}. Message ID: ${data.messages?.[0]?.id}`);
+    if (!useTemplate || templateFailed) {
+      const textResponse = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          recipient_type: "individual",
+          to: formattedPhone,
+          type: "text",
+          text: {
+            preview_url: false,
+            body: messageText
+          }
+        })
+      });
+      data = await textResponse.json();
+      if (!textResponse.ok) {
+        console.error(`[WhatsApp API Text Error]:`, JSON.stringify(data, null, 2));
+      } else {
+        console.log(`[WhatsApp API Success (Text)]: Confirmation sent to ${formattedPhone}. Message ID: ${data.messages?.[0]?.id}`);
+      }
     }
 
   } catch (error) {
@@ -298,52 +315,70 @@ export async function sendCustomerWhatsAppCancellation(orderId: string) {
 
     const url = `https://graph.facebook.com/v18.0/${phoneNumberId}/messages`;
     const useTemplate = process.env.WHATSAPP_USE_TEMPLATE === "true";
+    let templateFailed = false;
+    let data;
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(
-        useTemplate 
-          ? {
-              messaging_product: "whatsapp",
-              recipient_type: "individual",
-              to: formattedPhone,
-              type: "template",
-              template: {
-                name: "order_cancellation",
-                language: { code: "en" },
-                components: [
-                  {
-                    type: "body",
-                    parameters: [
-                      { type: "text", text: shortOrderId },
-                      { type: "text", text: `INR ${order.amount}` }
-                    ]
-                  }
+    if (useTemplate) {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          recipient_type: "individual",
+          to: formattedPhone,
+          type: "template",
+          template: {
+            name: "order_cancellation",
+            language: { code: "en" },
+            components: [
+              {
+                type: "body",
+                parameters: [
+                  { type: "text", text: customerName },
+                  { type: "text", text: shortOrderId },
+                  { type: "text", text: `INR ${order.amount}` }
                 ]
               }
-            }
-          : {
-              messaging_product: "whatsapp",
-              recipient_type: "individual",
-              to: formattedPhone,
-              type: "text",
-              text: {
-                preview_url: false,
-                body: messageText
-              }
-            }
-      )
-    });
+            ]
+          }
+        })
+      });
+      data = await response.json();
+      if (!response.ok) {
+        console.error(`[WhatsApp API Cancellation Template Error, falling back to text]:`, JSON.stringify(data, null, 2));
+        templateFailed = true;
+      } else {
+        console.log(`[WhatsApp API Success (Cancellation Template)]: Cancellation sent to customer. Message ID: ${data.messages?.[0]?.id}`);
+      }
+    }
 
-    const data = await response.json();
-    if (!response.ok) {
-      console.error(`[WhatsApp API Error (Customer Cancellation)]`, JSON.stringify(data, null, 2));
-    } else {
-      console.log(`[WhatsApp API Success]: Cancellation sent to customer. Message ID: ${data.messages?.[0]?.id}`);
+    if (!useTemplate || templateFailed) {
+      const textResponse = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          recipient_type: "individual",
+          to: formattedPhone,
+          type: "text",
+          text: {
+            preview_url: false,
+            body: messageText
+          }
+        })
+      });
+      data = await textResponse.json();
+      if (!textResponse.ok) {
+        console.error(`[WhatsApp API Cancellation Text Error]:`, JSON.stringify(data, null, 2));
+      } else {
+        console.log(`[WhatsApp API Success (Cancellation Text)]: Cancellation sent to customer. Message ID: ${data.messages?.[0]?.id}`);
+      }
     }
 
   } catch (error) {
