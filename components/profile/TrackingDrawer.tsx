@@ -51,12 +51,19 @@ export default function TrackingDrawer({ order, isOpen, onStatusUpdate }: Tracki
 
           // Check if status in DB needs update on UI
           const lowerStatus = (data.currentStatus || "").toLowerCase();
+          const lowerInstructions = (data.instructions || "").toLowerCase();
+          const statusCode = (data.statusCode || "").toLowerCase();
           let newStatus: string | null = null;
-          if (lowerStatus.includes("cancel") || lowerStatus === "canc") {
+          if (
+            lowerStatus.includes("cancel") || 
+            lowerStatus === "canc" || 
+            lowerInstructions.includes("cancel") || 
+            statusCode === "dtup-210"
+          ) {
             newStatus = "CANCELLED";
           } else if (lowerStatus === "delivered") {
             newStatus = "DELIVERED";
-          } else if (lowerStatus.includes("rto") || lowerStatus.includes("return")) {
+          } else if (lowerStatus.includes("rto") || lowerStatus.includes("return") || lowerInstructions.includes("rto") || lowerInstructions.includes("return")) {
             newStatus = "CANCELLED";
           } else if (["in transit", "dispatched", "out for delivery", "picked up"].includes(lowerStatus)) {
             newStatus = "SHIPPED";

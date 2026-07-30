@@ -33,15 +33,22 @@ export async function GET(req: Request) {
 
     // Synchronize DB order status with Delhivery status
     const lowerStatus = (shipment.Status.Status || "").toLowerCase();
+    const lowerInstructions = (shipment.Status.Instructions || "").toLowerCase();
+    const statusCode = (shipment.Status.StatusCode || "").toLowerCase();
     let dbStatus: string | null = null;
     let deliveredAt: Date | null = null;
 
-    if (lowerStatus.includes("cancel") || lowerStatus === "canc") {
+    if (
+      lowerStatus.includes("cancel") || 
+      lowerStatus === "canc" || 
+      lowerInstructions.includes("cancel") || 
+      statusCode === "dtup-210"
+    ) {
       dbStatus = "CANCELLED";
     } else if (lowerStatus === "delivered") {
       dbStatus = "DELIVERED";
       deliveredAt = new Date(shipment.Status.StatusDateTime || new Date());
-    } else if (lowerStatus.includes("rto") || lowerStatus.includes("return")) {
+    } else if (lowerStatus.includes("rto") || lowerStatus.includes("return") || lowerInstructions.includes("rto") || lowerInstructions.includes("return")) {
       dbStatus = "CANCELLED";
     } else if (lowerStatus === "in transit" || lowerStatus === "dispatched" || lowerStatus === "out for delivery" || lowerStatus === "picked up") {
       dbStatus = "SHIPPED";
@@ -60,6 +67,8 @@ export async function GET(req: Request) {
     return NextResponse.json({
       waybill: shipment.AWB,
       currentStatus: shipment.Status.Status,
+      instructions: shipment.Status.Instructions,
+      statusCode: shipment.Status.StatusCode,
       expectedDelivery: shipment.ExpectedDeliveryDate,
       scans: scans
     }, { status: 200 });
