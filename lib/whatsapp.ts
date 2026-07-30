@@ -201,7 +201,7 @@ export async function sendOwnerWhatsAppNotification(orderId: string, trackingNum
 
     const shortOrderId = orderId.slice(-8).toUpperCase();
     const amountStr = `INR ${order.amount}`;
-    const ownerPhone = formatE164Phone(process.env.WHATSAPP_OWNER_PHONE || "+919818891540");
+    const ownerPhone = formatE164Phone(process.env.WHATSAPP_OWNER_PHONE || "+918796621740");
     const itemsStr = buildItemsString(order.items);
 
     const messageText = 
@@ -409,7 +409,7 @@ export async function sendOwnerWhatsAppCancellation(orderId: string) {
 
     const shortOrderId = orderId.slice(-8).toUpperCase();
     const amountStr = `INR ${order.amount}`;
-    const ownerPhone = formatE164Phone(process.env.WHATSAPP_OWNER_PHONE || "+919818891540");
+    const ownerPhone = formatE164Phone(process.env.WHATSAPP_OWNER_PHONE || "+918796621740");
     const itemsStr = buildItemsString(order.items);
     const customerName = `${order.address.firstName} ${order.address.lastName}`;
 
@@ -490,7 +490,7 @@ export async function sendOwnerWhatsAppReturnRequest(orderId: string) {
 
     const shortOrderId = orderId.slice(-8).toUpperCase();
     const amountStr = `INR ${order.amount}`;
-    const ownerPhone = formatE164Phone(process.env.WHATSAPP_OWNER_PHONE || "+919818891540");
+    const ownerPhone = formatE164Phone(process.env.WHATSAPP_OWNER_PHONE || "+918796621740");
     const itemsStr = buildItemsString(order.items);
     const customerName = `${order.address.firstName} ${order.address.lastName}`;
     const retReq = order.returnRequest;
