@@ -465,3 +465,90 @@ export async function sendOwnerWhatsAppCancellation(orderId: string) {
     console.error(`[WhatsApp Owner API Cancellation Exception]`, error);
   }
 }
+
+/**
+ * Sends a return/exchange request notification to the store owner when a customer submits one.
+ */
+export async function sendOwnerWhatsAppReturnRequest(orderId: string) {
+  try {
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      include: {
+        address: true,
+        returnRequest: true,
+        items: {
+          include: {
+            variant: {
+              include: { product: true }
+            }
+          }
+        }
+      }
+    });
+
+    if (!order || !order.address || !order.returnRequest) return;
+
+    const shortOrderId = orderId.slice(-8).toUpperCase();
+    const amountStr = `INR ${order.amount}`;
+    const ownerPhone = formatE164Phone(process.env.WHATSAPP_OWNER_PHONE || "+919818891540");
+    const itemsStr = buildItemsString(order.items);
+    const customerName = `${order.address.firstName} ${order.address.lastName}`;
+    const retReq = order.returnRequest;
+
+    const messageText = 
+      `*NARROW PATH - NEW RETURN/EXCHANGE CLAIM*\n\n` +
+      `A new return/exchange request has been submitted for Order *#${shortOrderId}*.\n\n` +
+      `*Claim Details:*\n` +
+      `- Type: ${retReq.type}\n` +
+      `- Reason: ${retReq.reason}\n` +
+      `- Defective Claim: ${retReq.isDefective ? "YES (Fees waived)" : "NO"}\n` +
+      `- Evidence Link: ${retReq.mediaUrl}\n\n` +
+      `*Order Details:*\n` +
+      `${itemsStr}\n` +
+      `- Total Paid: ${amountStr}\n` +
+      `- Customer: ${customerName}\n` +
+      `- Customer Phone: ${order.address.phoneNumber}\n\n` +
+      `Please review this claim in the admin panel.`;
+
+    const token = process.env.WHATSAPP_API_TOKEN;
+    const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+
+    if (!token || !phoneNumberId) {
+      console.log(`\n--- [WHATSAPP OWNER NOTIFICATION MOCK SEND (RETURN CLAIM)] ---`);
+      console.log(`To Owner Number: ${ownerPhone}`);
+      console.log(`Message:\n${messageText}`);
+      console.log(`--------------------------------------------------------------\n`);
+      return;
+    }
+
+    const url = `https://graph.facebook.com/v18.0/${phoneNumberId}/messages`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        messaging_product: "whatsapp",
+        recipient_type: "individual",
+        to: ownerPhone,
+        type: "text",
+        text: {
+          preview_url: false,
+          body: messageText
+        }
+      })
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      console.error(`[WhatsApp Owner API Error (Return Claim)]`, JSON.stringify(data, null, 2));
+    } else {
+      console.log(`[WhatsApp Owner API Success]: Return notification sent to owner. Message ID: ${data.messages?.[0]?.id}`);
+    }
+
+  } catch (error) {
+    console.error(`[WhatsApp Owner API Return Claim Exception]`, error);
+  }
+}
+

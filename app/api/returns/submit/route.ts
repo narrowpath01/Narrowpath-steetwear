@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { sendOwnerWhatsAppReturnRequest } from "@/lib/whatsapp";
 
 export async function POST(req: Request) {
   try {
@@ -38,6 +39,9 @@ export async function POST(req: Request) {
         status: "PENDING_REVIEW"
       }
     });
+
+    // Notify the owner of the new return request
+    await sendOwnerWhatsAppReturnRequest(orderId);
 
     return NextResponse.json({ success: true, returnId: returnReq.id });
   } catch (error) {
