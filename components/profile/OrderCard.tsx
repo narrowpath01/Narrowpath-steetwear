@@ -201,7 +201,11 @@ export default function OrderCard({ order, onOrderUpdate }: OrderCardProps) {
       </div>
 
       {/* TRACKING DRAWER */}
-      <TrackingDrawer order={order} isOpen={isTrackingOpen} />
+      <TrackingDrawer
+        order={order}
+        isOpen={isTrackingOpen}
+        onStatusUpdate={(newStatus) => onOrderUpdate({ ...order, status: newStatus })}
+      />
 
       {/* RETURN / EXCHANGE DRAWER */}
       <ReturnRequestDrawer order={order} isOpen={isReturnOpen} onReturnSubmitted={handleReturnSubmitted} />

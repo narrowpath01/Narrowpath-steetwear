@@ -7,9 +7,10 @@ import { Order } from "./types";
 interface TrackingDrawerProps {
   order: Order;
   isOpen: boolean;
+  onStatusUpdate?: (newStatus: string) => void;
 }
 
-export default function TrackingDrawer({ order, isOpen }: TrackingDrawerProps) {
+export default function TrackingDrawer({ order, isOpen, onStatusUpdate }: TrackingDrawerProps) {
   const [trackingData, setTrackingData] = useState<any>(null);
   const [loadingTracking, setLoadingTracking] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -47,6 +48,23 @@ export default function TrackingDrawer({ order, isOpen }: TrackingDrawerProps) {
         if (res.ok) {
           const data = await res.json();
           setTrackingData(data);
+
+          // Check if status in DB needs update on UI
+          const lowerStatus = (data.currentStatus || "").toLowerCase();
+          let newStatus: string | null = null;
+          if (lowerStatus.includes("cancel") || lowerStatus === "canc") {
+            newStatus = "CANCELLED";
+          } else if (lowerStatus === "delivered") {
+            newStatus = "DELIVERED";
+          } else if (lowerStatus.includes("rto") || lowerStatus.includes("return")) {
+            newStatus = "CANCELLED";
+          } else if (["in transit", "dispatched", "out for delivery", "picked up"].includes(lowerStatus)) {
+            newStatus = "SHIPPED";
+          }
+
+          if (newStatus && order.status !== newStatus && onStatusUpdate) {
+            onStatusUpdate(newStatus);
+          }
         } else {
           console.error("Failed to fetch Delhivery tracking details");
         }
