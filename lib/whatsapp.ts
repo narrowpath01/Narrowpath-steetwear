@@ -204,24 +204,24 @@ export async function sendOwnerWhatsAppNotification(orderId: string, trackingNum
     const ownerPhone = formatE164Phone(process.env.WHATSAPP_OWNER_PHONE || "+918796621740");
     const itemsStr = buildItemsString(order.items);
 
-    const messageText = 
-      `*NARROW PATH - NEW ORDER RECEIVED!*\n\n` +
-      `Order *#${shortOrderId}* has been successfully paid and created!\n\n` +
-      `*Order Items:*\n` +
-      `${itemsStr}\n\n` +
-      `*Details:*\n` +
-      `- Amount: ${amountStr}\n` +
-      `- Customer: ${order.address.firstName} ${order.address.lastName}\n` +
-      `- Phone: ${order.address.phoneNumber}\n` +
-      `- City/State: ${order.address.city}, ${order.address.state}\n` +
-      `- Address: ${order.address.street}\n` +
-      `- AWB/Tracking: ${trackingNumber || "Manifest pending or failed"}\n\n` +
-      `Please prepare the shipment. Delhivery manifest has been generated automatically.`;
-
+    const fullAddress = `${order.address.street}, ${order.address.city}, ${order.address.state} - ${order.address.pinCode}`;
     const token = process.env.WHATSAPP_API_TOKEN;
     const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
     if (!token || !phoneNumberId) {
+      const messageText = 
+        `*NARROW PATH - NEW ORDER RECEIVED!*\n\n` +
+        `Order *#${shortOrderId}* has been successfully paid and created!\n\n` +
+        `*Order Items:*\n` +
+        `${itemsStr}\n\n` +
+        `*Details:*\n` +
+        `- Amount: ${amountStr}\n` +
+        `- Customer: ${order.address.firstName} ${order.address.lastName}\n` +
+        `- Phone: ${order.address.phoneNumber}\n` +
+        `- Address: ${fullAddress}\n` +
+        `- AWB/Tracking: ${trackingNumber || "Manifest pending or failed"}\n\n` +
+        `Please prepare the shipment. Delhivery manifest has been generated automatically.`;
+
       console.log(`\n--- [WHATSAPP OWNER NOTIFICATION MOCK SEND] ---`);
       console.log(`To Owner Number: ${ownerPhone}`);
       console.log(`Message:\n${messageText}`);
@@ -240,10 +240,24 @@ export async function sendOwnerWhatsAppNotification(orderId: string, trackingNum
         messaging_product: "whatsapp",
         recipient_type: "individual",
         to: ownerPhone,
-        type: "text",
-        text: {
-          preview_url: false,
-          body: messageText
+        type: "template",
+        template: {
+          name: "admin_order_notification",
+          language: { code: "en" },
+          components: [
+            {
+              type: "body",
+              parameters: [
+                { type: "text", text: shortOrderId },
+                { type: "text", text: itemsStr },
+                { type: "text", text: amountStr },
+                { type: "text", text: `${order.address.firstName} ${order.address.lastName}` },
+                { type: "text", text: order.address.phoneNumber || "N/A" },
+                { type: "text", text: fullAddress },
+                { type: "text", text: trackingNumber || "Manifest pending or failed" }
+              ]
+            }
+          ]
         }
       })
     });
@@ -413,21 +427,21 @@ export async function sendOwnerWhatsAppCancellation(orderId: string) {
     const itemsStr = buildItemsString(order.items);
     const customerName = `${order.address.firstName} ${order.address.lastName}`;
 
-    const messageText = 
-      `*NARROW PATH - ORDER CANCELLED BY CUSTOMER*\n\n` +
-      `Order *#${shortOrderId}* has been cancelled by the customer within the 15-minute window.\n\n` +
-      `*Cancelled Items:*\n` +
-      `${itemsStr}\n\n` +
-      `*Details:*\n` +
-      `- Amount: ${amountStr}\n` +
-      `- Customer: ${customerName}\n` +
-      `- Phone: ${order.address.phoneNumber}\n\n` +
-      `Please stop shipment processing for this order.`;
-
     const token = process.env.WHATSAPP_API_TOKEN;
     const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
     if (!token || !phoneNumberId) {
+      const messageText = 
+        `*NARROW PATH - ORDER CANCELLED BY CUSTOMER*\n\n` +
+        `Order *#${shortOrderId}* has been cancelled by the customer within the 15-minute window.\n\n` +
+        `*Cancelled Items:*\n` +
+        `${itemsStr}\n\n` +
+        `*Details:*\n` +
+        `- Amount: ${amountStr}\n` +
+        `- Customer: ${customerName}\n` +
+        `- Phone: ${order.address.phoneNumber}\n\n` +
+        `Please stop shipment processing for this order.`;
+
       console.log(`\n--- [WHATSAPP OWNER NOTIFICATION MOCK SEND (CANCELLATION)] ---`);
       console.log(`To Owner Number: ${ownerPhone}`);
       console.log(`Message:\n${messageText}`);
@@ -446,10 +460,22 @@ export async function sendOwnerWhatsAppCancellation(orderId: string) {
         messaging_product: "whatsapp",
         recipient_type: "individual",
         to: ownerPhone,
-        type: "text",
-        text: {
-          preview_url: false,
-          body: messageText
+        type: "template",
+        template: {
+          name: "admin_cancellation_notification",
+          language: { code: "en" },
+          components: [
+            {
+              type: "body",
+              parameters: [
+                { type: "text", text: shortOrderId },
+                { type: "text", text: itemsStr },
+                { type: "text", text: amountStr },
+                { type: "text", text: customerName },
+                { type: "text", text: order.address.phoneNumber || "N/A" }
+              ]
+            }
+          ]
         }
       })
     });
@@ -495,25 +521,25 @@ export async function sendOwnerWhatsAppReturnRequest(orderId: string) {
     const customerName = `${order.address.firstName} ${order.address.lastName}`;
     const retReq = order.returnRequest;
 
-    const messageText = 
-      `*NARROW PATH - NEW RETURN/EXCHANGE CLAIM*\n\n` +
-      `A new return/exchange request has been submitted for Order *#${shortOrderId}*.\n\n` +
-      `*Claim Details:*\n` +
-      `- Type: ${retReq.type}\n` +
-      `- Reason: ${retReq.reason}\n` +
-      `- Defective Claim: ${retReq.isDefective ? "YES (Fees waived)" : "NO"}\n` +
-      `- Evidence Link: ${retReq.mediaUrl}\n\n` +
-      `*Order Details:*\n` +
-      `${itemsStr}\n` +
-      `- Total Paid: ${amountStr}\n` +
-      `- Customer: ${customerName}\n` +
-      `- Customer Phone: ${order.address.phoneNumber}\n\n` +
-      `Please review this claim in the admin panel.`;
-
     const token = process.env.WHATSAPP_API_TOKEN;
     const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
     if (!token || !phoneNumberId) {
+      const messageText = 
+        `*NARROW PATH - NEW RETURN/EXCHANGE CLAIM*\n\n` +
+        `A new return/exchange request has been submitted for Order *#${shortOrderId}*.\n\n` +
+        `*Claim Details:*\n` +
+        `- Type: ${retReq.type}\n` +
+        `- Reason: ${retReq.reason}\n` +
+        `- Defective Claim: ${retReq.isDefective ? "YES (Fees waived)" : "NO"}\n` +
+        `- Evidence Link: ${retReq.mediaUrl}\n\n` +
+        `*Order Details:*\n` +
+        `${itemsStr}\n` +
+        `- Total Paid: ${amountStr}\n` +
+        `- Customer: ${customerName}\n` +
+        `- Customer Phone: ${order.address.phoneNumber}\n\n` +
+        `Please review this claim in the admin panel.`;
+
       console.log(`\n--- [WHATSAPP OWNER NOTIFICATION MOCK SEND (RETURN CLAIM)] ---`);
       console.log(`To Owner Number: ${ownerPhone}`);
       console.log(`Message:\n${messageText}`);
@@ -532,10 +558,26 @@ export async function sendOwnerWhatsAppReturnRequest(orderId: string) {
         messaging_product: "whatsapp",
         recipient_type: "individual",
         to: ownerPhone,
-        type: "text",
-        text: {
-          preview_url: false,
-          body: messageText
+        type: "template",
+        template: {
+          name: "admin_return_notification",
+          language: { code: "en" },
+          components: [
+            {
+              type: "body",
+              parameters: [
+                { type: "text", text: shortOrderId },
+                { type: "text", text: retReq.type },
+                { type: "text", text: retReq.reason },
+                { type: "text", text: retReq.isDefective ? "YES (Fees waived)" : "NO" },
+                { type: "text", text: retReq.mediaUrl },
+                { type: "text", text: itemsStr },
+                { type: "text", text: amountStr },
+                { type: "text", text: customerName },
+                { type: "text", text: order.address.phoneNumber || "N/A" }
+              ]
+            }
+          ]
         }
       })
     });
