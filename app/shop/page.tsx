@@ -2,6 +2,8 @@
 import prisma from "@/lib/db";
 import ProductCard from "@/components/ProductCard";
 
+export const dynamic = "force-dynamic";
+
 interface ShopPageProps {
   searchParams: Promise<{ type?: string; gender?: string }>;
 }

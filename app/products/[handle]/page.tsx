@@ -6,6 +6,8 @@ import ProductGalleryWrapper from "@/components/ProductGalleryWrapper";
 import ProductForm from "@/components/ProductForm";
 import PincodeChecker from "@/components/PincodeChecker";
 
+export const dynamic = "force-dynamic";
+
 export default async function ProductPage({ params }: { params: Promise<{ handle: string }> }) {
 
   const resolvedParams = await params;

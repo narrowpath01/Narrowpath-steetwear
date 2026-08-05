@@ -37,7 +37,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -66,7 +65,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -95,7 +93,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -124,7 +121,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -153,7 +149,6 @@ async function main() {
           { title: "M", price: monoPrice, inventory: 100 },
           { title: "L", price: monoPrice, inventory: 100 },
           { title: "XL", price: monoPrice, inventory: 100 },
-          { title: "XXL", price: monoPrice, inventory: 100 },
         ]
       }
     }
@@ -182,7 +177,6 @@ async function main() {
           { title: "M", price: monoPrice, inventory: 100 },
           { title: "L", price: monoPrice, inventory: 100 },
           { title: "XL", price: monoPrice, inventory: 100 },
-          { title: "XXL", price: monoPrice, inventory: 100 },
         ]
       }
     }
@@ -211,7 +205,6 @@ async function main() {
           { title: "M", price: monoPrice, inventory: 100 },
           { title: "L", price: monoPrice, inventory: 100 },
           { title: "XL", price: monoPrice, inventory: 100 },
-          { title: "XXL", price: monoPrice, inventory: 100 },
         ]
       }
     }
@@ -240,7 +233,6 @@ async function main() {
           { title: "M", price: monoPrice, inventory: 100 },
           { title: "L", price: monoPrice, inventory: 100 },
           { title: "XL", price: monoPrice, inventory: 100 },
-          { title: "XXL", price: monoPrice, inventory: 100 },
         ]
       }
     }
@@ -270,7 +262,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -300,7 +291,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -329,7 +319,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -360,7 +349,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -389,7 +377,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -419,7 +406,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -449,7 +435,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -478,7 +463,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -508,7 +492,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -538,7 +521,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -567,7 +549,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -659,7 +640,6 @@ async function main() {
             { title: "M", price: monoPrice, inventory: 100 },
             { title: "L", price: monoPrice, inventory: 100 },
             { title: "XL", price: monoPrice, inventory: 100 },
-            { title: "XXL", price: monoPrice, inventory: 100 },
           ]
         }
       }
@@ -690,7 +670,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -719,7 +698,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -748,7 +726,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -776,7 +753,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -805,7 +781,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -834,7 +809,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -863,7 +837,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -892,7 +865,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -921,7 +893,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }
@@ -949,7 +920,6 @@ async function main() {
           { title: "M", price: printedPrice, inventory: 100 },
           { title: "L", price: printedPrice, inventory: 100 },
           { title: "XL", price: printedPrice, inventory: 100 },
-          { title: "XXL", price: printedPrice, inventory: 100 },
         ]
       }
     }

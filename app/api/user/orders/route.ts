@@ -10,14 +10,14 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const orders = await prisma.order.findMany({
+    const orderQueryArgs = {
       where: {
         userId: session.user.id,
         status: { not: "PENDING" }
       },
-      orderBy: { createdAt: "desc" }, // Newest orders first
+      orderBy: { createdAt: "desc" as const }, // Newest orders first
       include: {
-        returnRequest: true, // We need this to show the return status on the UI
+        returnRequest: true,
         items: {
           include: {
             variant: {
@@ -32,7 +32,81 @@ export async function GET(req: Request) {
           }
         }
       }
-    });
+    };
+
+    let orders = await prisma.order.findMany(orderQueryArgs);
+
+    // Sync active orders in the database with Delhivery's live status
+    const activeOrders = orders.filter(
+      (order) => order.awb && !["CANCELLED", "DELIVERED", "REFUNDED"].includes(order.status)
+    );
+
+    if (activeOrders.length > 0) {
+      await Promise.all(
+        activeOrders.map(async (order) => {
+          try {
+            const url = `https://track.delhivery.com/api/v1/packages/json/?waybill=${order.awb}`;
+            const response = await fetch(url, {
+              method: "GET",
+              headers: {
+                "Authorization": `Token ${process.env.DELHIVERY_API_KEY}`,
+                "Content-Type": "application/json",
+              },
+            });
+            if (!response.ok) return;
+
+            const data = await response.json();
+            const shipment = data?.ShipmentData?.[0]?.Shipment;
+            if (!shipment) return;
+
+            const lowerStatus = (shipment.Status?.Status || "").toLowerCase();
+            const lowerInstructions = (shipment.Status?.Instructions || "").toLowerCase();
+            const statusCode = (shipment.Status?.StatusCode || "").toLowerCase();
+
+            let dbStatus: string | null = null;
+            let deliveredAt: Date | null = null;
+
+            if (
+              lowerStatus.includes("cancel") || 
+              lowerStatus === "canc" || 
+              lowerInstructions.includes("cancel") || 
+              statusCode === "dtup-210"
+            ) {
+              dbStatus = "CANCELLED";
+            } else if (lowerStatus === "delivered") {
+              dbStatus = "DELIVERED";
+              deliveredAt = new Date(shipment.Status?.StatusDateTime || new Date());
+            } else if (
+              lowerStatus.includes("rto") || 
+              lowerStatus.includes("return") || 
+              lowerInstructions.includes("rto") || 
+              lowerInstructions.includes("return")
+            ) {
+              dbStatus = "CANCELLED";
+            } else if (
+              ["in transit", "dispatched", "out for delivery", "picked up"].includes(lowerStatus)
+            ) {
+              dbStatus = "SHIPPED";
+            }
+
+            if (dbStatus && order.status !== dbStatus) {
+              await prisma.order.update({
+                where: { id: order.id },
+                data: {
+                  status: dbStatus,
+                  ...(deliveredAt ? { deliveredAt } : {})
+                }
+              });
+            }
+          } catch (syncError) {
+            console.error(`[Active Order Sync Error] for order ${order.id}:`, syncError);
+          }
+        })
+      );
+
+      // Fetch fresh records to reflect updated statuses on frontend
+      orders = await prisma.order.findMany(orderQueryArgs);
+    }
 
     return NextResponse.json(orders, { status: 200 });
 

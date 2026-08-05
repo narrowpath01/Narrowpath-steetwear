@@ -10,7 +10,7 @@ interface ProductFormProps {
 }
 
 export default function ProductForm({ product }: ProductFormProps) {
-  const sizeOrder: Record<string, number> = { "Small": 1, "Medium": 2, "Large": 3, "XL": 4, "XXL": 5, "S": 1, "M": 2, "L": 3 };
+  const sizeOrder: Record<string, number> = { "Small": 1, "Medium": 2, "Large": 3, "XL": 4, "S": 1, "M": 2, "L": 3 };
 
   // Intercept the raw database array and force the sort before rendering
   const variants = [...(product.variants || [])].sort(
@@ -213,7 +213,6 @@ export default function ProductForm({ product }: ProductFormProps) {
                     <th className="p-3 font-bold uppercase tracking-wider text-black">M</th>
                     <th className="p-3 font-bold uppercase tracking-wider text-black">L</th>
                     <th className="p-3 font-bold uppercase tracking-wider text-black">XL</th>
-                    <th className="p-3 font-bold uppercase tracking-wider text-black">XXL</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-neutral-100 font-medium text-neutral-800">
@@ -223,7 +222,6 @@ export default function ProductForm({ product }: ProductFormProps) {
                     <td className="p-3">44</td>
                     <td className="p-3">46</td>
                     <td className="p-3">48</td>
-                    <td className="p-3">50</td>
                   </tr>
                   <tr>
                     <td className="p-3 font-black bg-neutral-50/50 text-black text-left">Length</td>
@@ -231,7 +229,6 @@ export default function ProductForm({ product }: ProductFormProps) {
                     <td className="p-3">28</td>
                     <td className="p-3">28.5</td>
                     <td className="p-3">29</td>
-                    <td className="p-3">29.5</td>
                   </tr>
                   <tr>
                     <td className="p-3 font-black bg-neutral-50/50 text-black text-left">Shoulder</td>
@@ -239,7 +236,6 @@ export default function ProductForm({ product }: ProductFormProps) {
                     <td className="p-3">21</td>
                     <td className="p-3">22</td>
                     <td className="p-3">23</td>
-                    <td className="p-3">24</td>
                   </tr>
                   <tr>
                     <td className="p-3 font-black bg-neutral-50/50 text-black text-left">Sleeve Length</td>
@@ -247,7 +243,6 @@ export default function ProductForm({ product }: ProductFormProps) {
                     <td className="p-3">9</td>
                     <td className="p-3">9.5</td>
                     <td className="p-3">10</td>
-                    <td className="p-3">10.5</td>
                   </tr>
                 </tbody>
               </table>

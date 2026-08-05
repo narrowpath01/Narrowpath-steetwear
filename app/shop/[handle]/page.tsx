@@ -6,6 +6,8 @@ import AddToCartForm from "./AddToCartForm";
 
 const prisma = new PrismaClient();
 
+export const dynamic = "force-dynamic";
+
 // In Next.js 15+, params is an async promise. We await it.
 export default async function ProductPage({ params }: { params: Promise<{ handle: string }> }) {
   const resolvedParams = await params;
