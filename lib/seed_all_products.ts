@@ -238,6 +238,34 @@ async function main() {
     }
   });
 
+  // Monochrome White Heavyweight Tee
+  console.log("Seeding: Monochrome White Heavyweight Tee...");
+  await prisma.product.create({
+    data: {
+      title: "Monochrome White Heavyweight Tee",
+      handle: "monochrome-white-heavyweight-tee",
+      description: "Premium heavyweight white monochrome tee. Clean design, boxy relaxed fit, crafted from 100% premium cotton for ultimate comfort, styling, and structural drape. Minimalist stitching details with no graphics.",
+      collection: "MONOCHROME",
+      images: {
+        create: [
+          { url: "/monochrome-white-front.png", altText: "Monochrome White Heavyweight Tee Front View" },
+          { url: "/monochrome-white-back.png", altText: "Monochrome White Heavyweight Tee Back View Close" },
+          { url: "/monochrome-white-model.png", altText: "Monochrome White Heavyweight Tee Full Back View" },
+          { url: "/monochrome-white-collar.png", altText: "Monochrome White Heavyweight Tee Collar Detail" },
+          { url: "/monochrome-white-fabric.png", altText: "Monochrome White Heavyweight Tee Fabric Detail" },
+        ]
+      },
+      variants: {
+        create: [
+          { title: "S", price: monoPrice, inventory: 100 },
+          { title: "M", price: monoPrice, inventory: 100 },
+          { title: "L", price: monoPrice, inventory: 100 },
+          { title: "XL", price: monoPrice, inventory: 100 },
+        ]
+      }
+    }
+  });
+
   // 9. Space Ship Heavyweight Tee
   console.log("Seeding: Space Ship Heavyweight Tee...");
   await prisma.product.create({

@@ -52,20 +52,21 @@ export default function ProductForm({ product }: ProductFormProps) {
         <div className="mb-8">
           <span className="text-sm font-bold uppercase tracking-widest text-black block mb-4">Select Color</span>
           <div className="flex gap-3">
-            {(product.handle.startsWith("women-") 
+            {(product.handle.startsWith("women-")
               ? [
-                  { name: "Black", color: "#171717", handle: "women-monochrome-black-heavyweight-tee" },
-                  { name: "Off-White", color: "#FAF9F6", handle: "women-monochrome-off-white-heavyweight-tee" },
-                  { name: "Red", color: "#B91C1C", handle: "women-monochrome-red-heavyweight-tee" },
-                  { name: "Brown", color: "#78350F", handle: "women-monochrome-brown-heavyweight-tee" },
-                  { name: "White", color: "#FFFFFF", handle: "women-monochrome-white-heavyweight-tee" },
-                ]
+                { name: "Black", color: "#171717", handle: "women-monochrome-black-heavyweight-tee" },
+                { name: "Off-White", color: "#FAF9F6", handle: "women-monochrome-off-white-heavyweight-tee" },
+                { name: "Red", color: "#B91C1C", handle: "women-monochrome-red-heavyweight-tee" },
+                { name: "Brown", color: "#78350F", handle: "women-monochrome-brown-heavyweight-tee" },
+                { name: "White", color: "#FFFFFF", handle: "women-monochrome-white-heavyweight-tee" },
+              ]
               : [
-                  { name: "Black", color: "#171717", handle: "monochrome-black-heavyweight-tee" },
-                  { name: "Off-White", color: "#FAF9F6", handle: "monochrome-off-white-heavyweight-tee" },
-                  { name: "Red", color: "#B91C1C", handle: "monochrome-red-heavyweight-tee" },
-                  { name: "Brown", color: "#78350F", handle: "monochrome-brown-heavyweight-tee" },
-                ]
+                { name: "Black", color: "#171717", handle: "monochrome-black-heavyweight-tee" },
+                { name: "Off-White", color: "#FAF9F6", handle: "monochrome-off-white-heavyweight-tee" },
+                { name: "Red", color: "#B91C1C", handle: "monochrome-red-heavyweight-tee" },
+                { name: "Brown", color: "#78350F", handle: "monochrome-brown-heavyweight-tee" },
+                { name: "White", color: "#FFFFFF", handle: "monochrome-white-heavyweight-tee" },
+              ]
             ).map((col) => (
               <button
                 key={col.handle}
@@ -75,11 +76,10 @@ export default function ProductForm({ product }: ProductFormProps) {
                   }
                 }}
                 title={col.name}
-                className={`w-9 h-9 rounded-full border transition-all duration-200 ${
-                  product.handle === col.handle
+                className={`w-9 h-9 rounded-full border transition-all duration-200 ${product.handle === col.handle
                     ? "border-black scale-110 ring-2 ring-neutral-200"
                     : "border-neutral-200 hover:border-neutral-400"
-                }`}
+                  }`}
                 style={{ backgroundColor: col.color }}
                 aria-label={`Select ${col.name} color`}
               />
@@ -91,7 +91,7 @@ export default function ProductForm({ product }: ProductFormProps) {
       <div className="mb-8">
         <div className="flex justify-between items-center mb-4">
           <span className="text-sm font-bold uppercase tracking-widest text-black">Select Size</span>
-          <button 
+          <button
             type="button"
             onClick={() => setIsSizeChartOpen(true)}
             className="text-xs font-bold uppercase tracking-widest text-neutral-500 hover:text-black underline transition-colors"
@@ -106,11 +106,10 @@ export default function ProductForm({ product }: ProductFormProps) {
             <button
               key={variant.id}
               onClick={() => setSelectedVariant(variant)}
-              className={`w-11 h-11 flex items-center justify-center text-xs font-black transition-all duration-200 border rounded-full ${
-                selectedVariant?.id === variant.id
+              className={`w-11 h-11 flex items-center justify-center text-xs font-black transition-all duration-200 border rounded-full ${selectedVariant?.id === variant.id
                   ? "border-black bg-black text-white"
                   : "border-neutral-200 bg-white text-black hover:border-black"
-              }`}
+                }`}
             >
               {variant.title}
             </button>
@@ -187,7 +186,7 @@ export default function ProductForm({ product }: ProductFormProps) {
             {/* Modal Header */}
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-lg font-black uppercase tracking-wider">Size Chart</h3>
-              <button 
+              <button
                 onClick={() => setIsSizeChartOpen(false)}
                 className="p-1.5 hover:bg-neutral-100 rounded-full transition-colors text-black flex items-center justify-center"
                 aria-label="Close size chart"
