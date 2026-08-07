@@ -169,6 +169,7 @@ export default function CheckoutPage() {
       const res = await fetch("/api/checkout/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include", // Ensure session cookie is sent (fixes Instagram/in-app browser issues)
         body: JSON.stringify({ 
           items, 
           addressData: formData 
@@ -176,7 +177,12 @@ export default function CheckoutPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+      if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error("Your session has expired. Please open this page in your browser (not Instagram/WhatsApp), sign in, and try again.");
+        }
+        throw new Error(data.error);
+      }
 
       // 2. Initialize the Razorpay Modal
       const options = {
@@ -191,6 +197,7 @@ export default function CheckoutPage() {
           const verifyRes = await fetch("/api/checkout/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include", // Ensure session cookie is sent
             body: JSON.stringify({
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_order_id: response.razorpay_order_id,
