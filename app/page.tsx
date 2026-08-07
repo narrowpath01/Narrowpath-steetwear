@@ -55,17 +55,19 @@ export default async function Home() {
   const printedGridCount = sortedPrintedProducts.length - (sortedPrintedProducts.length % 4);
   const printedGridProducts = sortedPrintedProducts.slice(0, printedGridCount);
 
-  // Sort monochrome products with both Men and Women versions to the top
-  const sortedMenMono = [...menMono].sort((a, b) => {
-    const aBaseColor = a.handle.replace("monochrome-", "").replace("-heavyweight-tee", "");
-    const aHasWomen = womenMono.some((wp: any) => wp.handle.includes(aBaseColor));
-    const bBaseColor = b.handle.replace("monochrome-", "").replace("-heavyweight-tee", "");
-    const bHasWomen = womenMono.some((wp: any) => wp.handle.includes(bBaseColor));
+  // Sort monochrome products with both Men and Women versions to the top, filtering out White Tee from homepage
+  const sortedMenMono = [...menMono]
+    .filter((p: any) => p.handle !== "monochrome-white-heavyweight-tee")
+    .sort((a, b) => {
+      const aBaseColor = a.handle.replace("monochrome-", "").replace("-heavyweight-tee", "");
+      const aHasWomen = womenMono.some((wp: any) => wp.handle.includes(aBaseColor));
+      const bBaseColor = b.handle.replace("monochrome-", "").replace("-heavyweight-tee", "");
+      const bHasWomen = womenMono.some((wp: any) => wp.handle.includes(bBaseColor));
 
-    if (aHasWomen && !bHasWomen) return -1;
-    if (!aHasWomen && bHasWomen) return 1;
-    return 0;
-  });
+      if (aHasWomen && !bHasWomen) return -1;
+      if (!aHasWomen && bHasWomen) return 1;
+      return 0;
+    });
 
   // Construct alternating list for homepage editorial carousel:
   // Sunflower (Man) -> Year of Dragon (Woman) -> Kung Fu Panda (Man) -> Love Peace Patience (Woman)
@@ -150,7 +152,7 @@ export default async function Home() {
           <div className="mb-4 flex justify-between items-center">
             <h2 className="text-[20px] lg:text-[20px] font-black uppercase tracking-widest text-neutral-600">Latest Drops</h2>
           </div>
-          
+
           {/* Printed Collection */}
           <div className="space-y-4">
             <div className="text-[11px] font-normal text-black uppercase tracking-widest pl-0.5">
@@ -161,9 +163,9 @@ export default async function Home() {
                 const baseName = product.handle.replace("-heavyweight-tee", "");
                 const womenProduct = womenPrinted.find((wp: any) => wp.handle.includes(baseName));
                 return (
-                  <ProductCard 
-                    key={product.id} 
-                    product={product} 
+                  <ProductCard
+                    key={product.id}
+                    product={product}
                     womenProduct={womenProduct}
                     defaultGender="men"
                   />
@@ -184,9 +186,9 @@ export default async function Home() {
                 const baseColor = product.handle.replace("monochrome-", "").replace("-heavyweight-tee", "");
                 const womenProduct = womenMono.find((wp: any) => wp.handle.includes(baseColor));
                 return (
-                  <ProductCard 
-                    key={product.id} 
-                    product={product} 
+                  <ProductCard
+                    key={product.id}
+                    product={product}
                     womenProduct={womenProduct}
                     defaultGender="men"
                   />
