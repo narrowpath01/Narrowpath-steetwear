@@ -594,3 +594,65 @@ export async function sendOwnerWhatsAppReturnRequest(orderId: string) {
   }
 }
 
+/**
+ * Sends a real-time OTP verification code to a customer's phone number via WhatsApp.
+ */
+export async function sendOtpWhatsApp(phoneNumber: string, otpCode: string): Promise<{ success: boolean; messageId?: string; error?: string }> {
+  try {
+    const token = process.env.WHATSAPP_API_TOKEN;
+    const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+
+    const digitsOnly = phoneNumber.replace(/\D/g, "").slice(-10);
+    if (digitsOnly.length < 10) {
+      return { success: false, error: "Invalid mobile number" };
+    }
+    const formattedPhone = `91${digitsOnly}`;
+
+    const messageText = 
+      `*NARROW PATH STREETWEAR* ⚡\n\n` +
+      `Your login verification code is: *${otpCode}*\n\n` +
+      `⏱️ Valid for 5 minutes.\n` +
+      `⚠️ Do not share this code with anyone.\n\n` +
+      `Walk by faith, not by sight.`;
+
+    if (!token || !phoneNumberId) {
+      console.warn("[WhatsApp OTP]: WHATSAPP_API_TOKEN or WHATSAPP_PHONE_NUMBER_ID is not configured in .env");
+      return { success: false, error: "WhatsApp credentials not configured" };
+    }
+
+    const url = `https://graph.facebook.com/v18.0/${phoneNumberId}/messages`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        messaging_product: "whatsapp",
+        recipient_type: "individual",
+        to: formattedPhone,
+        type: "text",
+        text: {
+          preview_url: false,
+          body: messageText,
+        },
+      }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      console.error(`[WhatsApp OTP Error]: Failed to send to ${formattedPhone}`, JSON.stringify(data, null, 2));
+      return { success: false, error: data.error?.message || "WhatsApp sending failed" };
+    }
+
+    const messageId = data.messages?.[0]?.id;
+    console.log(`[WhatsApp OTP Success]: Verification code sent to +${formattedPhone}. Message ID: ${messageId}`);
+    return { success: true, messageId };
+
+  } catch (error: any) {
+    console.error(`[WhatsApp OTP Exception]:`, error);
+    return { success: false, error: error.message || "Failed to dispatch WhatsApp OTP" };
+  }
+}
+
+

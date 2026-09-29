@@ -2,11 +2,9 @@
 "use server";
 
 import Razorpay from "razorpay";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/db";
 import { getServerSession } from "next-auth"; 
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-
-const prisma = new PrismaClient();
 
 // Initialize the Razorpay SDK
 const razorpay = new Razorpay({
@@ -17,10 +15,14 @@ const razorpay = new Razorpay({
 export async function createRazorpayOrder(cartTotal: number, items: any[]) {
   // 1. Authenticate User
   const session = await getServerSession(authOptions);
-  if (!session?.user?.email) throw new Error("Unauthorized: Please log in.");
+  if (!session?.user) throw new Error("Unauthorized: Please log in.");
 
-  const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+  const userId = session.user.id;
+  const user = userId 
+    ? await prisma.user.findUnique({ where: { id: userId } })
+    : await prisma.user.findUnique({ where: { email: session.user.email! } });
   if (!user) throw new Error("User not found");
+
 
   // 2. Ask Razorpay to generate an Order ID
   const options = {

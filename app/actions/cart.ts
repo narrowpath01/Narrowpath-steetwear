@@ -1,28 +1,31 @@
 // app/actions/cart.ts
 "use server";
 
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { cookies } from "next/headers";
 import { v4 as uuidv4 } from "uuid";
-
-const prisma = new PrismaClient();
 
 // Helper function to get or create the Cart ID
 async function getOrCreateCart() {
   const session = await getServerSession(authOptions);
   let cart;
 
-  // 1. If Logged In: Find or create their permanent user cart
-  if (session?.user?.email) {
-    const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+  // 1. If Logged In: Find or create their permanent user cart by user.id or email
+  const userId = session?.user?.id;
+  if (userId || session?.user?.email) {
+    const user = userId 
+      ? await prisma.user.findUnique({ where: { id: userId } })
+      : await prisma.user.findUnique({ where: { email: session.user.email! } });
+
     if (user) {
       cart = await prisma.cart.findUnique({ where: { userId: user.id } });
       if (!cart) cart = await prisma.cart.create({ data: { userId: user.id } });
       return cart;
     }
   }
+
 
   // 2. If Anonymous: Rely on the Guest Cookie
   const cookieStore = await cookies();

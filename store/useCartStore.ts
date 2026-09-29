@@ -27,6 +27,7 @@ interface CartStore {
   removeItem: (itemId: string) => Promise<void>;
   updateQuantity: (itemId: string, quantity: number) => Promise<void>;
   totalPrice: () => number;
+  clearCart: () => void;
 }
 
 export const useCartStore = create<CartStore>((set, get) => ({
@@ -35,6 +36,8 @@ export const useCartStore = create<CartStore>((set, get) => ({
   isCartOpen: false,
 
   toggleCart: () => set((state) => ({ isCartOpen: !state.isCartOpen })),
+  clearCart: () => set({ items: [], cartCount: 0 }),
+
 
   // 1. CALCULATE TOTAL PRICE
   totalPrice: () => {

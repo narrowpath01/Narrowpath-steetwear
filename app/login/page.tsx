@@ -11,27 +11,36 @@ function LoginForm() {
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const [step, setStep] = useState<"phone" | "otp">("phone");
-  const [contact, setContact] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
+  const [infoMessage, setInfoMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSendCode = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setInfoMessage("");
     setLoading(true);
+
+    const clean = phoneNumber.replace(/\D/g, "").slice(-10);
+    if (clean.length !== 10) {
+      setError("Please enter a valid 10-digit mobile number.");
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await fetch("/api/auth/otp/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contact }),
+        body: JSON.stringify({ contact: clean }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to send code");
+      if (!res.ok) throw new Error(data.error || "Failed to send verification code");
       
-      // Output the code in an alert box for easy testing and debugging
-      if (data.code) {
-        alert(`[DEBUG] Verification Code: ${data.code}\n(This code has also been printed in your server terminal)`);
+      if (data.message) {
+        setInfoMessage(data.message);
       }
       setStep("otp");
     } catch (err: any) {
@@ -45,10 +54,13 @@ function LoginForm() {
     e.preventDefault();
     setError("");
     setLoading(true);
+
+    const clean = phoneNumber.replace(/\D/g, "").slice(-10);
+
     try {
       const result = await signIn("credentials", {
-        contact,
-        otp,
+        contact: clean,
+        otp: otp.trim(),
         redirect: false,
       });
 
@@ -69,28 +81,60 @@ function LoginForm() {
     <main className="min-h-screen w-full bg-gray-50 text-black flex flex-col items-center justify-center p-6 font-sans">
       <div className="w-full max-w-md flex flex-col items-center border border-neutral-200 rounded-3xl p-10 shadow-lg bg-white">
         
-        <h1 className="text-4xl font-black uppercase tracking-tighter mb-2">
+        <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 text-center">
           NARROW PATH
         </h1>
-        <p className="text-sm font-bold uppercase tracking-widest text-neutral-500 mb-8 text-center">
-          {step === "phone" ? "Access the Underground" : `Enter code sent to ${contact}`}
+        <p className="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-8 text-center">
+          {step === "phone" ? "ACCESS THE UNDERGROUND" : `ENTER CODE SENT TO +91 ${phoneNumber.replace(/\D/g, "").slice(-10)}`}
         </p>
 
         {error && (
-          <div className="w-full bg-red-50 text-red-600 rounded-xl p-4 text-xs font-bold uppercase tracking-wider mb-6 text-center border border-red-100">
+          <div className="w-full bg-red-50 text-red-600 rounded-xl p-3.5 text-xs font-bold uppercase tracking-wider mb-6 text-center border border-red-100">
             {error}
           </div>
         )}
 
+        {infoMessage && step === "otp" && (
+          <div className="w-full bg-emerald-50 text-emerald-800 rounded-xl p-3 text-xs font-medium mb-6 text-center border border-emerald-200">
+            {infoMessage}
+          </div>
+        )}
+
         {step === "phone" ? (
-          <div className="w-full">
+          <div className="w-full flex flex-col gap-4">
+            {/* Phone Number Input Form */}
+            <form onSubmit={handleSendCode} className="flex flex-col gap-3 w-full">
+              <input
+                type="tel"
+                required
+                disabled={loading}
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder="Phone number"
+                className="w-full border border-neutral-300 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-black transition-colors disabled:bg-neutral-50 font-medium placeholder:text-neutral-400"
+              />
+              <button
+                type="submit"
+                disabled={loading || !phoneNumber.trim()}
+                className="w-full bg-neutral-400 text-white font-bold uppercase tracking-widest text-xs py-3.5 rounded-full hover:bg-neutral-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                {loading ? "SENDING CODE..." : "SEND VERIFICATION CODE"}
+              </button>
+            </form>
+
+            {/* Divider */}
+            <div className="flex items-center my-2">
+              <div className="flex-1 border-t border-neutral-200"></div>
+              <span className="px-4 text-xs uppercase font-medium text-neutral-400 tracking-wider">OR</span>
+              <div className="flex-1 border-t border-neutral-200"></div>
+            </div>
+
             {/* Google OAuth Trigger */}
             <button
               onClick={() => signIn("google", { callbackUrl })}
               disabled={loading}
-              className="w-full bg-white text-[#3c4043] border border-[#dadce0] py-3 rounded-full font-medium text-sm hover:bg-[#f8f9fa] transition-colors flex items-center justify-center gap-3 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-white text-[#3c4043] border border-[#dadce0] py-3.5 rounded-full font-medium text-sm hover:bg-[#f8f9fa] transition-colors flex items-center justify-center gap-3 shadow-xs disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
-              {/* Official Multi-colored Google G Logo */}
               <svg className="w-5 h-5" viewBox="0 0 48 48">
                 <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
                 <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
@@ -111,28 +155,28 @@ function LoginForm() {
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
               placeholder="000000"
-              className="w-full border-2 border-neutral-200 rounded-md p-3 text-2xl tracking-[1em] text-center focus:outline-none focus:border-black transition-colors disabled:bg-neutral-50"
+              className="w-full border-2 border-neutral-200 rounded-xl p-3.5 text-2xl tracking-[0.8em] text-center focus:outline-none focus:border-black transition-colors disabled:bg-neutral-50 font-mono font-bold"
             />
             <button 
               type="submit" 
-              disabled={loading}
-              className="w-full bg-black text-white font-bold uppercase tracking-widest text-sm py-3 rounded-full hover:bg-neutral-800 transition-colors mt-2 disabled:bg-neutral-400 disabled:cursor-not-allowed"
+              disabled={loading || otp.trim().length !== 6}
+              className="w-full bg-black text-white font-bold uppercase tracking-widest text-xs py-3.5 rounded-full hover:bg-neutral-800 transition-colors disabled:bg-neutral-400 disabled:cursor-not-allowed cursor-pointer"
             >
-              {loading ? "Verifying..." : "Verify & Sign In"}
+              {loading ? "VERIFYING..." : "VERIFY & SIGN IN"}
             </button>
             <button 
               type="button" 
-              onClick={() => setStep("phone")} 
+              onClick={() => { setStep("phone"); setOtp(""); }} 
               disabled={loading}
-              className="text-xs text-neutral-500 uppercase font-bold hover:text-black mt-2 underline underline-offset-4 disabled:opacity-50"
+              className="text-xs text-neutral-500 uppercase font-bold hover:text-black mt-2 underline underline-offset-4 disabled:opacity-50 cursor-pointer"
             >
-              Back
+              Change Phone Number
             </button>
           </form>
         )}
 
         <Link href="/" className="text-xs uppercase font-bold text-neutral-400 hover:text-black underline underline-offset-4 mt-8">
-          Return to Store
+          RETURN TO STORE
         </Link>
         
       </div>

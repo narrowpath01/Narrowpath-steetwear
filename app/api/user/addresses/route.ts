@@ -6,15 +6,16 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    console.log("DEBUG: Current Session Object:", session); 
-    
-    if (!session?.user?.email) {
+    if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email: session.user.email }
-    });
+    const userId = session.user.id;
+    const user = userId
+      ? await prisma.user.findUnique({ where: { id: userId } })
+      : session.user.email
+        ? await prisma.user.findUnique({ where: { email: session.user.email } })
+        : null;
     
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -82,11 +83,16 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
-    // FIXED: authOptions is now passed to the GET request too
     const session = await getServerSession(authOptions);
-    if (!session?.user?.email) return NextResponse.json([], { status: 401 });
+    if (!session?.user) return NextResponse.json([], { status: 401 });
 
-    const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+    const userId = session.user.id;
+    const user = userId
+      ? await prisma.user.findUnique({ where: { id: userId } })
+      : session.user.email
+        ? await prisma.user.findUnique({ where: { email: session.user.email } })
+        : null;
+
     if (!user) return NextResponse.json([], { status: 404 });
 
     const addresses = await prisma.address.findMany({
@@ -112,8 +118,19 @@ export async function GET() {
 export async function DELETE(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.email) {
+    if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userId = session.user.id;
+    const user = userId
+      ? await prisma.user.findUnique({ where: { id: userId } })
+      : session.user.email
+        ? await prisma.user.findUnique({ where: { email: session.user.email } })
+        : null;
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     // 1. Grab the ID from the URL (e.g., /api/user/addresses?id=123)
@@ -124,7 +141,15 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "Missing address ID" }, { status: 400 });
     }
 
-    // 2. Delete the address from the Postgres database
+    // 2. Verify ownership before deleting
+    const address = await prisma.address.findUnique({
+      where: { id: addressId },
+    });
+
+    if (!address || address.userId !== user.id) {
+      return NextResponse.json({ error: "Address not found or unauthorized" }, { status: 404 });
+    }
+
     await prisma.address.delete({
       where: { id: addressId },
     });

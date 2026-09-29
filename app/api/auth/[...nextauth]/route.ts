@@ -3,9 +3,7 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "@/lib/db";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -16,6 +14,7 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      allowDangerousEmailAccountLinking: true,
     }),
     CredentialsProvider({
       id: "credentials",
@@ -26,22 +25,25 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.contact || !credentials?.otp) {
-          throw new Error("Phone number/email and OTP code are required.");
+          throw new Error("Phone number and verification code are required.");
         }
 
-        const contact = credentials.contact.trim();
+        const rawContact = credentials.contact.trim();
         const otp = credentials.otp.trim();
 
+        // Standardize to 10-digit Indian phone number
+        const cleanPhone = rawContact.replace(/\D/g, "").slice(-10);
+        if (cleanPhone.length !== 10) {
+          throw new Error("Please provide a valid 10-digit mobile number.");
+        }
+
         // 1. Find user record in the DB
-        const isEmail = contact.includes("@");
         const user = await prisma.user.findFirst({
-          where: isEmail
-            ? { email: contact.toLowerCase() }
-            : { phone: contact },
+          where: { phone: cleanPhone },
         });
 
         if (!user) {
-          throw new Error("No user record found for this number or email.");
+          throw new Error("No user record found for this number.");
         }
 
         // 2. Validate OTP code matching
@@ -51,7 +53,7 @@ export const authOptions: NextAuthOptions = {
 
         // 3. Validate OTP code expiration
         if (user.otpExpires && new Date() > user.otpExpires) {
-          throw new Error("Verification code has expired. Please send a new one.");
+          throw new Error("Verification code has expired. Please request a new one.");
         }
 
         // 4. Burn the OTP code to prevent replay attacks
@@ -68,6 +70,7 @@ export const authOptions: NextAuthOptions = {
           name: user.name,
           email: user.email,
           image: user.image,
+          phone: user.phone,
         };
       },
     }),
@@ -76,17 +79,28 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.phone = (user as any).phone || token.phone || null;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user && token) {
         session.user.id = token.id as string;
+        session.user.phone = (token.phone as string) || null;
       }
       return session;
+    },
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      try {
+        if (new URL(url).origin === baseUrl) return url;
+      } catch {
+        // invalid URL fallback
+      }
+      return baseUrl;
     },
   },
 };
 
 const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+export { handler as GET, handler as POST };

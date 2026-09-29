@@ -12,10 +12,44 @@ const razorpay = new Razorpay({
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const body = await req.json();
     const { items, addressData } = body;
+
+    if (!items || items.length === 0) {
+      return NextResponse.json({ error: "Your cart is empty" }, { status: 400 });
+    }
+
+    if (!addressData || !addressData.firstName || !addressData.street || !addressData.pinCode || !addressData.phoneNumber) {
+      return NextResponse.json({ error: "Please fill out the entire shipping form" }, { status: 400 });
+    }
+
+    // Resolve or Auto-Create User (supports both Logged-In and Guest checkouts)
+    let userId = session?.user?.id;
+
+    if (!userId) {
+      const cleanPhone = addressData.phoneNumber ? addressData.phoneNumber.toString().replace(/\D/g, "").slice(-10) : null;
+      const cleanEmail = addressData.email ? addressData.email.toString().trim().toLowerCase() : null;
+
+      let user = null;
+      if (cleanPhone && cleanPhone.length === 10) {
+        user = await prisma.user.findFirst({ where: { phone: cleanPhone } });
+      }
+      if (!user && cleanEmail) {
+        user = await prisma.user.findFirst({ where: { email: cleanEmail } });
+      }
+
+      if (!user) {
+        user = await prisma.user.create({
+          data: {
+            name: `${addressData.firstName || ""} ${addressData.lastName || ""}`.trim() || "Customer",
+            phone: cleanPhone && cleanPhone.length === 10 ? cleanPhone : null,
+            email: cleanEmail || null,
+          }
+        });
+      }
+      userId = user.id;
+    }
 
     // 1. Calculate Base Amount of the clothes
     const baseAmount = items.reduce((acc: number, item: any) => acc + (item.variant.price * item.quantity), 0);
@@ -68,7 +102,7 @@ export async function POST(req: Request) {
       // Check if an identical physical address already exists for the user (case-insensitive and trimmed)
       const existingAddress = await prisma.address.findFirst({
         where: {
-          userId: session.user.id,
+          userId: userId,
           street: { equals: addressData.street.trim(), mode: 'insensitive' },
           city: { equals: addressData.city.trim(), mode: 'insensitive' },
           state: { equals: addressData.state.trim(), mode: 'insensitive' },
@@ -93,7 +127,7 @@ export async function POST(req: Request) {
       } else {
         const newAddress = await prisma.address.create({
           data: {
-            userId: session.user.id,
+            userId: userId,
             firstName: addressData.firstName,
             lastName: addressData.lastName,
             phoneNumber: addressData.phoneNumber,
@@ -113,7 +147,7 @@ export async function POST(req: Request) {
     // 6. Draft the Order in your Database
     const newOrder = await prisma.order.create({
       data: {
-        userId: session.user.id,
+        userId: userId,
         amount: totalAmount,
         status: "PENDING",
         razorpayOrderId: razorpayOrder.id,
@@ -134,6 +168,7 @@ export async function POST(req: Request) {
       dbOrderId: newOrder.id,
       amount: razorpayOrder.amount 
     });
+
 
   } catch (error) {
     console.error("Order Creation Error:", error);

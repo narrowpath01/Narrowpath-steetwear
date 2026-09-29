@@ -38,6 +38,7 @@ export default function CheckoutPage() {
 
   const [shippingFee, setShippingFee] = useState<number>(0);
   const [calculatingShipping, setCalculatingShipping] = useState(false);
+  const [checkoutError, setCheckoutError] = useState("");
 
   // Payment Method is PREPAID only
   const paymentMethod = "PREPAID";
@@ -150,8 +151,10 @@ export default function CheckoutPage() {
   if (!isMounted) return null;
 
   const handlePayment = async () => {
+    setCheckoutError("");
+
     if (!formData.firstName || !formData.street || !formData.city || !formData.pinCode || !formData.phoneNumber) {
-      alert("Don't skip steps. Fill out the entire shipping form.");
+      setCheckoutError("Please fill out all required shipping details.");
       return;
     }
 
@@ -160,7 +163,7 @@ export default function CheckoutPage() {
     try {
       const isScriptLoaded = await loadRazorpayScript();
       if (!isScriptLoaded) {
-        alert("Razorpay SDK failed to load. Are you online?");
+        setCheckoutError("Payment SDK failed to load. Please check your internet connection and try again.");
         setIsProcessing(false);
         return;
       }
@@ -178,10 +181,7 @@ export default function CheckoutPage() {
 
       const data = await res.json();
       if (!res.ok) {
-        if (res.status === 401) {
-          throw new Error("Your session has expired. Please open this page in your browser (not Instagram/WhatsApp), sign in, and try again.");
-        }
-        throw new Error(data.error);
+        throw new Error(data.error || "Failed to initialize order. Please try again.");
       }
 
       // 2. Initialize the Razorpay Modal
@@ -192,30 +192,42 @@ export default function CheckoutPage() {
         name: "Narrow Path",
         description: "Access the Underground",
         order_id: data.orderId,
+        modal: {
+          ondismiss: () => {
+            setIsProcessing(false);
+          },
+        },
         handler: async function (response: any) {
-          // 3. Send payment signature to backend for verification
-          const verifyRes = await fetch("/api/checkout/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include", // Ensure session cookie is sent
-            body: JSON.stringify({
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature,
-              dbOrderId: data.dbOrderId 
-            }),
-          });
+          try {
+            // 3. Send payment signature to backend for verification
+            const verifyRes = await fetch("/api/checkout/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              credentials: "include",
+              body: JSON.stringify({
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                dbOrderId: data.dbOrderId 
+              }),
+            });
 
-          const verifyData = await verifyRes.json();
-          if (verifyData.success) {
-            alert("Payment successful!");
-            window.location.href = `/order/success?id=${data.dbOrderId}`;
-          } else {
-            alert("Payment verification failed. If money was deducted, it will be refunded.");
+            const verifyData = await verifyRes.json();
+            if (verifyData.success) {
+              useCartStore.getState().clearCart();
+              window.location.href = `/order/success?id=${data.dbOrderId}`;
+            } else {
+              setCheckoutError("Payment verification failed. If money was deducted, it will be refunded automatically.");
+              setIsProcessing(false);
+            }
+          } catch (verifyErr) {
+            console.error("Verification error:", verifyErr);
+            setCheckoutError("Error verifying payment. If amount was debited, your order will still be processed.");
+            setIsProcessing(false);
           }
         },
         prefill: {
-          name: `${formData.firstName} ${formData.lastName}`,
+          name: `${formData.firstName} ${formData.lastName}`.trim(),
           email: formData.email,
           contact: formData.phoneNumber,
         },
@@ -229,11 +241,11 @@ export default function CheckoutPage() {
 
     } catch (error: any) {
       console.error("Checkout failed:", error);
-      alert(error.message || "Something broke during checkout.");
-    } finally {
+      setCheckoutError(error.message || "Something broke during checkout.");
       setIsProcessing(false);
     }
   };
+
 
 
 
@@ -422,10 +434,16 @@ export default function CheckoutPage() {
             <span>INR {totalPrice() + shippingFee}</span>
           </div>
 
+          {checkoutError && (
+            <div className="w-full bg-red-50 text-red-600 rounded-xl p-3.5 text-xs font-bold uppercase tracking-wider mb-4 text-center border border-red-200">
+              {checkoutError}
+            </div>
+          )}
+
           <button 
             onClick={handlePayment}
             disabled={isPinServiceable === false || checkingPin || calculatingShipping || !formData.pinCode || isProcessing}
-            className="w-full bg-black text-white py-5 rounded-full font-bold uppercase tracking-widest text-sm hover:bg-neutral-800 transition-colors disabled:bg-neutral-400 disabled:cursor-not-allowed mt-auto"
+            className="w-full bg-black text-white py-5 rounded-full font-bold uppercase tracking-widest text-sm hover:bg-neutral-800 transition-colors disabled:bg-neutral-400 disabled:cursor-not-allowed mt-auto cursor-pointer"
           >
             {isProcessing ? "Processing..." : 
              checkingPin || calculatingShipping ? "Calculating..." : 
