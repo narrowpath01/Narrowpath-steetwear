@@ -5,6 +5,7 @@ import crypto from "crypto";
 // Fallback in-memory storage in case of transient DB connectivity issues
 const memoryCache = new Map<string, {
   imageData: string;
+  mockupData?: string;
   baseColor: string;
   size: string;
   details?: string;
@@ -14,7 +15,7 @@ const memoryCache = new Map<string, {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { imageData, baseColor = "black", size = "M", details = "" } = body;
+    const { imageData, mockupData = "", baseColor = "black", size = "M", details = {} } = body;
 
     if (!imageData || typeof imageData !== "string") {
       return NextResponse.json({ error: "Missing or invalid imageData" }, { status: 400 });
@@ -22,6 +23,12 @@ export async function POST(req: Request) {
 
     // Generate unique compact design ID
     const designId = `des_${crypto.randomBytes(6).toString("hex")}`;
+
+    const detailsObj = typeof details === "object" && details !== null ? details : {};
+    if (mockupData) {
+      (detailsObj as any).mockupData = mockupData;
+    }
+    const detailsStr = JSON.stringify(detailsObj);
 
     // 1. Try to persist to PostgreSQL CustomDesign table
     try {
@@ -32,16 +39,17 @@ export async function POST(req: Request) {
         imageData,
         baseColor,
         size,
-        typeof details === "string" ? details : JSON.stringify(details),
+        detailsStr,
         new Date()
       );
     } catch (dbErr) {
       console.warn("[Customise Share] DB insert failed, falling back to memory cache:", dbErr);
       memoryCache.set(designId, {
         imageData,
+        mockupData,
         baseColor,
         size,
-        details: typeof details === "string" ? details : JSON.stringify(details),
+        details: detailsStr,
         createdAt: new Date(),
       });
     }
@@ -56,6 +64,7 @@ export async function POST(req: Request) {
       id: designId,
       previewUrl: `${baseUrl}/customise/design/${designId}`,
       imageUrl: `${baseUrl}/api/customise/preview/${designId}`,
+      mockupUrl: `${baseUrl}/api/customise/preview/${designId}?type=mockup`,
     });
   } catch (error) {
     console.error("[Customise Share API Error]:", error);

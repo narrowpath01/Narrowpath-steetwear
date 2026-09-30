@@ -49,6 +49,7 @@ export default function CustomisePage() {
   const [isWhatsAppLoading, setIsWhatsAppLoading] = useState(false);
   const [showPermissionModal, setShowPermissionModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
+  const [saveModalType, setSaveModalType] = useState<"design" | "mockup">("design");
   const [generatedMockupUrl, setGeneratedMockupUrl] = useState<string | null>(null);
   const [whatsAppSuccessModal, setWhatsAppSuccessModal] = useState<{
     open: boolean;
@@ -248,38 +249,108 @@ export default function CustomisePage() {
     }
   };
 
-  const handleDownloadImageDirectly = (url: string) => {
+  const handleDownloadImageDirectly = (url: string, filename?: string) => {
     const link = document.createElement("a");
-    link.download = `narrow-path-custom-tee-${baseColor}-${activeSlide}-${Date.now()}.png`;
+    link.download = filename || `narrow-path-custom-tee-${baseColor}-${activeSlide}-${Date.now()}.png`;
     link.href = url;
     link.click();
   };
 
-  const generateMockupDataUrl = async (): Promise<string | null> => {
+  // Helper to crop transparent PNG down to artwork bounding box
+  const cropTransparentImage = (dataUrl: string): Promise<string> => {
+    return new Promise((resolve) => {
+      if (typeof window === "undefined") return resolve(dataUrl);
+      const img = new window.Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        try {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d", { willReadFrequently: true });
+          if (!ctx) {
+            resolve(dataUrl);
+            return;
+          }
+          ctx.drawImage(img, 0, 0);
+          const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const { data, width, height } = imgData;
+
+          let minX = width;
+          let minY = height;
+          let maxX = 0;
+          let maxY = 0;
+          let found = false;
+
+          for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
+              const alpha = data[(y * width + x) * 4 + 3];
+              if (alpha > 8) {
+                if (x < minX) minX = x;
+                if (x > maxX) maxX = x;
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+                found = true;
+              }
+            }
+          }
+
+          if (!found) {
+            resolve(dataUrl);
+            return;
+          }
+
+          const padding = 24;
+          const cropX = Math.max(0, minX - padding);
+          const cropY = Math.max(0, minY - padding);
+          const cropWidth = Math.min(width - cropX, (maxX - minX) + padding * 2);
+          const cropHeight = Math.min(height - cropY, (maxY - minY) + padding * 2);
+
+          const croppedCanvas = document.createElement("canvas");
+          croppedCanvas.width = cropWidth;
+          croppedCanvas.height = cropHeight;
+          const croppedCtx = croppedCanvas.getContext("2d");
+          if (!croppedCtx) {
+            resolve(dataUrl);
+            return;
+          }
+
+          croppedCtx.drawImage(
+            canvas,
+            cropX, cropY, cropWidth, cropHeight,
+            0, 0, cropWidth, cropHeight
+          );
+
+          resolve(croppedCanvas.toDataURL("image/png"));
+        } catch (e) {
+          console.warn("Error cropping transparent design:", e);
+          resolve(dataUrl);
+        }
+      };
+      img.onerror = () => resolve(dataUrl);
+      img.src = dataUrl;
+    });
+  };
+
+  // 1. Generates ONLY the PNG design (transparent background, NO model, NO blank t-shirt)
+  const generatePureDesignPng = async (): Promise<string | null> => {
     if (!previewContainerRef.current) return null;
 
-    // Save previous active selection & deselect for clean screenshot
     const prevActiveElement = activeElement;
     setActiveElement(null);
-
-    // Give React a small paint frame to remove bounding boxes
     await new Promise((resolve) => setTimeout(resolve, 150));
 
-    let baseImgEl: HTMLImageElement | null = null;
-    let originalSrc = "";
+    const hiddenEls: { el: HTMLElement; origDisplay: string }[] = [];
     const graphicImages = Array.from(previewContainerRef.current.querySelectorAll("img[alt*='Graphic']") || []) as HTMLImageElement[];
     const originalGraphicSrcs = new Map<HTMLImageElement, string>();
 
-    try {
-      // 1. Temporarily swap base image to Base64
-      baseImgEl = previewContainerRef.current.querySelector("img[alt*='Preview']") as HTMLImageElement | null;
-      if (baseImgEl && baseImgEl.src) {
-        originalSrc = baseImgEl.src;
-        const base64Src = await imageUrlToBase64(baseImgEl.src);
-        baseImgEl.src = base64Src;
-      }
+    const origClassName = previewContainerRef.current.className;
+    const origContainerBg = previewContainerRef.current.style.backgroundColor;
+    const origContainerBorder = previewContainerRef.current.style.borderColor;
+    const origBoxShadow = previewContainerRef.current.style.boxShadow;
 
-      // 2. Temporarily swap all custom graphics to Base64
+    try {
+      // Inline all custom graphics to Base64
       for (const img of graphicImages) {
         if (img.src && !img.src.startsWith("data:")) {
           originalGraphicSrcs.set(img, img.src);
@@ -288,7 +359,90 @@ export default function CustomisePage() {
         }
       }
 
-      // Warm-up pass for Safari compatibility
+      // Hide all non-graphic images (e.g. Tee model preview front & back)
+      const baseImgs = Array.from(previewContainerRef.current.querySelectorAll("img:not([alt*='Graphic'])")) as HTMLImageElement[];
+      baseImgs.forEach((img) => {
+        hiddenEls.push({ el: img, origDisplay: img.style.display });
+        img.style.display = "none";
+      });
+
+      // Hide all background overlay divs or guide overlays
+      const overlays = Array.from(previewContainerRef.current.querySelectorAll("div.pointer-events-none, div[class*='bg-neutral-100']")) as HTMLElement[];
+      overlays.forEach((ov) => {
+        if (!ov.closest(".transformer-container")) {
+          hiddenEls.push({ el: ov, origDisplay: ov.style.display });
+          ov.style.display = "none";
+        }
+      });
+
+      // Make canvas container fully transparent and remove borders/shadows
+      previewContainerRef.current.classList.remove("bg-neutral-100", "shadow-inner", "border", "border-neutral-200/80");
+      previewContainerRef.current.style.backgroundColor = "transparent";
+      previewContainerRef.current.style.borderColor = "transparent";
+      previewContainerRef.current.style.boxShadow = "none";
+
+      // Render transparent canvas at 3x pixelRatio for print quality
+      const rawDataUrl = await toPng(previewContainerRef.current, {
+        cacheBust: false,
+        skipFonts: true,
+        backgroundColor: "transparent",
+        pixelRatio: 3,
+        quality: 1,
+      });
+
+      // Crop to exact design artwork bounds with padding
+      const croppedDesignUrl = await cropTransparentImage(rawDataUrl);
+      return croppedDesignUrl;
+
+    } catch (error) {
+      console.error("Failed to generate transparent design PNG:", error);
+      return null;
+    } finally {
+      hiddenEls.forEach(({ el, origDisplay }) => {
+        el.style.display = origDisplay;
+      });
+      if (previewContainerRef.current) {
+        previewContainerRef.current.className = origClassName;
+        previewContainerRef.current.style.backgroundColor = origContainerBg;
+        previewContainerRef.current.style.borderColor = origContainerBorder;
+        previewContainerRef.current.style.boxShadow = origBoxShadow;
+      }
+      originalGraphicSrcs.forEach((src, img) => {
+        img.src = src;
+      });
+      setActiveElement(prevActiveElement);
+    }
+  };
+
+  // 2. Generates the visual mockup preview on the model
+  const generateMockupDataUrl = async (): Promise<string | null> => {
+    if (!previewContainerRef.current) return null;
+
+    const prevActiveElement = activeElement;
+    setActiveElement(null);
+    await new Promise((resolve) => setTimeout(resolve, 150));
+
+    let baseImgEl: HTMLImageElement | null = null;
+    let originalSrc = "";
+    const graphicImages = Array.from(previewContainerRef.current.querySelectorAll("img[alt*='Graphic']") || []) as HTMLImageElement[];
+    const originalGraphicSrcs = new Map<HTMLImageElement, string>();
+
+    try {
+      baseImgEl = previewContainerRef.current.querySelector("img[alt*='Preview']") as HTMLImageElement | null;
+      if (baseImgEl && baseImgEl.src) {
+        originalSrc = baseImgEl.src;
+        const base64Src = await imageUrlToBase64(baseImgEl.src);
+        baseImgEl.src = base64Src;
+      }
+
+      for (const img of graphicImages) {
+        if (img.src && !img.src.startsWith("data:")) {
+          originalGraphicSrcs.set(img, img.src);
+          const base64Src = await imageUrlToBase64(img.src);
+          img.src = base64Src;
+        }
+      }
+
       const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
       if (isSafari) {
         try {
@@ -298,12 +452,9 @@ export default function CustomisePage() {
             backgroundColor: "#f5f5f5",
             pixelRatio: 1
           });
-        } catch (e) {
-          // Silent warmup catch
-        }
+        } catch (e) {}
       }
 
-      // Capture mockup PNG with optimal balance of speed and sharpness
       const dataUrl = await toPng(previewContainerRef.current, {
         cacheBust: false,
         skipFonts: true,
@@ -317,7 +468,6 @@ export default function CustomisePage() {
       console.error("Failed to generate mockup image:", error);
       return null;
     } finally {
-      // Restore all original image sources & active selection
       if (baseImgEl && originalSrc) {
         baseImgEl.src = originalSrc;
       }
@@ -328,35 +478,105 @@ export default function CustomisePage() {
     }
   };
 
+  // Primary Download: ONLY THE PNG DESIGN (transparent artwork print file)
+  const handleDownloadDesignOnly = async () => {
+    const currentElements = activeSlide === "front" ? frontElements : backElements;
+    if (currentElements.length === 0) {
+      alert("Please add at least one photo or text to your design before downloading!");
+      return;
+    }
+
+    setIsExporting(true);
+    setSaveModalType("design");
+    try {
+      const dataUrl = await generatePureDesignPng();
+      if (!dataUrl) {
+        alert("Failed to render design PNG. Please try again!");
+        return;
+      }
+      setGeneratedMockupUrl(dataUrl);
+
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+      if (isMobile) {
+        try {
+          handleDownloadImageDirectly(dataUrl, `narrowpath-design-artwork-${activeSlide}-${Date.now()}.png`);
+        } catch (e) {}
+        setShowSaveModal(true);
+      } else {
+        handleDownloadImageDirectly(dataUrl, `narrowpath-design-artwork-${activeSlide}-${Date.now()}.png`);
+      }
+    } catch (err) {
+      console.error("Failed to download design PNG:", err);
+      alert("Failed to download design PNG. Please try again.");
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  // Secondary Download: Mockup on Model
+  const handleDownloadMockup = async () => {
+    setIsExporting(true);
+    setSaveModalType("mockup");
+    try {
+      const dataUrl = await generateMockupDataUrl();
+      if (!dataUrl) {
+        alert("Failed to export mockup. Please try again!");
+        return;
+      }
+      setGeneratedMockupUrl(dataUrl);
+
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+      if (isMobile) {
+        try {
+          handleDownloadImageDirectly(dataUrl, `narrowpath-mockup-model-${activeSlide}-${Date.now()}.png`);
+        } catch (e) {}
+        setShowSaveModal(true);
+      } else {
+        handleDownloadImageDirectly(dataUrl, `narrowpath-mockup-model-${activeSlide}-${Date.now()}.png`);
+      }
+    } catch (error) {
+      console.error("Failed to generate mockup image:", error);
+      alert("Failed to export mockup. Please try again!");
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   const handleWhatsAppSubmit = async () => {
     if (isWhatsAppLoading) return;
     setIsWhatsAppLoading(true);
 
     try {
-      // 1. Render clean custom mockup photo
-      const dataUrl = await generateMockupDataUrl();
-      if (!dataUrl) {
+      // Generate both: transparent PNG design (print file) and model mockup preview
+      const [designPngUrl, mockupPngUrl] = await Promise.all([
+        generatePureDesignPng(),
+        generateMockupDataUrl()
+      ]);
+
+      const activeDesignUrl = designPngUrl || mockupPngUrl;
+      if (!activeDesignUrl) {
         alert("Failed to render your design image. Please try again!");
         setIsWhatsAppLoading(false);
         return;
       }
 
-      setGeneratedMockupUrl(dataUrl);
+      setGeneratedMockupUrl(mockupPngUrl || activeDesignUrl);
 
-      // 2. Prepare order summary data
+      // Prepare order summary data
       const frontGraphics = frontElements.filter(e => e.type === "graphic");
       const frontTexts = frontElements.filter(e => e.type === "text");
       const backGraphics = backElements.filter(e => e.type === "graphic");
       const backTexts = backElements.filter(e => e.type === "text");
 
-      // 3. Upload to server to get hosted OpenGraph preview link
+      // Upload both assets to server
       let previewUrl = "";
       try {
         const res = await fetch("/api/customise/share", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            imageData: dataUrl,
+            imageData: designPngUrl || activeDesignUrl,
+            mockupData: mockupPngUrl || activeDesignUrl,
             baseColor,
             size,
             details: {
@@ -379,12 +599,12 @@ export default function CustomisePage() {
         console.warn("Upload to share API failed, continuing with direct image:", uploadErr);
       }
 
-      // 4. Construct WhatsApp text with preview link
+      // Construct WhatsApp text with preview link
       const textDetails = `Hello Narrow Path! I would like to order a Custom Heavyweight Tee:
 - Price: INR 649
 - Base Color: ${baseColor.toUpperCase()}
 - Size: ${size}
-${previewUrl ? `\n📸 VIEW & DOWNLOAD DESIGN MOCKUP:\n${previewUrl}\n` : ""}
+${previewUrl ? `\n📸 VIEW & DOWNLOAD DESIGN ASSETS (PRINT PNG + MOCKUP):\n${previewUrl}\n` : ""}
 FRONT CUSTOMISATION:
 - Total Photos: ${frontGraphics.length}
 ${frontGraphics.map((g, idx) => `  * Photo ${idx + 1}: ${g.name || "Custom Image"}`).join("\n")}
@@ -398,13 +618,14 @@ ${backGraphics.map((g, idx) => `  * Photo ${idx + 1}: ${g.name || "Custom Image"
 ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptions.find(f => f.value === t.fontFamily)?.name || "Standard"}, Color: ${t.color})`).join("\n")}`;
 
       const encodedText = encodeURIComponent(textDetails);
-      const waUrl = `https://wa.me/919315457852?text=${encodedText}`;
+      // Official Narrow Path WhatsApp Business number
+      const waUrl = `https://wa.me/919894781426?text=${encodedText}`;
 
-      // 5. Convert to Blob & File for Clipboard / Native Sharing
-      const blob = base64ToBlob(dataUrl, 'image/png');
-      const file = new File([blob], `narrowpath-tee-${baseColor}-${size}.png`, { type: 'image/png' });
+      // Convert pure design to Blob & File for Clipboard / Native Sharing
+      const blob = base64ToBlob(activeDesignUrl, 'image/png');
+      const file = new File([blob], `narrowpath-design-artwork-${activeSlide}.png`, { type: 'image/png' });
 
-      // 6. Copy image to Clipboard for instantaneous Ctrl+V paste in WhatsApp Web / Desktop
+      // Copy pure design PNG to Clipboard for Ctrl+V paste in WhatsApp Web / Desktop
       let clipboardCopied = false;
       if (typeof window !== "undefined" && navigator.clipboard && window.ClipboardItem) {
         try {
@@ -417,7 +638,7 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
         }
       }
 
-      // 7. Check if Mobile Native Share with file is available
+      // Check if Mobile Native Share with file is available
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
 
       if (isMobile && navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -436,13 +657,13 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
         }
       }
 
-      // 8. Desktop / Web: Auto-download file + Launch WhatsApp Web + Show Modal
-      handleDownloadImageDirectly(dataUrl);
+      // Desktop / Web: Auto-download transparent PNG design + Launch WhatsApp Web + Show Modal
+      handleDownloadImageDirectly(activeDesignUrl, `narrowpath-design-artwork-${activeSlide}.png`);
       window.open(waUrl, "_blank");
 
       setWhatsAppSuccessModal({
         open: true,
-        mockupUrl: dataUrl,
+        mockupUrl: mockupPngUrl || activeDesignUrl,
         waUrl,
         previewUrl,
         clipboardCopied
@@ -450,7 +671,7 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
 
     } catch (err) {
       console.error("WhatsApp submit error:", err);
-      alert("Failed to submit design to WhatsApp. Please try downloading the mockup directly.");
+      alert("Failed to submit design to WhatsApp. Please try downloading the design directly.");
     } finally {
       setIsWhatsAppLoading(false);
     }
@@ -473,44 +694,6 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
     } catch (e) {
       console.error("Sharing failed", e);
       handleDownloadImageDirectly(generatedMockupUrl);
-    }
-  };
-
-  const handleDownloadMockup = () => {
-    setShowPermissionModal(true);
-  };
-
-  const triggerExport = async () => {
-    setShowPermissionModal(false);
-    if (!previewContainerRef.current) return;
-    setIsExporting(true);
-
-    try {
-      const dataUrl = await generateMockupDataUrl();
-      if (!dataUrl) {
-        alert("Failed to export preview. Please take a screenshot of your screen to save your design!");
-        return;
-      }
-
-      setGeneratedMockupUrl(dataUrl);
-
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
-
-      if (isMobile) {
-        try {
-          handleDownloadImageDirectly(dataUrl);
-        } catch (e) {
-          // Silent fallback
-        }
-        setShowSaveModal(true);
-      } else {
-        handleDownloadImageDirectly(dataUrl);
-      }
-    } catch (error) {
-      console.error("Failed to generate mockup image:", error);
-      alert("Failed to export preview. Please take a screenshot of your screen to save your design!");
-    } finally {
-      setIsExporting(false);
     }
   };
 
@@ -1050,51 +1233,69 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
               })()}
             </div>
             <div className="pt-4 border-t border-neutral-150 space-y-3">
+              {/* PRIMARY ACTION: PURE TRANSPARENT PNG DESIGN FOR DTF/SCREEN PRINTING */}
               <button
+                type="button"
+                onClick={handleDownloadDesignOnly}
+                disabled={isExporting}
+                className="w-full bg-black hover:bg-neutral-800 text-white py-4 rounded-full font-bold uppercase tracking-widest text-xs transition-all flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg disabled:opacity-50 cursor-pointer"
+              >
+                <svg className="w-5 h-5 fill-none stroke-current" strokeWidth={2.5} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                </svg>
+                {isExporting ? "Rendering Design..." : "Download PNG Design (Print Ready)"}
+              </button>
+
+              <div className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider text-center flex items-center justify-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block animate-pulse"></span>
+                <span>Transparent PNG • Only Artwork • DTF/Screen Print Ready</span>
+              </div>
+
+              {/* SECONDARY ACTION: MOCKUP ON MODEL */}
+              <button
+                type="button"
                 onClick={handleDownloadMockup}
                 disabled={isExporting}
-                className="w-full bg-white hover:bg-neutral-50 text-black border-2 border-black py-4 rounded-full font-bold uppercase tracking-widest text-xs transition-colors flex items-center justify-center gap-2.5 shadow-sm hover:shadow-md disabled:opacity-50"
+                className="w-full bg-white hover:bg-neutral-50 text-neutral-800 border-2 border-neutral-300 hover:border-black py-3 rounded-full font-bold uppercase tracking-widest text-[11px] transition-all flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                <svg className="w-4 h-4 fill-none stroke-current" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
                 </svg>
-                {isExporting ? "Generating PNG..." : "Download Mockup (PNG)"}
+                {isExporting ? "Generating Mockup..." : "Download Model Mockup (PNG)"}
               </button>
 
-              <p className="text-[10px] text-neutral-500 font-bold uppercase tracking-wide text-center leading-normal mt-1 mb-2 max-w-[90%] mx-auto">
-                Submit directly to WhatsApp with your custom design photo attached automatically.
-              </p>
+              {/* WHATSAPP SUBMIT */}
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={handleWhatsAppSubmit}
+                  disabled={isWhatsAppLoading}
+                  className="w-full bg-[#25d366] hover:bg-[#20ba5a] text-white py-4 rounded-full font-bold uppercase tracking-widest text-xs transition-colors flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg disabled:opacity-75 disabled:cursor-wait cursor-pointer"
+                >
+                  {isWhatsAppLoading ? (
+                    <>
+                      <svg className="w-5 h-5 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      <span>Preparing Design & WhatsApp...</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.09-3.977c1.649.979 3.278 1.488 4.908 1.489 5.482 0 9.943-4.461 9.947-9.947.002-2.658-1.03-5.158-2.906-7.037C16.32 2.65 13.823 1.62 11.2 1.62c-5.485 0-9.949 4.464-9.953 9.953-.001 1.706.505 3.327 1.47 4.79l-1.026 3.748 3.866-1.018z" />
+                      </svg>
+                      <span>Submit Design via WhatsApp</span>
+                    </>
+                  )}
+                </button>
 
-              <button
-                onClick={handleWhatsAppSubmit}
-                disabled={isWhatsAppLoading}
-                className="w-full bg-[#25d366] hover:bg-[#20ba5a] text-white py-4 rounded-full font-bold uppercase tracking-widest text-xs transition-colors flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg disabled:opacity-75 disabled:cursor-wait cursor-pointer"
-              >
-                {isWhatsAppLoading ? (
-                  <>
-                    <svg className="w-5 h-5 animate-spin text-white" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    <span>Preparing Design & WhatsApp...</span>
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.09-3.977c1.649.979 3.278 1.488 4.908 1.489 5.482 0 9.943-4.461 9.947-9.947.002-2.658-1.03-5.158-2.906-7.037C16.32 2.65 13.823 1.62 11.2 1.62c-5.485 0-9.949 4.464-9.953 9.953-.001 1.706.505 3.327 1.47 4.79l-1.026 3.748 3.866-1.018z" />
-                    </svg>
-                    <span>Submit Design via WhatsApp</span>
-                  </>
-                )}
-              </button>
-
-              <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider text-center mt-2.5">
-                Our designer will review and draft your mockup directly!
-              </p>
+                <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider text-center mt-2.5">
+                  Our designer will review and draft your order directly!
+                </p>
+              </div>
             </div>
-
           </div>
-
         </div>
 
       </div>
@@ -1106,15 +1307,29 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowPermissionModal(false)}
+            className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm cursor-pointer"
           >
             <motion.div
               initial={{ scale: 0.95, y: 15 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 15 }}
               transition={{ type: "spring", duration: 0.4 }}
-              className="bg-white/95 backdrop-blur-md border border-neutral-200/80 rounded-[28px] max-w-sm w-full p-6 text-center shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+              className="relative bg-white/95 backdrop-blur-md border border-neutral-200/80 rounded-[28px] max-w-sm w-full p-6 text-center shadow-2xl cursor-default"
             >
+              {/* Top-Right Cut/Close (X) Button */}
+              <button
+                type="button"
+                onClick={() => setShowPermissionModal(false)}
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-600 hover:text-black flex items-center justify-center transition-colors cursor-pointer z-30"
+                aria-label="Close"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
               <div className="w-12 h-12 bg-blue-50 text-[#005bd3] rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -1126,13 +1341,18 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
               </p>
               <div className="flex gap-3 mt-6">
                 <button
+                  type="button"
                   onClick={() => setShowPermissionModal(false)}
                   className="flex-1 py-3 bg-neutral-100 hover:bg-neutral-200 text-neutral-600 rounded-full font-bold uppercase tracking-widest text-[10px] transition-colors"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={triggerExport}
+                  type="button"
+                  onClick={() => {
+                    setShowPermissionModal(false);
+                    handleDownloadMockup();
+                  }}
                   className="flex-1 py-3 bg-[#005bd3] hover:bg-[#004bb3] text-white rounded-full font-bold uppercase tracking-widest text-[10px] transition-colors shadow-md hover:shadow-lg"
                 >
                   Allow & Save
@@ -1150,44 +1370,69 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowSaveModal(false)}
+            className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm cursor-pointer"
           >
             <motion.div
               initial={{ scale: 0.95, y: 15 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 15 }}
               transition={{ type: "spring", duration: 0.4 }}
-              className="bg-white/95 backdrop-blur-md border border-neutral-200/80 rounded-[32px] max-w-md w-full p-6 text-center shadow-2xl flex flex-col items-center"
+              onClick={(e) => e.stopPropagation()}
+              className="relative bg-white/95 backdrop-blur-md border border-neutral-200/80 rounded-[32px] max-w-md w-full p-6 text-center shadow-2xl flex flex-col items-center cursor-default max-h-[90vh] overflow-y-auto"
             >
-              <h3 className="text-lg font-black uppercase tracking-wider text-black mb-2">Saved to Downloads!</h3>
-              <p className="text-neutral-500 text-[10px] font-bold uppercase tracking-wider leading-relaxed mb-4 max-w-sm">
-                Your design has been saved to your device's Downloads folder as a high-quality PNG. If the download did not trigger automatically, tap the button below or long-press the image to save it.
+              {/* Top-Right Cut/Close (X) Button */}
+              <button
+                type="button"
+                onClick={() => setShowSaveModal(false)}
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-600 hover:text-black flex items-center justify-center transition-colors cursor-pointer z-30"
+                aria-label="Close"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
+              <h3 className="text-lg font-black uppercase tracking-wider text-black mb-1">
+                {saveModalType === "design" ? "Design Artwork Ready!" : "Model Mockup Ready!"}
+              </h3>
+              <p className="text-neutral-500 text-[11px] font-medium leading-relaxed mb-4 max-w-xs">
+                {saveModalType === "design"
+                  ? "Your pure transparent print-ready PNG (DTF/Screen print) has been generated. Tap below or long-press the image to save."
+                  : "Your tee design mockup on the model has been generated. Tap below or long-press the image to save."}
               </p>
 
               <div className="w-full flex flex-col gap-2.5 mb-4">
                 <button
-                  onClick={() => handleDownloadImageDirectly(generatedMockupUrl)}
-                  className="w-full py-3.5 bg-black hover:bg-neutral-800 text-white rounded-full font-bold uppercase tracking-widest text-[10px] transition-colors shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                  type="button"
+                  onClick={() => handleDownloadImageDirectly(
+                    generatedMockupUrl,
+                    saveModalType === "design"
+                      ? `narrowpath-design-artwork-${activeSlide}-${Date.now()}.png`
+                      : `narrowpath-mockup-model-${activeSlide}-${Date.now()}.png`
+                  )}
+                  className="w-full py-3.5 bg-black hover:bg-neutral-800 text-white rounded-full font-bold uppercase tracking-widest text-[10px] transition-colors shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <svg className="w-4 h-4 fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 fill-none stroke-current" strokeWidth={2.5} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                   </svg>
-                  Download PNG
+                  {saveModalType === "design" ? "Download Print PNG" : "Download Mockup PNG"}
                 </button>
               </div>
 
-              <div className="w-full relative aspect-[4/5] bg-neutral-100 rounded-[20px] overflow-hidden border border-neutral-200 shadow-inner mb-6 flex items-center justify-center">
+              <div className="w-full relative aspect-[4/5] bg-neutral-100/60 rounded-[20px] overflow-hidden border border-neutral-200 shadow-inner mb-4 flex items-center justify-center p-3">
                 <img
                   src={generatedMockupUrl}
-                  alt="Custom Tee Mockup Preview"
+                  alt={saveModalType === "design" ? "Custom Artwork PNG" : "Custom Tee Mockup"}
                   className="w-full h-full object-contain cursor-pointer"
                   style={{ WebkitTouchCallout: "default" }}
                 />
               </div>
 
               <button
+                type="button"
                 onClick={() => setShowSaveModal(false)}
-                className="w-full py-4 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded-full font-bold uppercase tracking-widest text-xs transition-colors"
+                className="w-full py-3 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded-full font-bold uppercase tracking-widest text-xs transition-colors cursor-pointer"
               >
                 Close
               </button>
