@@ -46,9 +46,17 @@ export default function CustomisePage() {
 
   // Export State
   const [isExporting, setIsExporting] = useState(false);
+  const [isWhatsAppLoading, setIsWhatsAppLoading] = useState(false);
   const [showPermissionModal, setShowPermissionModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [generatedMockupUrl, setGeneratedMockupUrl] = useState<string | null>(null);
+  const [whatsAppSuccessModal, setWhatsAppSuccessModal] = useState<{
+    open: boolean;
+    mockupUrl: string;
+    waUrl: string;
+    previewUrl?: string;
+    clipboardCopied?: boolean;
+  } | null>(null);
 
   // Font Dropdown open state
   const [isFontOpen, setIsFontOpen] = useState(false);
@@ -90,6 +98,19 @@ export default function CustomisePage() {
 
     document.addEventListener("pointerdown", handleGlobalClick);
     return () => document.removeEventListener("pointerdown", handleGlobalClick);
+  }, []);
+
+  // Escape key listener to dismiss any open modals
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setWhatsAppSuccessModal(null);
+        setShowSaveModal(false);
+        setShowPermissionModal(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   // Helper images for base monochrome tees
@@ -227,17 +248,143 @@ export default function CustomisePage() {
     }
   };
 
-  const handleWhatsAppSubmit = () => {
-    const frontGraphics = frontElements.filter(e => e.type === "graphic");
-    const frontTexts = frontElements.filter(e => e.type === "text");
-    const backGraphics = backElements.filter(e => e.type === "graphic");
-    const backTexts = backElements.filter(e => e.type === "text");
+  const handleDownloadImageDirectly = (url: string) => {
+    const link = document.createElement("a");
+    link.download = `narrow-path-custom-tee-${baseColor}-${activeSlide}-${Date.now()}.png`;
+    link.href = url;
+    link.click();
+  };
 
-    const textDetails = `Hello Narrow Path! I would like to order a Custom Heavyweight Tee:
+  const generateMockupDataUrl = async (): Promise<string | null> => {
+    if (!previewContainerRef.current) return null;
+
+    // Save previous active selection & deselect for clean screenshot
+    const prevActiveElement = activeElement;
+    setActiveElement(null);
+
+    // Give React a small paint frame to remove bounding boxes
+    await new Promise((resolve) => setTimeout(resolve, 150));
+
+    let baseImgEl: HTMLImageElement | null = null;
+    let originalSrc = "";
+    const graphicImages = Array.from(previewContainerRef.current.querySelectorAll("img[alt*='Graphic']") || []) as HTMLImageElement[];
+    const originalGraphicSrcs = new Map<HTMLImageElement, string>();
+
+    try {
+      // 1. Temporarily swap base image to Base64
+      baseImgEl = previewContainerRef.current.querySelector("img[alt*='Preview']") as HTMLImageElement | null;
+      if (baseImgEl && baseImgEl.src) {
+        originalSrc = baseImgEl.src;
+        const base64Src = await imageUrlToBase64(baseImgEl.src);
+        baseImgEl.src = base64Src;
+      }
+
+      // 2. Temporarily swap all custom graphics to Base64
+      for (const img of graphicImages) {
+        if (img.src && !img.src.startsWith("data:")) {
+          originalGraphicSrcs.set(img, img.src);
+          const base64Src = await imageUrlToBase64(img.src);
+          img.src = base64Src;
+        }
+      }
+
+      // Warm-up pass for Safari compatibility
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      if (isSafari) {
+        try {
+          await toPng(previewContainerRef.current, {
+            cacheBust: false,
+            skipFonts: true,
+            backgroundColor: "#f5f5f5",
+            pixelRatio: 1
+          });
+        } catch (e) {
+          // Silent warmup catch
+        }
+      }
+
+      // Capture mockup PNG with optimal balance of speed and sharpness
+      const dataUrl = await toPng(previewContainerRef.current, {
+        cacheBust: false,
+        skipFonts: true,
+        quality: 0.92,
+        backgroundColor: "#f5f5f5",
+        pixelRatio: window.devicePixelRatio && window.devicePixelRatio > 2 ? 2 : 1.5
+      });
+
+      return dataUrl;
+    } catch (error) {
+      console.error("Failed to generate mockup image:", error);
+      return null;
+    } finally {
+      // Restore all original image sources & active selection
+      if (baseImgEl && originalSrc) {
+        baseImgEl.src = originalSrc;
+      }
+      originalGraphicSrcs.forEach((src, img) => {
+        img.src = src;
+      });
+      setActiveElement(prevActiveElement);
+    }
+  };
+
+  const handleWhatsAppSubmit = async () => {
+    if (isWhatsAppLoading) return;
+    setIsWhatsAppLoading(true);
+
+    try {
+      // 1. Render clean custom mockup photo
+      const dataUrl = await generateMockupDataUrl();
+      if (!dataUrl) {
+        alert("Failed to render your design image. Please try again!");
+        setIsWhatsAppLoading(false);
+        return;
+      }
+
+      setGeneratedMockupUrl(dataUrl);
+
+      // 2. Prepare order summary data
+      const frontGraphics = frontElements.filter(e => e.type === "graphic");
+      const frontTexts = frontElements.filter(e => e.type === "text");
+      const backGraphics = backElements.filter(e => e.type === "graphic");
+      const backTexts = backElements.filter(e => e.type === "text");
+
+      // 3. Upload to server to get hosted OpenGraph preview link
+      let previewUrl = "";
+      try {
+        const res = await fetch("/api/customise/share", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            imageData: dataUrl,
+            baseColor,
+            size,
+            details: {
+              price: "INR 649",
+              frontGraphics: frontGraphics.length,
+              frontTexts: frontTexts.length,
+              backGraphics: backGraphics.length,
+              backTexts: backTexts.length,
+            }
+          })
+        });
+
+        if (res.ok) {
+          const shareData = await res.json();
+          if (shareData.previewUrl) {
+            previewUrl = shareData.previewUrl;
+          }
+        }
+      } catch (uploadErr) {
+        console.warn("Upload to share API failed, continuing with direct image:", uploadErr);
+      }
+
+      // 4. Construct WhatsApp text with preview link
+      const textDetails = `Hello Narrow Path! I would like to order a Custom Heavyweight Tee:
 - Price: INR 649
 - Base Color: ${baseColor.toUpperCase()}
 - Size: ${size}
-
+${previewUrl ? `\n📸 VIEW & DOWNLOAD DESIGN MOCKUP:\n${previewUrl}\n` : ""}
 FRONT CUSTOMISATION:
 - Total Photos: ${frontGraphics.length}
 ${frontGraphics.map((g, idx) => `  * Photo ${idx + 1}: ${g.name || "Custom Image"}`).join("\n")}
@@ -250,15 +397,63 @@ ${backGraphics.map((g, idx) => `  * Photo ${idx + 1}: ${g.name || "Custom Image"
 - Total Texts: ${backTexts.length}
 ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptions.find(f => f.value === t.fontFamily)?.name || "Standard"}, Color: ${t.color})`).join("\n")}`;
 
-    const encodedText = encodeURIComponent(textDetails);
-    window.open(`https://wa.me/919315457852?text=${encodedText}`, "_blank");
-  };
+      const encodedText = encodeURIComponent(textDetails);
+      const waUrl = `https://wa.me/919315457852?text=${encodedText}`;
 
-  const handleDownloadImageDirectly = (url: string) => {
-    const link = document.createElement("a");
-    link.download = `custom-tee-${activeSlide}-${Date.now()}.png`;
-    link.href = url;
-    link.click();
+      // 5. Convert to Blob & File for Clipboard / Native Sharing
+      const blob = base64ToBlob(dataUrl, 'image/png');
+      const file = new File([blob], `narrowpath-tee-${baseColor}-${size}.png`, { type: 'image/png' });
+
+      // 6. Copy image to Clipboard for instantaneous Ctrl+V paste in WhatsApp Web / Desktop
+      let clipboardCopied = false;
+      if (typeof window !== "undefined" && navigator.clipboard && window.ClipboardItem) {
+        try {
+          await navigator.clipboard.write([
+            new ClipboardItem({ 'image/png': blob })
+          ]);
+          clipboardCopied = true;
+        } catch (clipErr) {
+          console.warn("Clipboard auto-copy:", clipErr);
+        }
+      }
+
+      // 7. Check if Mobile Native Share with file is available
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+
+      if (isMobile && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            files: [file],
+            title: 'My Custom Streetwear Design',
+            text: textDetails,
+          });
+          setIsWhatsAppLoading(false);
+          return;
+        } catch (shareErr: any) {
+          if (shareErr.name !== "AbortError") {
+            console.warn("Native share aborted or failed:", shareErr);
+          }
+        }
+      }
+
+      // 8. Desktop / Web: Auto-download file + Launch WhatsApp Web + Show Modal
+      handleDownloadImageDirectly(dataUrl);
+      window.open(waUrl, "_blank");
+
+      setWhatsAppSuccessModal({
+        open: true,
+        mockupUrl: dataUrl,
+        waUrl,
+        previewUrl,
+        clipboardCopied
+      });
+
+    } catch (err) {
+      console.error("WhatsApp submit error:", err);
+      alert("Failed to submit design to WhatsApp. Please try downloading the mockup directly.");
+    } finally {
+      setIsWhatsAppLoading(false);
+    }
   };
 
   const handleShareOrSave = async () => {
@@ -290,63 +485,15 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
     if (!previewContainerRef.current) return;
     setIsExporting(true);
 
-    // Save previous active selection & deselect for clean screenshot
-    const prevActiveElement = activeElement;
-    setActiveElement(null);
-
-    // Give React a small paint frame to remove bounding boxes
-    await new Promise((resolve) => setTimeout(resolve, 150));
-
-    let baseImgEl: HTMLImageElement | null = null;
-    let originalSrc = "";
-    const graphicImages = Array.from(previewContainerRef.current.querySelectorAll("img[alt*='Graphic']") || []) as HTMLImageElement[];
-    const originalGraphicSrcs = new Map<HTMLImageElement, string>();
-
     try {
-      // 1. Temporarily swap base image to Base64 to bypass Safari WebKit SVG limitations
-      baseImgEl = previewContainerRef.current.querySelector("img[alt*='Preview']") as HTMLImageElement | null;
-      if (baseImgEl && baseImgEl.src) {
-        originalSrc = baseImgEl.src;
-        const base64Src = await imageUrlToBase64(baseImgEl.src);
-        baseImgEl.src = base64Src;
+      const dataUrl = await generateMockupDataUrl();
+      if (!dataUrl) {
+        alert("Failed to export preview. Please take a screenshot of your screen to save your design!");
+        return;
       }
-
-      // 2. Temporarily swap all custom graphics to Base64 to bypass Safari WebKit SVG limitations
-      for (const img of graphicImages) {
-        if (img.src && !img.src.startsWith("data:")) {
-          originalGraphicSrcs.set(img, img.src);
-          const base64Src = await imageUrlToBase64(img.src);
-          img.src = base64Src;
-        }
-      }
-
-      // Warm-up pass for Safari compatibility
-      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-      if (isSafari) {
-        try {
-          await toPng(previewContainerRef.current, {
-            cacheBust: false,
-            skipFonts: true,
-            backgroundColor: "#f5f5f5",
-            pixelRatio: 1
-          });
-        } catch (e) {
-          // Silent warmup catch
-        }
-      }
-
-      // Capture mockup PNG
-      const dataUrl = await toPng(previewContainerRef.current, {
-        cacheBust: false,
-        skipFonts: true,
-        quality: 0.95,
-        backgroundColor: "#f5f5f5",
-        pixelRatio: window.devicePixelRatio && window.devicePixelRatio > 2 ? 2 : (window.devicePixelRatio || 1)
-      });
 
       setGeneratedMockupUrl(dataUrl);
 
-      // Mobile check
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
 
       if (isMobile) {
@@ -363,17 +510,7 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
       console.error("Failed to generate mockup image:", error);
       alert("Failed to export preview. Please take a screenshot of your screen to save your design!");
     } finally {
-      // 3. Restore all original image sources
-      if (baseImgEl && originalSrc) {
-        baseImgEl.src = originalSrc;
-      }
-      originalGraphicSrcs.forEach((src, img) => {
-        img.src = src;
-      });
-
       setIsExporting(false);
-      // Restore previous user selection
-      setActiveElement(prevActiveElement);
     }
   };
 
@@ -925,17 +1062,30 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
               </button>
 
               <p className="text-[10px] text-neutral-500 font-bold uppercase tracking-wide text-center leading-normal mt-1 mb-2 max-w-[90%] mx-auto">
-                First download this image, then click the WhatsApp button below and attach/send the design from your gallery.
+                Submit directly to WhatsApp with your custom design photo attached automatically.
               </p>
 
               <button
                 onClick={handleWhatsAppSubmit}
-                className="w-full bg-[#25d366] hover:bg-[#20ba5a] text-white py-4 rounded-full font-bold uppercase tracking-widest text-xs transition-colors flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg"
+                disabled={isWhatsAppLoading}
+                className="w-full bg-[#25d366] hover:bg-[#20ba5a] text-white py-4 rounded-full font-bold uppercase tracking-widest text-xs transition-colors flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg disabled:opacity-75 disabled:cursor-wait cursor-pointer"
               >
-                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.09-3.977c1.649.979 3.278 1.488 4.908 1.489 5.482 0 9.943-4.461 9.947-9.947.002-2.658-1.03-5.158-2.906-7.037C16.32 2.65 13.823 1.62 11.2 1.62c-5.485 0-9.949 4.464-9.953 9.953-.001 1.706.505 3.327 1.47 4.79l-1.026 3.748 3.866-1.018z" />
-                </svg>
-                Submit Design via WhatsApp
+                {isWhatsAppLoading ? (
+                  <>
+                    <svg className="w-5 h-5 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    <span>Preparing Design & WhatsApp...</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.09-3.977c1.649.979 3.278 1.488 4.908 1.489 5.482 0 9.943-4.461 9.947-9.947.002-2.658-1.03-5.158-2.906-7.037C16.32 2.65 13.823 1.62 11.2 1.62c-5.485 0-9.949 4.464-9.953 9.953-.001 1.706.505 3.327 1.47 4.79l-1.026 3.748 3.866-1.018z" />
+                    </svg>
+                    <span>Submit Design via WhatsApp</span>
+                  </>
+                )}
               </button>
 
               <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider text-center mt-2.5">
@@ -1041,6 +1191,103 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
               >
                 Close
               </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* WhatsApp Submission Success / Image Attached Modal */}
+      <AnimatePresence>
+        {whatsAppSuccessModal?.open && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setWhatsAppSuccessModal(null)}
+            className="fixed inset-0 z-[160] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm cursor-pointer"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 15 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 15 }}
+              transition={{ type: "spring", duration: 0.3 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative bg-white border border-neutral-200 rounded-[28px] max-w-sm w-full p-5 text-center shadow-2xl flex flex-col items-center cursor-default max-h-[88vh] overflow-y-auto"
+            >
+              {/* Top-Right Cut/Close (X) Button */}
+              <button
+                type="button"
+                onClick={() => setWhatsAppSuccessModal(null)}
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-600 hover:text-black flex items-center justify-center transition-colors cursor-pointer z-30"
+                aria-label="Close"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
+              {/* WhatsApp Icon Badge */}
+              <div className="w-10 h-10 bg-[#25d366]/15 text-[#20ba5a] rounded-full flex items-center justify-center mb-2 mt-1">
+                <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.09-3.977c1.649.979 3.278 1.488 4.908 1.489 5.482 0 9.943-4.461 9.947-9.947.002-2.658-1.03-5.158-2.906-7.037C16.32 2.65 13.823 1.62 11.2 1.62c-5.485 0-9.949 4.464-9.953 9.953-.001 1.706.505 3.327 1.47 4.79l-1.026 3.748 3.866-1.018z" />
+                </svg>
+              </div>
+
+              <h3 className="text-base font-black uppercase tracking-wider text-black">
+                Design Ready on WhatsApp!
+              </h3>
+
+              <p className="text-neutral-500 text-[11px] mt-1 font-medium leading-normal max-w-xs">
+                Your custom tee mockup photo has been generated.
+              </p>
+
+              {/* Compact Mockup Preview Card */}
+              <div className="h-36 w-auto aspect-[3/4] bg-neutral-100 rounded-xl overflow-hidden border border-neutral-200 shadow-inner my-3 flex items-center justify-center p-1.5">
+                <img
+                  src={whatsAppSuccessModal.mockupUrl}
+                  alt="Custom Tee Mockup Preview"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+
+              {/* Status Points */}
+              <div className="w-full bg-neutral-50 rounded-xl p-3 border border-neutral-200/60 text-left space-y-1.5 mb-3.5">
+                <div className="flex items-start gap-2 text-[11px] text-neutral-800">
+                  <span className="text-sm leading-none">📋</span>
+                  <span>
+                    <strong>Photo Copied to Clipboard:</strong> In WhatsApp, just press <strong>Ctrl + V</strong> to send the photo directly!
+                  </span>
+                </div>
+                <div className="flex items-start gap-2 text-[11px] text-neutral-800">
+                  <span className="text-sm leading-none">💾</span>
+                  <span>
+                    <strong>Saved in Downloads:</strong> Mockup PNG is also saved in your Downloads.
+                  </span>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="w-full flex flex-col gap-2">
+                <a
+                  href={whatsAppSuccessModal.waUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-3 bg-[#25d366] hover:bg-[#20ba5a] text-white rounded-full font-bold uppercase tracking-widest text-[11px] transition-colors flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
+                >
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.09-3.977c1.649.979 3.278 1.488 4.908 1.489 5.482 0 9.943-4.461 9.947-9.947.002-2.658-1.03-5.158-2.906-7.037C16.32 2.65 13.823 1.62 11.2 1.62c-5.485 0-9.949 4.464-9.953 9.953-.001 1.706.505 3.327 1.47 4.79l-1.026 3.748 3.866-1.018z" />
+                  </svg>
+                  Open WhatsApp Chat
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => setWhatsAppSuccessModal(null)}
+                  className="w-full py-2.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-full font-bold uppercase tracking-widest text-[10px] transition-colors"
+                >
+                  Close & Done
+                </button>
+              </div>
             </motion.div>
           </motion.div>
         )}
