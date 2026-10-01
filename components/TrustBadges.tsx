@@ -4,7 +4,7 @@ export function TrustBadges() {
   const badges = [
     {
       icon: (
-        <svg className="w-8 h-8 text-black transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg aria-hidden="true" className="w-8 h-8 text-black transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <rect x="1" y="3" width="15" height="13" rx="2" ry="2" />
           <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
           <circle cx="5.5" cy="18.5" r="2.5" />
@@ -16,7 +16,7 @@ export function TrustBadges() {
     },
     {
       icon: (
-        <svg className="w-8 h-8 text-black transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg aria-hidden="true" className="w-8 h-8 text-black transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
           <circle cx="12" cy="11" r="2" />
           <path d="M12 13v3" />
@@ -27,7 +27,7 @@ export function TrustBadges() {
     },
     {
       icon: (
-        <svg className="w-8 h-8 text-black transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg aria-hidden="true" className="w-8 h-8 text-black transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           <circle cx="12" cy="9" r="3" />
           <path d="M12 7.5v2l1 1" />
@@ -38,7 +38,7 @@ export function TrustBadges() {
     },
     {
       icon: (
-        <svg className="w-8 h-8 text-black transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg aria-hidden="true" className="w-8 h-8 text-black transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
           <path d="M21 3v5h-5" />
           <path d="M21 12a9 9 0 0 1-15 6.7L3 16" />
@@ -61,10 +61,10 @@ export function TrustBadges() {
             <div className="mb-4 text-black p-3 bg-neutral-50 rounded-2xl group-hover:bg-neutral-100 transition-colors">
               {badge.icon}
             </div>
-            <h4 className="text-sm font-black uppercase tracking-wider mb-2 text-black">
+            <h3 className="text-sm font-black uppercase tracking-wider mb-2 text-black">
               {badge.title}
-            </h4>
-            <p className="text-xs text-neutral-500 leading-relaxed max-w-[240px]">
+            </h3>
+            <p className="text-xs text-neutral-600 leading-relaxed max-w-[240px]">
               {badge.desc}
             </p>
           </div>

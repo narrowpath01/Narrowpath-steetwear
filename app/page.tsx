@@ -14,11 +14,15 @@ import ReactDOM from "react-dom";
 export const revalidate = 60;
 
 export default async function Home() {
-  const heroLcpUrl = getOptimizedCloudinaryUrl(
+  const heroLcpMobileUrl = getOptimizedCloudinaryUrl(
+    "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840467/porsche-model.png",
+    { width: 450 }
+  );
+  const heroLcpDesktopUrl = getOptimizedCloudinaryUrl(
     "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840467/porsche-model.png",
     { width: 800 }
   );
-  ReactDOM.preload(heroLcpUrl, { as: "image", fetchPriority: "high" });
+  ReactDOM.preload(heroLcpMobileUrl, { as: "image", fetchPriority: "high" });
 
   // Fetch from Postgres in parallel
   let products: any[] = [];
@@ -114,10 +118,15 @@ export default async function Home() {
       <link
         rel="preload"
         as="image"
-        href={heroLcpUrl}
+        href={heroLcpMobileUrl}
+        imageSrcSet={`${heroLcpMobileUrl} 450w, ${heroLcpDesktopUrl} 800w`}
+        imageSizes="(max-width: 640px) 100vw, 50vw"
         fetchPriority="high"
         crossOrigin="anonymous"
       />
+
+      {/* Visually hidden primary level-1 heading landmark for accessibility and SEO */}
+      <h1 className="sr-only">Narrow Path | Premium Streetwear Collection</h1>
 
       {/* Hero Slider Banner */}
       <HeroSlider />
@@ -125,7 +134,7 @@ export default async function Home() {
       {/* Homepage Collections Section */}
       <section className="py-12 bg-white text-black max-w-[1600px] mx-auto px-4 md:px-8 border-b border-neutral-100">
         <div className="text-center mb-10">
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400">Our Catalog</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-600">Our Catalog</span>
           <h2 className="text-3xl font-black uppercase tracking-widest text-black mt-2">Collections</h2>
           <div className="h-[2px] w-12 bg-black mx-auto mt-4"></div>
         </div>
@@ -136,6 +145,11 @@ export default async function Home() {
             <div className="relative aspect-[3/4] w-full rounded-[24px] overflow-hidden bg-neutral-50 border border-neutral-100 shadow-sm transition-all duration-500 group-hover:shadow-md">
               <img
                 src={getOptimizedCloudinaryUrl("https://res.cloudinary.com/lhqxzevt/image/upload/v1790840509/sunflower-back.png", { width: 800 })}
+                srcSet={`
+                  ${getOptimizedCloudinaryUrl("https://res.cloudinary.com/lhqxzevt/image/upload/v1790840509/sunflower-back.png", { width: 450 })} 450w,
+                  ${getOptimizedCloudinaryUrl("https://res.cloudinary.com/lhqxzevt/image/upload/v1790840509/sunflower-back.png", { width: 800 })} 800w
+                `}
+                sizes="(max-width: 768px) 100vw, 50vw"
                 alt="Men's Collection"
                 loading="lazy"
                 decoding="async"
@@ -160,6 +174,11 @@ export default async function Home() {
             <div className="relative aspect-[3/4] w-full rounded-[24px] overflow-hidden bg-neutral-50 border border-neutral-100 shadow-sm transition-all duration-500 group-hover:shadow-md">
               <img
                 src={getOptimizedCloudinaryUrl("https://res.cloudinary.com/lhqxzevt/image/upload/v1790840672/women-sunflower-1.png", { width: 800 })}
+                srcSet={`
+                  ${getOptimizedCloudinaryUrl("https://res.cloudinary.com/lhqxzevt/image/upload/v1790840672/women-sunflower-1.png", { width: 450 })} 450w,
+                  ${getOptimizedCloudinaryUrl("https://res.cloudinary.com/lhqxzevt/image/upload/v1790840672/women-sunflower-1.png", { width: 800 })} 800w
+                `}
+                sizes="(max-width: 768px) 100vw, 50vw"
                 alt="Women's Collection"
                 loading="lazy"
                 decoding="async"
@@ -188,7 +207,7 @@ export default async function Home() {
       <section className="py-10 px-4 md:px-8 max-w-[1600px] mx-auto space-y-12">
         <div>
           <div className="mb-4 flex justify-between items-center">
-            <h2 className="text-[20px] lg:text-[20px] font-black uppercase tracking-widest text-neutral-600">Latest Drops</h2>
+            <h2 className="text-[20px] lg:text-[20px] font-black uppercase tracking-widest text-neutral-800">Latest Drops</h2>
           </div>
 
           {/* Printed Collection */}

@@ -67,6 +67,11 @@ export default function HeroSlider() {
             <div className="w-full md:w-1/2 h-full relative overflow-hidden">
               <img
                 src={getOptimizedCloudinaryUrl(slides[currentSlide].image, { width: 800 })}
+                srcSet={`
+                  ${getOptimizedCloudinaryUrl(slides[currentSlide].image, { width: 450 })} 450w,
+                  ${getOptimizedCloudinaryUrl(slides[currentSlide].image, { width: 800 })} 800w
+                `}
+                sizes="(max-width: 640px) 100vw, 50vw"
                 alt={slides[currentSlide].alt}
                 loading="eager"
                 fetchPriority={currentSlide === 0 ? "high" : "auto"}
@@ -80,6 +85,7 @@ export default function HeroSlider() {
               <img
                 src={getOptimizedCloudinaryUrl(slides[(currentSlide + 3) % slides.length].image, { width: 800 })}
                 alt={slides[(currentSlide + 3) % slides.length].alt}
+                sizes="50vw"
                 loading="lazy"
                 decoding="async"
                 crossOrigin="anonymous"

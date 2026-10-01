@@ -35,8 +35,8 @@ export default function CartDrawer() {
           >
             <div className="flex justify-between items-center p-6 border-b border-neutral-200">
               <h2 className="text-xl font-black uppercase tracking-widest">Your Cart</h2>
-              <button onClick={toggleCart} className="p-2 hover:bg-neutral-100 rounded-full transition-colors text-black">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <button onClick={toggleCart} className="p-2 hover:bg-neutral-100 rounded-full transition-colors text-black" aria-label="Close cart">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -83,9 +83,9 @@ export default function CartDrawer() {
 
                         <div className="flex justify-between items-end">
                           <div className="flex items-center border border-neutral-200">
-                            <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="px-3 py-1 hover:bg-neutral-100 text-black">-</button>
+                            <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="px-3 py-1 hover:bg-neutral-100 text-black" aria-label="Decrease quantity">-</button>
                             <span className="px-3 text-sm font-medium text-black">{item.quantity}</span>
-                            <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="px-3 py-1 hover:bg-neutral-100 text-black">+</button>
+                            <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="px-3 py-1 hover:bg-neutral-100 text-black" aria-label="Increase quantity">+</button>
                           </div>
 
                           <button onClick={() => removeItem(item.id)} className="text-xs uppercase font-bold text-neutral-400 hover:text-black underline underline-offset-4">

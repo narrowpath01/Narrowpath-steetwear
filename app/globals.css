@@ -40,5 +40,8 @@ body {
   display: flex;
   width: max-content;
   animation: marquee 25s linear infinite;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
 }
 

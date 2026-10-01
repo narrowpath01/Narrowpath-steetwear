@@ -20,7 +20,8 @@ export default function Marquee({ text, speed = "medium", className = "" }: Marq
   return (
     <div className={`flex overflow-hidden bg-black text-white py-3 border-y border-neutral-800 ${className}`}>
       <motion.div
-        className="flex whitespace-nowrap text-xs sm:text-sm font-bold tracking-[0.2em] uppercase"
+        className="flex whitespace-nowrap text-xs sm:text-sm font-bold tracking-[0.2em] uppercase will-change-transform"
+        style={{ transform: "translateZ(0)" }}
         animate={{ x: ["0%", "-50%"] }}
         transition={{ repeat: Infinity, ease: "linear", duration: duration }}
       >

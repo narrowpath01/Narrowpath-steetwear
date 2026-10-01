@@ -90,10 +90,18 @@ export default function ProductCard({ product, womenProduct, defaultGender = "me
   };
 
   return (
-    <Link href={`/products/${currentProduct.handle}`} className="group cursor-pointer block">
+    <div className="group block relative">
       <div className="relative w-full aspect-[3/4] bg-white mb-4 overflow-hidden rounded-2xl border border-neutral-100/50 group/card">
+        {/* Clickable Card Link for Image */}
+        <Link
+          href={`/products/${currentProduct.handle}`}
+          className="absolute inset-0 z-0"
+          aria-label={`View ${currentProduct.title}`}
+        />
+
         {/* Wishlist Button (Ribbon Overlay) */}
         <button
+          type="button"
           onClick={handleWishlistToggle}
           className="absolute top-3.5 right-3.5 p-2 bg-white/70 backdrop-blur-md rounded-full shadow-sm hover:scale-105 hover:bg-white transition-all z-20 flex items-center justify-center text-black"
           aria-label={isProductWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
@@ -104,6 +112,7 @@ export default function ProductCard({ product, womenProduct, defaultGender = "me
             stroke="black"
             strokeWidth={1.75}
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
           </svg>
@@ -120,7 +129,7 @@ export default function ProductCard({ product, womenProduct, defaultGender = "me
         <div 
           ref={scrollRef}
           onScroll={handleScroll}
-          className="w-full h-full flex overflow-x-auto snap-x snap-mandatory scrollbar-none scroll-smooth"
+          className="w-full h-full flex overflow-x-auto snap-x snap-mandatory scrollbar-none scroll-smooth pointer-events-none"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {images.map((img: any, idx: number) => {
@@ -129,6 +138,11 @@ export default function ProductCard({ product, womenProduct, defaultGender = "me
               <div key={img.id || idx} className="w-full h-full flex-shrink-0 snap-start snap-always relative overflow-hidden rounded-2xl">
                 <img
                   src={getOptimizedCloudinaryUrl(img.url, { width: 600 })}
+                  srcSet={`
+                    ${getOptimizedCloudinaryUrl(img.url, { width: 360 })} 360w,
+                    ${getOptimizedCloudinaryUrl(img.url, { width: 600 })} 600w
+                  `}
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   alt={img.altText || `${currentProduct.title} view ${idx + 1}`}
                   loading="lazy"
                   decoding="async"
@@ -146,6 +160,7 @@ export default function ProductCard({ product, womenProduct, defaultGender = "me
         {images.length > 1 && (
           <>
             <button
+              type="button"
               onClick={(e) => scrollToIndex(currentIndex - 1, e)}
               disabled={currentIndex === 0}
               className={`absolute left-2.5 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-black p-1.5 rounded-full shadow-sm opacity-0 group-hover/card:opacity-100 transition-opacity z-10 flex items-center justify-center ${
@@ -153,11 +168,12 @@ export default function ProductCard({ product, womenProduct, defaultGender = "me
               }`}
               aria-label="Previous image"
             >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
             </button>
             <button
+              type="button"
               onClick={(e) => scrollToIndex(currentIndex + 1, e)}
               disabled={currentIndex === images.length - 1}
               className={`absolute right-2.5 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-black p-1.5 rounded-full shadow-sm opacity-0 group-hover/card:opacity-100 transition-opacity z-10 flex items-center justify-center ${
@@ -165,7 +181,7 @@ export default function ProductCard({ product, womenProduct, defaultGender = "me
               }`}
               aria-label="Next image"
             >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
             </button>
@@ -174,7 +190,7 @@ export default function ProductCard({ product, womenProduct, defaultGender = "me
 
         {/* Tracking Indicator Dots (Bottom Centered) */}
         {images.length > 1 && (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10 bg-black/15 backdrop-blur-[2px] px-2.5 py-1 rounded-full">
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10 bg-black/15 backdrop-blur-[2px] px-2.5 py-1 rounded-full pointer-events-none">
             {images.map((_: any, idx: number) => (
               <span
                 key={idx}
@@ -189,31 +205,33 @@ export default function ProductCard({ product, womenProduct, defaultGender = "me
 
       {/* Gender Toggle for Plain Tees */}
       {womenProduct && (
-        <div className="flex gap-2 mb-2.5 px-0.5 text-[9px] font-black uppercase tracking-widest">
+        <div className="flex gap-2 mb-2.5 px-0.5 text-[9px] font-black uppercase tracking-widest relative z-10">
           <button
+            type="button"
             onClick={(e) => {
               e.preventDefault();
-              e.stopPropagation();
               setSelectedGender("men");
             }}
+            aria-label="Show Men's styling"
             className={`px-3 py-1 rounded-full border transition-all ${
               selectedGender === "men"
                 ? "bg-black text-white border-black"
-                : "bg-white text-neutral-400 border-neutral-200 hover:text-black hover:border-neutral-300"
+                : "bg-white text-neutral-600 border-neutral-300 hover:text-black hover:border-neutral-400"
             }`}
           >
             Men
           </button>
           <button
+            type="button"
             onClick={(e) => {
               e.preventDefault();
-              e.stopPropagation();
               setSelectedGender("women");
             }}
+            aria-label="Show Women's styling"
             className={`px-3 py-1 rounded-full border transition-all ${
               selectedGender === "women"
                 ? "bg-black text-white border-black"
-                : "bg-white text-black border-neutral-200 hover:text-neutral-400 hover:border-neutral-300"
+                : "bg-white text-neutral-600 border-neutral-300 hover:text-black hover:border-neutral-400"
             }`}
           >
             Women
@@ -223,24 +241,27 @@ export default function ProductCard({ product, womenProduct, defaultGender = "me
 
       <div className="flex justify-between items-end">
         <div className="flex flex-col gap-1 flex-1 min-w-0 pr-1 sm:pr-2">
-          <h3 className="font-bold text-xs sm:text-sm uppercase tracking-wide line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] leading-tight text-black">
-            {currentProduct.title}
-          </h3>
-          <p className="text-xs sm:text-sm font-medium text-neutral-500">
+          <Link href={`/products/${currentProduct.handle}`} className="hover:opacity-75 transition-opacity">
+            <h3 className="font-bold text-xs sm:text-sm uppercase tracking-wide line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] leading-tight text-black">
+              {currentProduct.title}
+            </h3>
+          </Link>
+          <p className="text-xs sm:text-sm font-medium text-neutral-600">
             INR {price}
           </p>
         </div>
 
         <button 
+          type="button"
           onClick={handleQuickAdd}
-          className="p-1 sm:p-2 hover:opacity-50 transition-opacity flex items-center justify-center flex-shrink-0"
-          aria-label="Add to cart"
+          className="p-1 sm:p-2 hover:opacity-50 transition-opacity flex items-center justify-center flex-shrink-0 relative z-10"
+          aria-label={`Add ${currentProduct.title} to cart`}
         >
-          <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="black" strokeWidth="1.5" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="black" strokeWidth="1.5" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="square" strokeLinejoin="miter" d="M12 5v14M5 12h14" />
           </svg>
         </button>
       </div>
-    </Link>
+    </div>
   );
 }

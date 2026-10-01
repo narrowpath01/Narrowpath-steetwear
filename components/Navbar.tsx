@@ -106,8 +106,10 @@ export default function Navbar() {
       }
     };
 
-    setIsScrolled(window.scrollY > 0);
     window.addEventListener("scroll", handleScroll, { passive: true });
+    window.requestAnimationFrame(() => {
+      setIsScrolled(window.scrollY > 0);
+    });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -123,8 +125,8 @@ export default function Navbar() {
         <div className="flex justify-between items-center px-6 md:px-12 py-3 w-full h-[72px]">
           {/* LEFT: Hamburger Menu + Categories */}
           <div className="flex-1 flex items-center gap-3">
-            <button onClick={() => setIsMenuOpen(true)} className="p-2 -ml-2 hover:opacity-70 transition-opacity text-black">
-              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button onClick={() => setIsMenuOpen(true)} className="p-2 -ml-2 hover:opacity-70 transition-opacity text-black" aria-label="Open menu">
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
@@ -236,6 +238,7 @@ export default function Navbar() {
                 <div className="w-full flex flex-col items-start">
                   <button
                     onClick={() => setIsCollectionsOpen(!isCollectionsOpen)}
+                    aria-expanded={isCollectionsOpen}
                     className="text-xl font-black uppercase tracking-widest text-black hover:opacity-50 transition-opacity flex items-center gap-2 w-full text-left"
                   >
                     Collections
@@ -449,6 +452,7 @@ export default function Navbar() {
             <div className="w-full flex flex-col items-start">
               <button
                 onClick={() => setIsCollectionsOpen(!isCollectionsOpen)}
+                aria-expanded={isCollectionsOpen}
                 className="text-2xl font-black uppercase tracking-widest text-black hover:opacity-50 transition-opacity flex items-center gap-2 w-full text-left"
               >
                 Collections
@@ -553,6 +557,8 @@ export default function Navbar() {
                   </svg>
                   <input
                     type="text"
+                    name="search"
+                    aria-label="Search products"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search here...."

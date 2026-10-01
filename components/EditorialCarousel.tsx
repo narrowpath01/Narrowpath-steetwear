@@ -173,7 +173,7 @@ export default function EditorialCarousel({ products = [], marqueeText }: Editor
                 style={{ pointerEvents: variant === "active" ? "auto" : "none" }}
               >
                 {item.handle ? (
-                  <Link href={`/products/${item.handle}`} className="w-full h-full block relative">
+                  <Link href={`/products/${item.handle}`} className="w-full h-full block relative" aria-label={`View ${item.title}`}>
                     {cardContent}
                   </Link>
                 ) : (
