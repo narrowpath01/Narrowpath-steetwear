@@ -103,7 +103,7 @@ export default async function Home() {
           <Link href="/shop?gender=men" className="group block relative">
             <div className="relative aspect-[3/4] w-full rounded-[24px] overflow-hidden bg-neutral-50 border border-neutral-100 shadow-sm transition-all duration-500 group-hover:shadow-md">
               <img
-                src="/sunflower-back.png"
+                src="https://res.cloudinary.com/lhqxzevt/image/upload/v1790840509/sunflower-back.png"
                 alt="Men's Collection"
                 className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
               />
@@ -124,7 +124,7 @@ export default async function Home() {
           <Link href="/shop?gender=women" className="group block relative">
             <div className="relative aspect-[3/4] w-full rounded-[24px] overflow-hidden bg-neutral-50 border border-neutral-100 shadow-sm transition-all duration-500 group-hover:shadow-md">
               <img
-                src="/women-sunflower-1.png"
+                src="https://res.cloudinary.com/lhqxzevt/image/upload/v1790840672/women-sunflower-1.png"
                 alt="Women's Collection"
                 className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
               />

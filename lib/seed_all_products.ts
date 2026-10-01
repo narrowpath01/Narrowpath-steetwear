@@ -23,12 +23,12 @@ async function main() {
       description: "Premium heavyweight cream tee featuring our custom sunflower graphic print on the back and minimalist SUNFLOWER lettering on the chest. Relaxed boxy fit, crafted from 100% premium cotton for ultimate comfort and durability.",
       images: {
         create: [
-          { url: "/sunflower-1.png", altText: "Sunflower Heavyweight Tee Front View" },
-          { url: "/sunflower-2.png", altText: "Sunflower Heavyweight Tee Back View" },
-          { url: "/sunflower-3.png", altText: "Sunflower Heavyweight Tee Model View" },
-          { url: "/sunflower-4.png", altText: "Sunflower Heavyweight Tee Sleeve Logo Detail" },
-          { url: "/sunflower-5.png", altText: "Sunflower Heavyweight Tee Chest Graphic Detail" },
-          { url: "/sunflower-6.png", altText: "Sunflower Heavyweight Tee Back Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840506/sunflower-1.png", altText: "Sunflower Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840506/sunflower-2.png", altText: "Sunflower Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840507/sunflower-3.png", altText: "Sunflower Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840506/sunflower-4.png", altText: "Sunflower Heavyweight Tee Sleeve Logo Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840507/sunflower-5.png", altText: "Sunflower Heavyweight Tee Chest Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840508/sunflower-6.png", altText: "Sunflower Heavyweight Tee Back Graphic Detail" },
         ]
       },
       variants: {
@@ -51,12 +51,12 @@ async function main() {
       description: "Premium heavyweight black tee featuring a striking red cross graphic print on the back containing the quote 'I CAN DO ALL THINGS THROUGH CHRIST WHO STRENGTHENS ME PHIL 04:13' and a minimalist red 'NP NARROW PATH' chest logo. Relaxed boxy fit, crafted from 100% premium cotton for structural drape and breathability.",
       images: {
         create: [
-          { url: "/christ-cross-front-detail.png", altText: "Christ Cross Heavyweight Tee Chest Logo" },
-          { url: "/christ-cross-back-body.png", altText: "Christ Cross Heavyweight Tee Back View" },
-          { url: "/christ-cross-front-body.png", altText: "Christ Cross Heavyweight Tee Front View" },
-          { url: "/christ-cross-side.png", altText: "Christ Cross Heavyweight Tee Side View" },
-          { url: "/christ-cross-back-detail.png", altText: "Christ Cross Heavyweight Tee Back Graphic Detail" },
-          { url: "/christ-cross-collar.png", altText: "Christ Cross Heavyweight Tee Collar Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840312/christ-cross-front-detail.png", altText: "Christ Cross Heavyweight Tee Chest Logo" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840308/christ-cross-back-body.png", altText: "Christ Cross Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840308/christ-cross-front-body.png", altText: "Christ Cross Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840308/christ-cross-side.png", altText: "Christ Cross Heavyweight Tee Side View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840309/christ-cross-back-detail.png", altText: "Christ Cross Heavyweight Tee Back Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840310/christ-cross-collar.png", altText: "Christ Cross Heavyweight Tee Collar Detail" },
         ]
       },
       variants: {
@@ -79,12 +79,12 @@ async function main() {
       description: "Premium heavyweight cream tee featuring our custom red and black Isaiah 41:10 typographic cross print on the back that reads 'AFRAID DO NOT BE ISA 41:10' and a minimalist black 'NP NARROW PATH' chest logo. Relaxed boxy fit, crafted from 100% premium cotton for structural drape and breathability.",
       images: {
         create: [
-          { url: "/do-not-be-afraid-1.png", altText: "Do Not Be Afraid Heavyweight Tee Front View" },
-          { url: "/do-not-be-afraid-2.png", altText: "Do Not Be Afraid Heavyweight Tee Back View" },
-          { url: "/do-not-be-afraid-3.png", altText: "Do Not Be Afraid Heavyweight Tee Model View" },
-          { url: "/do-not-be-afraid-4.png", altText: "Do Not Be Afraid Heavyweight Tee Detail View" },
-          { url: "/do-not-be-afraid-5.png", altText: "Do Not Be Afraid Heavyweight Tee Back Graphic Detail" },
-          { url: "/do-not-be-afraid-6.png", altText: "Do Not Be Afraid Heavyweight Tee Collar Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840309/do-not-be-afraid-1.png", altText: "Do Not Be Afraid Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840314/do-not-be-afraid-2.png", altText: "Do Not Be Afraid Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840314/do-not-be-afraid-3.png", altText: "Do Not Be Afraid Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840314/do-not-be-afraid-4.png", altText: "Do Not Be Afraid Heavyweight Tee Detail View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840315/do-not-be-afraid-5.png", altText: "Do Not Be Afraid Heavyweight Tee Back Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840314/do-not-be-afraid-6.png", altText: "Do Not Be Afraid Heavyweight Tee Collar Detail" },
         ]
       },
       variants: {
@@ -107,12 +107,12 @@ async function main() {
       description: "Premium heavyweight red tee featuring a bold graphic print of Kung Fu Panda in a martial arts stance set inside a yellow crescent circle on the back, and a minimalist black and white 'the kung fu PANDA' chest lettering. Relaxed boxy fit, crafted from 100% premium cotton for comfort and style.",
       images: {
         create: [
-          { url: "/panda-1.png", altText: "Kung Fu Panda Heavyweight Tee Front Model View" },
-          { url: "/panda-2.png", altText: "Kung Fu Panda Heavyweight Tee Back View" },
-          { url: "/panda-3.png", altText: "Kung Fu Panda Heavyweight Tee Front Model View Full" },
-          { url: "/panda-4.png", altText: "Kung Fu Panda Heavyweight Tee Sleeve Logo Detail" },
-          { url: "/panda-5.png", altText: "Kung Fu Panda Heavyweight Tee Chest Graphic Detail" },
-          { url: "/panda-6.png", altText: "Kung Fu Panda Heavyweight Tee Back Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840422/panda-1.png", altText: "Kung Fu Panda Heavyweight Tee Front Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840422/panda-2.png", altText: "Kung Fu Panda Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840422/panda-3.png", altText: "Kung Fu Panda Heavyweight Tee Front Model View Full" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840422/panda-4.png", altText: "Kung Fu Panda Heavyweight Tee Sleeve Logo Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840422/panda-5.png", altText: "Kung Fu Panda Heavyweight Tee Chest Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840422/panda-6.png", altText: "Kung Fu Panda Heavyweight Tee Back Graphic Detail" },
         ]
       },
       variants: {
@@ -136,11 +136,11 @@ async function main() {
       collection: "MONOCHROME",
       images: {
         create: [
-          { url: "/monochrome-red-front.png", altText: "Monochrome Red Heavyweight Tee Front View" },
-          { url: "/monochrome-red-back.png", altText: "Monochrome Red Heavyweight Tee Back View" },
-          { url: "/monochrome-red-detail.png", altText: "Monochrome Red Heavyweight Tee Back View Upper" },
-          { url: "/monochrome-red-collar.png", altText: "Monochrome Red Heavyweight Tee Collar Detail" },
-          { url: "/monochrome-red-fabric.png", altText: "Monochrome Red Heavyweight Tee Fabric Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840404/monochrome-red-front.png", altText: "Monochrome Red Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840403/monochrome-red-back.png", altText: "Monochrome Red Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840402/monochrome-red-detail.png", altText: "Monochrome Red Heavyweight Tee Back View Upper" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840401/monochrome-red-collar.png", altText: "Monochrome Red Heavyweight Tee Collar Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840402/monochrome-red-fabric.png", altText: "Monochrome Red Heavyweight Tee Fabric Detail" },
         ]
       },
       variants: {
@@ -164,11 +164,11 @@ async function main() {
       collection: "MONOCHROME",
       images: {
         create: [
-          { url: "/monochrome-offwhite-front.png", altText: "Monochrome Off-White Heavyweight Tee Front View" },
-          { url: "/monochrome-offwhite-back.png", altText: "Monochrome Off-White Heavyweight Tee Back View" },
-          { url: "/monochrome-offwhite-back-model.png", altText: "Monochrome Off-White Heavyweight Tee Back Model View" },
-          { url: "/monochrome-offwhite-collar-detail.png", altText: "Monochrome Off-White Heavyweight Tee Collar Detail" },
-          { url: "/monochrome-offwhite-fabric.png", altText: "Monochrome Off-White Heavyweight Tee Fabric Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840401/monochrome-offwhite-front.png", altText: "Monochrome Off-White Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840379/monochrome-offwhite-back.png", altText: "Monochrome Off-White Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840380/monochrome-offwhite-back-model.png", altText: "Monochrome Off-White Heavyweight Tee Back Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840400/monochrome-offwhite-collar-detail.png", altText: "Monochrome Off-White Heavyweight Tee Collar Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840400/monochrome-offwhite-fabric.png", altText: "Monochrome Off-White Heavyweight Tee Fabric Detail" },
         ]
       },
       variants: {
@@ -192,11 +192,11 @@ async function main() {
       collection: "MONOCHROME",
       images: {
         create: [
-          { url: "/monochrome-brown-1.png", altText: "Monochrome Brown Heavyweight Tee Front View" },
-          { url: "/monochrome-brown-2.png", altText: "Monochrome Brown Heavyweight Tee Back View Upper" },
-          { url: "/monochrome-brown-3.png", altText: "Monochrome Brown Heavyweight Tee Back View Full" },
-          { url: "/monochrome-brown-4.png", altText: "Monochrome Brown Heavyweight Tee Front Detail" },
-          { url: "/monochrome-brown-5.png", altText: "Monochrome Brown Heavyweight Tee Back Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840377/monochrome-brown-1.png", altText: "Monochrome Brown Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840377/monochrome-brown-2.png", altText: "Monochrome Brown Heavyweight Tee Back View Upper" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840378/monochrome-brown-3.png", altText: "Monochrome Brown Heavyweight Tee Back View Full" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840377/monochrome-brown-4.png", altText: "Monochrome Brown Heavyweight Tee Front Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840377/monochrome-brown-5.png", altText: "Monochrome Brown Heavyweight Tee Back Detail" },
         ]
       },
       variants: {
@@ -220,11 +220,11 @@ async function main() {
       collection: "MONOCHROME",
       images: {
         create: [
-          { url: "/monochrome-black-front.png", altText: "Monochrome Black Heavyweight Tee Front View" },
-          { url: "/monochrome-black-back.png", altText: "Monochrome Black Heavyweight Tee Back View" },
-          { url: "/monochrome-black-fabric.png", altText: "Monochrome Black Heavyweight Tee Fabric Detail" },
-          { url: "/monochrome-black-model.png", altText: "Monochrome Black Heavyweight Tee Model View" },
-          { url: "/monochrome-black-collar.png", altText: "Monochrome Black Heavyweight Tee Collar View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840374/monochrome-black-front.png", altText: "Monochrome Black Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840373/monochrome-black-back.png", altText: "Monochrome Black Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840374/monochrome-black-fabric.png", altText: "Monochrome Black Heavyweight Tee Fabric Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840375/monochrome-black-model.png", altText: "Monochrome Black Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840374/monochrome-black-collar.png", altText: "Monochrome Black Heavyweight Tee Collar View" },
         ]
       },
       variants: {
@@ -248,11 +248,11 @@ async function main() {
       collection: "MONOCHROME",
       images: {
         create: [
-          { url: "/monochrome-white-front.png", altText: "Monochrome White Heavyweight Tee Front View" },
-          { url: "/monochrome-white-back.png", altText: "Monochrome White Heavyweight Tee Back View Close" },
-          { url: "/monochrome-white-model.png", altText: "Monochrome White Heavyweight Tee Full Back View" },
-          { url: "/monochrome-white-collar.png", altText: "Monochrome White Heavyweight Tee Collar Detail" },
-          { url: "/monochrome-white-fabric.png", altText: "Monochrome White Heavyweight Tee Fabric Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840420/monochrome-white-front.png", altText: "Monochrome White Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840403/monochrome-white-back.png", altText: "Monochrome White Heavyweight Tee Back View Close" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840420/monochrome-white-model.png", altText: "Monochrome White Heavyweight Tee Full Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840403/monochrome-white-collar.png", altText: "Monochrome White Heavyweight Tee Collar Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840404/monochrome-white-fabric.png", altText: "Monochrome White Heavyweight Tee Fabric Detail" },
         ]
       },
       variants: {
@@ -276,12 +276,12 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/space-ship-front.png", altText: "Space Ship Heavyweight Tee Front View" },
-          { url: "/space-ship-back.png", altText: "Space Ship Heavyweight Tee Back View" },
-          { url: "/space-ship-model.png", altText: "Space Ship Heavyweight Tee Model View" },
-          { url: "/space-ship-detail-front.png", altText: "Space Ship Heavyweight Tee Chest Logo" },
-          { url: "/space-ship-detail-back.png", altText: "Space Ship Heavyweight Tee Back Graphic Detail" },
-          { url: "/space-ship-fabric.png", altText: "Space Ship Heavyweight Tee Fabric Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840505/space-ship-front.png", altText: "Space Ship Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840477/space-ship-back.png", altText: "Space Ship Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840506/space-ship-model.png", altText: "Space Ship Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840478/space-ship-detail-front.png", altText: "Space Ship Heavyweight Tee Chest Logo" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840478/space-ship-detail-back.png", altText: "Space Ship Heavyweight Tee Back Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840504/space-ship-fabric.png", altText: "Space Ship Heavyweight Tee Fabric Detail" },
         ]
       },
       variants: {
@@ -305,12 +305,12 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/warrior-front.png", altText: "Warrior Heavyweight Tee Front View" },
-          { url: "/warrior-back.png", altText: "Warrior Heavyweight Tee Back View" },
-          { url: "/warrior-model.png", altText: "Warrior Heavyweight Tee Model View" },
-          { url: "/warrior-detail-front.png", altText: "Warrior Heavyweight Tee Chest Graphic" },
-          { url: "/warrior-detail-back.png", altText: "Warrior Heavyweight Tee Back Graphic Detail" },
-          { url: "/warrior-fabric.png", altText: "Warrior Heavyweight Tee Fabric Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840530/warrior-front.png", altText: "Warrior Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840529/warrior-back.png", altText: "Warrior Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840530/warrior-model.png", altText: "Warrior Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840529/warrior-detail-front.png", altText: "Warrior Heavyweight Tee Chest Graphic" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840529/warrior-detail-back.png", altText: "Warrior Heavyweight Tee Back Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840530/warrior-fabric.png", altText: "Warrior Heavyweight Tee Fabric Detail" },
         ]
       },
       variants: {
@@ -334,11 +334,11 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/red-moon-1.png", altText: "Red Moon Heavyweight Tee Front Model View" },
-          { url: "/red-moon-2.png", altText: "Red Moon Heavyweight Tee Back View" },
-          { url: "/red-moon-3.png", altText: "Red Moon Heavyweight Tee Front Model View Full" },
-          { url: "/red-moon-4.png", altText: "Red Moon Heavyweight Tee Sleeve Logo Detail" },
-          { url: "/red-moon-5.png", altText: "Red Moon Heavyweight Tee Chest Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840469/red-moon-1.png", altText: "Red Moon Heavyweight Tee Front Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840469/red-moon-2.png", altText: "Red Moon Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840469/red-moon-3.png", altText: "Red Moon Heavyweight Tee Front Model View Full" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840468/red-moon-4.png", altText: "Red Moon Heavyweight Tee Sleeve Logo Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840470/red-moon-5.png", altText: "Red Moon Heavyweight Tee Chest Graphic Detail" },
         ]
       },
       variants: {
@@ -362,13 +362,13 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/porsche-1.png", altText: "Porsche 911 Heavyweight Tee Front View" },
-          { url: "/porsche-2.png", altText: "Porsche 911 Heavyweight Tee Back View" },
-          { url: "/porsche-3.png", altText: "Porsche 911 Heavyweight Tee Model View" },
-          { url: "/porsche-4.png", altText: "Porsche 911 Heavyweight Tee Sleeve Logo Detail" },
-          { url: "/porsche-5.png", altText: "Porsche 911 Heavyweight Tee Back Graphic Detail" },
-          { url: "/porsche-6.png", altText: "Porsche 911 Heavyweight Tee Chest Graphic Detail" },
-          { url: "/porsche-7.png", altText: "Porsche 911 Heavyweight Tee Sleeve Text Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840442/porsche-1.png", altText: "Porsche 911 Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840443/porsche-2.png", altText: "Porsche 911 Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840443/porsche-3.png", altText: "Porsche 911 Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840442/porsche-4.png", altText: "Porsche 911 Heavyweight Tee Sleeve Logo Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840443/porsche-5.png", altText: "Porsche 911 Heavyweight Tee Back Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840444/porsche-6.png", altText: "Porsche 911 Heavyweight Tee Chest Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840444/porsche-7.png", altText: "Porsche 911 Heavyweight Tee Sleeve Text Detail" },
         ]
       },
       variants: {
@@ -392,11 +392,11 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/social-introvert-1.png", altText: "Social Introvert Heavyweight Tee Front View" },
-          { url: "/social-introvert-2.png", altText: "Social Introvert Heavyweight Tee Back View" },
-          { url: "/social-introvert-3.png", altText: "Social Introvert Heavyweight Tee Model View" },
-          { url: "/social-introvert-4.png", altText: "Social Introvert Heavyweight Tee Chest Graphic Detail" },
-          { url: "/social-introvert-5.png", altText: "Social Introvert Heavyweight Tee Collar Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840475/social-introvert-1.png", altText: "Social Introvert Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840476/social-introvert-2.png", altText: "Social Introvert Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840477/social-introvert-3.png", altText: "Social Introvert Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840475/social-introvert-4.png", altText: "Social Introvert Heavyweight Tee Chest Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840476/social-introvert-5.png", altText: "Social Introvert Heavyweight Tee Collar Detail" },
         ]
       },
       variants: {
@@ -420,12 +420,12 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/dragon-1.png", altText: "Year of Dragon Heavyweight Tee Front View" },
-          { url: "/dragon-2.png", altText: "Year of Dragon Heavyweight Tee Back View" },
-          { url: "/dragon-3.png", altText: "Year of Dragon Heavyweight Tee Model View" },
-          { url: "/dragon-4.png", altText: "Year of Dragon Heavyweight Tee Chest Graphic Detail" },
-          { url: "/dragon-5.png", altText: "Year of Dragon Heavyweight Tee Back Graphic Detail" },
-          { url: "/dragon-6.png", altText: "Year of Dragon Heavyweight Tee Collar Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840319/dragon-1.png", altText: "Year of Dragon Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840321/dragon-2.png", altText: "Year of Dragon Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840321/dragon-3.png", altText: "Year of Dragon Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840320/dragon-4.png", altText: "Year of Dragon Heavyweight Tee Chest Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840321/dragon-5.png", altText: "Year of Dragon Heavyweight Tee Back Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840322/dragon-6.png", altText: "Year of Dragon Heavyweight Tee Collar Detail" },
         ]
       },
       variants: {
@@ -449,12 +449,12 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/floral-dreams-1.png", altText: "Floral Dreams Heavyweight Tee Front View" },
-          { url: "/floral-dreams-2.png", altText: "Floral Dreams Heavyweight Tee Back View" },
-          { url: "/floral-dreams-5.png", altText: "Floral Dreams Heavyweight Tee Model View" },
-          { url: "/floral-dreams-3.png", altText: "Floral Dreams Heavyweight Tee Chest Graphic Detail" },
-          { url: "/floral-dreams-4.png", altText: "Floral Dreams Heavyweight Tee Back Graphic Detail" },
-          { url: "/floral-dreams-6.png", altText: "Floral Dreams Heavyweight Tee Collar Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840323/floral-dreams-1.png", altText: "Floral Dreams Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840323/floral-dreams-2.png", altText: "Floral Dreams Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840324/floral-dreams-5.png", altText: "Floral Dreams Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840323/floral-dreams-3.png", altText: "Floral Dreams Heavyweight Tee Chest Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840323/floral-dreams-4.png", altText: "Floral Dreams Heavyweight Tee Back Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840324/floral-dreams-6.png", altText: "Floral Dreams Heavyweight Tee Collar Detail" },
         ]
       },
       variants: {
@@ -478,11 +478,11 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/glow-different-1.png", altText: "Glow Different Heavyweight Tee Front View" },
-          { url: "/glow-different-2.png", altText: "Glow Different Heavyweight Tee Back View" },
-          { url: "/glow-different-3.png", altText: "Glow Different Heavyweight Tee Model View" },
-          { url: "/glow-different-4.png", altText: "Glow Different Heavyweight Tee Chest Graphic Detail" },
-          { url: "/glow-different-5.png", altText: "Glow Different Heavyweight Tee Back Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840327/glow-different-1.png", altText: "Glow Different Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840327/glow-different-2.png", altText: "Glow Different Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840327/glow-different-3.png", altText: "Glow Different Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840327/glow-different-4.png", altText: "Glow Different Heavyweight Tee Chest Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840327/glow-different-5.png", altText: "Glow Different Heavyweight Tee Back Graphic Detail" },
         ]
       },
       variants: {
@@ -506,12 +506,12 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/goku-1.png", altText: "Goku Heavyweight Tee Front View" },
-          { url: "/goku-2.png", altText: "Goku Heavyweight Tee Back View" },
-          { url: "/goku-3.png", altText: "Goku Heavyweight Tee Model View" },
-          { url: "/goku-4.png", altText: "Goku Heavyweight Tee Chest Graphic Detail" },
-          { url: "/goku-5.png", altText: "Goku Heavyweight Tee Back Graphic Detail" },
-          { url: "/goku-6.png", altText: "Goku Heavyweight Tee Collar Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840328/goku-1.png", altText: "Goku Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840330/goku-2.png", altText: "Goku Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840330/goku-3.png", altText: "Goku Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840330/goku-4.png", altText: "Goku Heavyweight Tee Chest Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840331/goku-5.png", altText: "Goku Heavyweight Tee Back Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840330/goku-6.png", altText: "Goku Heavyweight Tee Collar Detail" },
         ]
       },
       variants: {
@@ -535,12 +535,12 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/happiness-1.png", altText: "Happiness Heavyweight Tee Front View" },
-          { url: "/happiness-2.png", altText: "Happiness Heavyweight Tee Back View" },
-          { url: "/happiness-3.png", altText: "Happiness Heavyweight Tee Model View" },
-          { url: "/happiness-4.png", altText: "Happiness Heavyweight Tee Chest Graphic Detail" },
-          { url: "/happiness-5.png", altText: "Happiness Heavyweight Tee Back Graphic Detail" },
-          { url: "/happiness-6.png", altText: "Happiness Heavyweight Tee Collar Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840331/happiness-1.png", altText: "Happiness Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840333/happiness-2.png", altText: "Happiness Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840333/happiness-3.png", altText: "Happiness Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840332/happiness-4.png", altText: "Happiness Heavyweight Tee Chest Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840333/happiness-5.png", altText: "Happiness Heavyweight Tee Back Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840333/happiness-6.png", altText: "Happiness Heavyweight Tee Collar Detail" },
         ]
       },
       variants: {
@@ -564,11 +564,11 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/love-peace-patience-1.png", altText: "Love Peace Patience Heavyweight Tee Front View" },
-          { url: "/love-peace-patience-2.png", altText: "Love Peace Patience Heavyweight Tee Back View" },
-          { url: "/love-peace-patience-3.png", altText: "Love Peace Patience Heavyweight Tee Model View" },
-          { url: "/love-peace-patience-4.png", altText: "Love Peace Patience Heavyweight Tee Chest Graphic Detail" },
-          { url: "/love-peace-patience-5.png", altText: "Love Peace Patience Heavyweight Tee Back Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840372/love-peace-patience-1.png", altText: "Love Peace Patience Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840373/love-peace-patience-2.png", altText: "Love Peace Patience Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840371/love-peace-patience-3.png", altText: "Love Peace Patience Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840371/love-peace-patience-4.png", altText: "Love Peace Patience Heavyweight Tee Chest Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840371/love-peace-patience-5.png", altText: "Love Peace Patience Heavyweight Tee Back Graphic Detail" },
         ]
       },
       variants: {
@@ -589,12 +589,12 @@ async function main() {
       title: "Women's Monochrome Black Heavyweight Tee",
       handle: "women-monochrome-black-heavyweight-tee",
       images: [
-        { url: "/women-plain-black-front.png", altText: "Women's Monochrome Black Heavyweight Tee Front View" },
-        { url: "/women-plain-black-back.png", altText: "Women's Monochrome Black Heavyweight Tee Back View" },
-        { url: "/women-plain-black-full.png", altText: "Women's Monochrome Black Heavyweight Tee Full View" },
-        { url: "/women-plain-black-side.png", altText: "Women's Monochrome Black Heavyweight Tee Side View" },
-        { url: "/women-plain-black-collar.png", altText: "Women's Monochrome Black Heavyweight Tee Collar Detail" },
-        { url: "/women-plain-black-detail.png", altText: "Women's Monochrome Black Heavyweight Tee Fabric Detail" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840637/women-plain-black-front.png", altText: "Women's Monochrome Black Heavyweight Tee Front View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840634/women-plain-black-back.png", altText: "Women's Monochrome Black Heavyweight Tee Back View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840638/women-plain-black-full.png", altText: "Women's Monochrome Black Heavyweight Tee Full View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840646/women-plain-black-side.png", altText: "Women's Monochrome Black Heavyweight Tee Side View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840635/women-plain-black-collar.png", altText: "Women's Monochrome Black Heavyweight Tee Collar Detail" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840636/women-plain-black-detail.png", altText: "Women's Monochrome Black Heavyweight Tee Fabric Detail" },
       ]
     },
     {
@@ -602,12 +602,12 @@ async function main() {
       title: "Women's Monochrome Brown Heavyweight Tee",
       handle: "women-monochrome-brown-heavyweight-tee",
       images: [
-        { url: "/women-plain-brown-front.png", altText: "Women's Monochrome Brown Heavyweight Tee Front View" },
-        { url: "/women-plain-brown-back.png", altText: "Women's Monochrome Brown Heavyweight Tee Back View" },
-        { url: "/women-plain-brown-full.png", altText: "Women's Monochrome Brown Heavyweight Tee Full View" },
-        { url: "/women-plain-brown-side.png", altText: "Women's Monochrome Brown Heavyweight Tee Side View" },
-        { url: "/women-plain-brown-collar.png", altText: "Women's Monochrome Brown Heavyweight Tee Collar Detail" },
-        { url: "/women-plain-brown-detail.png", altText: "Women's Monochrome Brown Heavyweight Tee Fabric Detail" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840644/women-plain-brown-front.png", altText: "Women's Monochrome Brown Heavyweight Tee Front View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840640/women-plain-brown-back.png", altText: "Women's Monochrome Brown Heavyweight Tee Back View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840646/women-plain-brown-full.png", altText: "Women's Monochrome Brown Heavyweight Tee Full View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840647/women-plain-brown-side.png", altText: "Women's Monochrome Brown Heavyweight Tee Side View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840642/women-plain-brown-collar.png", altText: "Women's Monochrome Brown Heavyweight Tee Collar Detail" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840644/women-plain-brown-detail.png", altText: "Women's Monochrome Brown Heavyweight Tee Fabric Detail" },
       ]
     },
     {
@@ -615,12 +615,12 @@ async function main() {
       title: "Women's Monochrome Off-White Heavyweight Tee",
       handle: "women-monochrome-off-white-heavyweight-tee",
       images: [
-        { url: "/women-plain-offwhite-front.png", altText: "Women's Monochrome Off-White Heavyweight Tee Front View" },
-        { url: "/women-plain-offwhite-back.png", altText: "Women's Monochrome Off-White Heavyweight Tee Back View" },
-        { url: "/women-plain-offwhite-full.png", altText: "Women's Monochrome Off-White Heavyweight Tee Full View" },
-        { url: "/women-plain-offwhite-side.png", altText: "Women's Monochrome Off-White Heavyweight Tee Side View" },
-        { url: "/women-plain-offwhite-collar.png", altText: "Women's Monochrome Off-White Heavyweight Tee Collar Detail" },
-        { url: "/women-plain-offwhite-detail.png", altText: "Women's Monochrome Off-White Heavyweight Tee Fabric Detail" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840657/women-plain-offwhite-front.png", altText: "Women's Monochrome Off-White Heavyweight Tee Front View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840648/women-plain-offwhite-back.png", altText: "Women's Monochrome Off-White Heavyweight Tee Back View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840653/women-plain-offwhite-full.png", altText: "Women's Monochrome Off-White Heavyweight Tee Full View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840654/women-plain-offwhite-side.png", altText: "Women's Monochrome Off-White Heavyweight Tee Side View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840650/women-plain-offwhite-collar.png", altText: "Women's Monochrome Off-White Heavyweight Tee Collar Detail" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840651/women-plain-offwhite-detail.png", altText: "Women's Monochrome Off-White Heavyweight Tee Fabric Detail" },
       ]
     },
     {
@@ -628,12 +628,12 @@ async function main() {
       title: "Women's Monochrome Red Heavyweight Tee",
       handle: "women-monochrome-red-heavyweight-tee",
       images: [
-        { url: "/women-plain-red-front.png", altText: "Women's Monochrome Red Heavyweight Tee Front View" },
-        { url: "/women-plain-red-back.png", altText: "Women's Monochrome Red Heavyweight Tee Back View" },
-        { url: "/women-plain-red-full.png", altText: "Women's Monochrome Red Heavyweight Tee Full View" },
-        { url: "/women-plain-red-side.png", altText: "Women's Monochrome Red Heavyweight Tee Side View" },
-        { url: "/women-plain-red-collar.png", altText: "Women's Monochrome Red Heavyweight Tee Collar Detail" },
-        { url: "/women-plain-red-detail.png", altText: "Women's Monochrome Red Heavyweight Tee Fabric Detail" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840658/women-plain-red-front.png", altText: "Women's Monochrome Red Heavyweight Tee Front View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840655/women-plain-red-back.png", altText: "Women's Monochrome Red Heavyweight Tee Back View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840659/women-plain-red-full.png", altText: "Women's Monochrome Red Heavyweight Tee Full View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840660/women-plain-red-side.png", altText: "Women's Monochrome Red Heavyweight Tee Side View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840656/women-plain-red-collar.png", altText: "Women's Monochrome Red Heavyweight Tee Collar Detail" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840657/women-plain-red-detail.png", altText: "Women's Monochrome Red Heavyweight Tee Fabric Detail" },
       ]
     },
     {
@@ -641,12 +641,12 @@ async function main() {
       title: "Women's Monochrome White Heavyweight Tee",
       handle: "women-monochrome-white-heavyweight-tee",
       images: [
-        { url: "/women-plain-white-front.png", altText: "Women's Monochrome White Heavyweight Tee Front View" },
-        { url: "/women-plain-white-back.png", altText: "Women's Monochrome White Heavyweight Tee Back View" },
-        { url: "/women-plain-white-full.png", altText: "Women's Monochrome White Heavyweight Tee Full View" },
-        { url: "/women-plain-white-side.png", altText: "Women's Monochrome White Heavyweight Tee Side View" },
-        { url: "/women-plain-white-collar.png", altText: "Women's Monochrome White Heavyweight Tee Collar Detail" },
-        { url: "/women-plain-white-detail.png", altText: "Women's Monochrome White Heavyweight Tee Fabric Detail" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840663/women-plain-white-front.png", altText: "Women's Monochrome White Heavyweight Tee Front View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840661/women-plain-white-back.png", altText: "Women's Monochrome White Heavyweight Tee Back View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840664/women-plain-white-full.png", altText: "Women's Monochrome White Heavyweight Tee Full View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840664/women-plain-white-side.png", altText: "Women's Monochrome White Heavyweight Tee Side View" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840662/women-plain-white-collar.png", altText: "Women's Monochrome White Heavyweight Tee Collar Detail" },
+        { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840662/women-plain-white-detail.png", altText: "Women's Monochrome White Heavyweight Tee Fabric Detail" },
       ]
     }
   ];
@@ -684,12 +684,12 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/women-do-not-be-afraid-1.png", altText: "Women's Do Not Be Afraid Heavyweight Tee Front View" },
-          { url: "/women-do-not-be-afraid-2.png", altText: "Women's Do Not Be Afraid Heavyweight Tee Back View" },
-          { url: "/women-do-not-be-afraid-3.png", altText: "Women's Do Not Be Afraid Heavyweight Tee Model View" },
-          { url: "/women-do-not-be-afraid-4.png", altText: "Women's Do Not Be Afraid Heavyweight Tee Chest Logo" },
-          { url: "/women-do-not-be-afraid-5.png", altText: "Women's Do Not Be Afraid Heavyweight Tee Back Graphic Detail" },
-          { url: "/women-do-not-be-afraid-6.png", altText: "Women's Do Not Be Afraid Heavyweight Tee Collar Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840585/women-do-not-be-afraid-1.png", altText: "Women's Do Not Be Afraid Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840585/women-do-not-be-afraid-2.png", altText: "Women's Do Not Be Afraid Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840582/women-do-not-be-afraid-3.png", altText: "Women's Do Not Be Afraid Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840585/women-do-not-be-afraid-4.png", altText: "Women's Do Not Be Afraid Heavyweight Tee Chest Logo" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840585/women-do-not-be-afraid-5.png", altText: "Women's Do Not Be Afraid Heavyweight Tee Back Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840585/women-do-not-be-afraid-6.png", altText: "Women's Do Not Be Afraid Heavyweight Tee Collar Detail" },
         ]
       },
       variants: {
@@ -712,12 +712,12 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/women-year-of-dragon-1.png", altText: "Women's Year of Dragon Heavyweight Tee Front View" },
-          { url: "/women-year-of-dragon-2.png", altText: "Women's Year of Dragon Heavyweight Tee Back View" },
-          { url: "/women-year-of-dragon-3.png", altText: "Women's Year of Dragon Heavyweight Tee Model View" },
-          { url: "/women-year-of-dragon-4.png", altText: "Women's Year of Dragon Heavyweight Tee Chest Detail" },
-          { url: "/women-year-of-dragon-5.png", altText: "Women's Year of Dragon Heavyweight Tee Back Graphic Detail" },
-          { url: "/women-year-of-dragon-6.png", altText: "Women's Year of Dragon Heavyweight Tee Collar Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840677/women-year-of-dragon-1.png", altText: "Women's Year of Dragon Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840678/women-year-of-dragon-2.png", altText: "Women's Year of Dragon Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840679/women-year-of-dragon-3.png", altText: "Women's Year of Dragon Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840681/women-year-of-dragon-4.png", altText: "Women's Year of Dragon Heavyweight Tee Chest Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840682/women-year-of-dragon-5.png", altText: "Women's Year of Dragon Heavyweight Tee Back Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840683/women-year-of-dragon-6.png", altText: "Women's Year of Dragon Heavyweight Tee Collar Detail" },
         ]
       },
       variants: {
@@ -740,12 +740,12 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/women-floral-dreams-1.png", altText: "Women's Floral Dreams Heavyweight Tee Front View" },
-          { url: "/women-floral-dreams-2.png", altText: "Women's Floral Dreams Heavyweight Tee Back View" },
-          { url: "/women-floral-dreams-3.png", altText: "Women's Floral Dreams Heavyweight Tee Model View" },
-          { url: "/women-floral-dreams-4.png", altText: "Women's Floral Dreams Heavyweight Tee Back Graphic Detail" },
-          { url: "/women-floral-dreams-5.png", altText: "Women's Floral Dreams Heavyweight Tee Collar Detail View 1" },
-          { url: "/women-floral-dreams-6.png", altText: "Women's Floral Dreams Heavyweight Tee Collar Detail View 2" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840586/women-floral-dreams-1.png", altText: "Women's Floral Dreams Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840598/women-floral-dreams-2.png", altText: "Women's Floral Dreams Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840593/women-floral-dreams-3.png", altText: "Women's Floral Dreams Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840595/women-floral-dreams-4.png", altText: "Women's Floral Dreams Heavyweight Tee Back Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840592/women-floral-dreams-5.png", altText: "Women's Floral Dreams Heavyweight Tee Collar Detail View 1" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840592/women-floral-dreams-6.png", altText: "Women's Floral Dreams Heavyweight Tee Collar Detail View 2" },
         ]
       },
       variants: {
@@ -768,11 +768,11 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/women-glow-different-1.png", altText: "Women's Glow Different Heavyweight Tee Front View" },
-          { url: "/women-glow-different-2.png", altText: "Women's Glow Different Heavyweight Tee Back View" },
-          { url: "/women-glow-different-3.png", altText: "Women's Glow Different Heavyweight Tee Model Back View" },
-          { url: "/women-glow-different-4.png", altText: "Women's Glow Different Heavyweight Tee Front Logo Close-up" },
-          { url: "/women-glow-different-5.png", altText: "Women's Glow Different Heavyweight Tee Back Print Close-up" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840598/women-glow-different-1.png", altText: "Women's Glow Different Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840611/women-glow-different-2.png", altText: "Women's Glow Different Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840608/women-glow-different-3.png", altText: "Women's Glow Different Heavyweight Tee Model Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840604/women-glow-different-4.png", altText: "Women's Glow Different Heavyweight Tee Front Logo Close-up" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840608/women-glow-different-5.png", altText: "Women's Glow Different Heavyweight Tee Back Print Close-up" },
         ]
       },
       variants: {
@@ -795,12 +795,12 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/women-happiness-1.png", altText: "Women's Happiness Heavyweight Tee Front Model View" },
-          { url: "/women-happiness-2.png", altText: "Women's Happiness Heavyweight Tee Back Model View" },
-          { url: "/women-happiness-3.png", altText: "Women's Happiness Heavyweight Tee Model View" },
-          { url: "/women-happiness-4.png", altText: "Women's Happiness Heavyweight Tee Chest Graphic" },
-          { url: "/women-happiness-5.png", altText: "Women's Happiness Heavyweight Tee Back Print Close-up" },
-          { url: "/women-happiness-6.png", altText: "Women's Happiness Heavyweight Tee Collar Detail View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840610/women-happiness-1.png", altText: "Women's Happiness Heavyweight Tee Front Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840615/women-happiness-2.png", altText: "Women's Happiness Heavyweight Tee Back Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840614/women-happiness-3.png", altText: "Women's Happiness Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840618/women-happiness-4.png", altText: "Women's Happiness Heavyweight Tee Chest Graphic" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840618/women-happiness-5.png", altText: "Women's Happiness Heavyweight Tee Back Print Close-up" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840617/women-happiness-6.png", altText: "Women's Happiness Heavyweight Tee Collar Detail View" },
         ]
       },
       variants: {
@@ -823,12 +823,12 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/women-love-peace-patience-1.png", altText: "Women's Love Peace Patience Heavyweight Tee Front View" },
-          { url: "/women-love-peace-patience-2.png", altText: "Women's Love Peace Patience Heavyweight Tee Back View" },
-          { url: "/women-love-peace-patience-3.png", altText: "Women's Love Peace Patience Heavyweight Tee Model View" },
-          { url: "/women-love-peace-patience-4.png", altText: "Women's Love Peace Patience Heavyweight Tee Chest Detail" },
-          { url: "/women-love-peace-patience-5.png", altText: "Women's Love Peace Patience Heavyweight Tee Back Print Detail" },
-          { url: "/women-love-peace-patience-6.png", altText: "Women's Love Peace Patience Heavyweight Tee Collar Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840631/women-love-peace-patience-1.png", altText: "Women's Love Peace Patience Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840630/women-love-peace-patience-2.png", altText: "Women's Love Peace Patience Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840632/women-love-peace-patience-3.png", altText: "Women's Love Peace Patience Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840630/women-love-peace-patience-4.png", altText: "Women's Love Peace Patience Heavyweight Tee Chest Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840631/women-love-peace-patience-5.png", altText: "Women's Love Peace Patience Heavyweight Tee Back Print Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840632/women-love-peace-patience-6.png", altText: "Women's Love Peace Patience Heavyweight Tee Collar Detail" },
         ]
       },
       variants: {
@@ -851,12 +851,12 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/women-kung-fu-panda-1.png", altText: "Women's Kung Fu Panda Heavyweight Tee Front View" },
-          { url: "/women-kung-fu-panda-2.png", altText: "Women's Kung Fu Panda Heavyweight Tee Back View" },
-          { url: "/women-kung-fu-panda-3.png", altText: "Women's Kung Fu Panda Heavyweight Tee Model View" },
-          { url: "/women-kung-fu-panda-4.png", altText: "Women's Kung Fu Panda Heavyweight Tee Model Full View" },
-          { url: "/women-kung-fu-panda-5.png", altText: "Women's Kung Fu Panda Heavyweight Tee Chest Detail" },
-          { url: "/women-kung-fu-panda-6.png", altText: "Women's Kung Fu Panda Heavyweight Tee Sleeve Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840624/women-kung-fu-panda-1.png", altText: "Women's Kung Fu Panda Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840626/women-kung-fu-panda-2.png", altText: "Women's Kung Fu Panda Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840626/women-kung-fu-panda-3.png", altText: "Women's Kung Fu Panda Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840624/women-kung-fu-panda-4.png", altText: "Women's Kung Fu Panda Heavyweight Tee Model Full View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840628/women-kung-fu-panda-5.png", altText: "Women's Kung Fu Panda Heavyweight Tee Chest Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840626/women-kung-fu-panda-6.png", altText: "Women's Kung Fu Panda Heavyweight Tee Sleeve Detail" },
         ]
       },
       variants: {
@@ -879,12 +879,12 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/women-social-introvert-1.png", altText: "Women's Social Introvert Heavyweight Tee Front View" },
-          { url: "/women-social-introvert-2.png", altText: "Women's Social Introvert Heavyweight Tee Back View" },
-          { url: "/women-social-introvert-3.png", altText: "Women's Social Introvert Heavyweight Tee Front Detail View" },
-          { url: "/women-social-introvert-4.png", altText: "Women's Social Introvert Heavyweight Tee Back Print Detail" },
-          { url: "/women-social-introvert-5.png", altText: "Women's Social Introvert Heavyweight Tee Collar Detail" },
-          { url: "/women-social-introvert-6.png", altText: "Women's Social Introvert Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840670/women-social-introvert-1.png", altText: "Women's Social Introvert Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840667/women-social-introvert-2.png", altText: "Women's Social Introvert Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840668/women-social-introvert-3.png", altText: "Women's Social Introvert Heavyweight Tee Front Detail View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840669/women-social-introvert-4.png", altText: "Women's Social Introvert Heavyweight Tee Back Print Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840669/women-social-introvert-5.png", altText: "Women's Social Introvert Heavyweight Tee Collar Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840671/women-social-introvert-6.png", altText: "Women's Social Introvert Heavyweight Tee Model View" },
         ]
       },
       variants: {
@@ -907,12 +907,12 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/women-sunflower-1.png", altText: "Women's Sunflower Heavyweight Tee Front View" },
-          { url: "/women-sunflower-2.png", altText: "Women's Sunflower Heavyweight Tee Back View" },
-          { url: "/women-sunflower-3.png", altText: "Women's Sunflower Heavyweight Tee Model View" },
-          { url: "/women-sunflower-4.png", altText: "Women's Sunflower Heavyweight Tee Sleeve Detail" },
-          { url: "/women-sunflower-5.png", altText: "Women's Sunflower Heavyweight Tee Chest Detail" },
-          { url: "/women-sunflower-6.png", altText: "Women's Sunflower Heavyweight Tee Back Graphic Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840672/women-sunflower-1.png", altText: "Women's Sunflower Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840673/women-sunflower-2.png", altText: "Women's Sunflower Heavyweight Tee Back View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840674/women-sunflower-3.png", altText: "Women's Sunflower Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840674/women-sunflower-4.png", altText: "Women's Sunflower Heavyweight Tee Sleeve Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840675/women-sunflower-5.png", altText: "Women's Sunflower Heavyweight Tee Chest Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840676/women-sunflower-6.png", altText: "Women's Sunflower Heavyweight Tee Back Graphic Detail" },
         ]
       },
       variants: {
@@ -935,11 +935,11 @@ async function main() {
       collection: "PRINTED",
       images: {
         create: [
-          { url: "/women-christ-cross-1.png", altText: "Women's Christ Cross Heavyweight Tee Front View" },
-          { url: "/women-christ-cross-2.png", altText: "Women's Christ Cross Heavyweight Tee Model View" },
-          { url: "/women-christ-cross-3.png", altText: "Women's Christ Cross Heavyweight Tee Back Print Detail" },
-          { url: "/women-christ-cross-4.png", altText: "Women's Christ Cross Heavyweight Tee Side View" },
-          { url: "/women-christ-cross-5.png", altText: "Women's Christ Cross Heavyweight Tee Collar Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840531/women-christ-cross-1.png", altText: "Women's Christ Cross Heavyweight Tee Front View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840531/women-christ-cross-2.png", altText: "Women's Christ Cross Heavyweight Tee Model View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840533/women-christ-cross-3.png", altText: "Women's Christ Cross Heavyweight Tee Back Print Detail" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840533/women-christ-cross-4.png", altText: "Women's Christ Cross Heavyweight Tee Side View" },
+          { url: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840533/women-christ-cross-5.png", altText: "Women's Christ Cross Heavyweight Tee Collar Detail" },
         ]
       },
       variants: {

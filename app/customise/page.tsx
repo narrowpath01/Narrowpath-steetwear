@@ -117,16 +117,16 @@ export default function CustomisePage() {
   // Helper images for base monochrome tees
   const teeImages = {
     front: {
-      black: "/monochrome-black-front.png",
-      brown: "/monochrome-brown-1.png",
-      "off-white": "/monochrome-offwhite-front.png",
-      red: "/monochrome-red-front.png"
+      black: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840374/monochrome-black-front.png",
+      brown: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840377/monochrome-brown-1.png",
+      "off-white": "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840401/monochrome-offwhite-front.png",
+      red: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840404/monochrome-red-front.png"
     },
     back: {
-      black: "/monochrome-black-back.png",
-      brown: "/monochrome-brown-2.png",
-      "off-white": "/monochrome-offwhite-back.png",
-      red: "/monochrome-red-back.png"
+      black: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840373/monochrome-black-back.png",
+      brown: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840377/monochrome-brown-2.png",
+      "off-white": "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840379/monochrome-offwhite-back.png",
+      red: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840403/monochrome-red-back.png"
     }
   };
 

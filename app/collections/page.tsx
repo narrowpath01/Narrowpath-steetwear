@@ -20,7 +20,7 @@ export default function CollectionsPage() {
           <Link href="/shop?type=printed" className="group block relative">
             <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden bg-neutral-50 border border-neutral-100 shadow-sm transition-all duration-500 group-hover:shadow-md">
               <Image
-                src="/sunflower-back.png"
+                src="https://res.cloudinary.com/lhqxzevt/image/upload/v1790840509/sunflower-back.png"
                 alt="Printed Tee Collection"
                 fill
                 className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
@@ -47,7 +47,7 @@ export default function CollectionsPage() {
           <Link href="/shop?type=monochrome" className="group block relative">
             <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden bg-neutral-50 border border-neutral-100 shadow-sm transition-all duration-500 group-hover:shadow-md">
               <Image
-                src="/monochrome-red-front.png"
+                src="https://res.cloudinary.com/lhqxzevt/image/upload/v1790840404/monochrome-red-front.png"
                 alt="Monochrome Tee Collection"
                 fill
                 className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
