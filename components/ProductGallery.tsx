@@ -21,6 +21,7 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
             loading={index === 0 ? "eager" : "lazy"}
             fetchPriority={index === 0 ? "high" : "auto"}
             decoding="async"
+            crossOrigin="anonymous"
             className="w-full h-auto block select-none object-contain rounded-2xl"
           />
         </div>

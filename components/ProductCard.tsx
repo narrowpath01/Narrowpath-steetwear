@@ -132,6 +132,7 @@ export default function ProductCard({ product, womenProduct, defaultGender = "me
                   alt={img.altText || `${currentProduct.title} view ${idx + 1}`}
                   loading={idx === 0 ? "eager" : "lazy"}
                   decoding="async"
+                  crossOrigin="anonymous"
                   className={`w-full h-full object-cover object-top rounded-2xl animate-fade-in transition-all duration-300 ${
                     isZoomed ? "scale-[1.12] origin-top" : ""
                   }`}

@@ -70,6 +70,7 @@ export default function HeroSlider() {
                 alt={slides[currentSlide].alt}
                 fetchPriority={currentSlide === 0 ? "high" : "auto"}
                 decoding="async"
+                crossOrigin="anonymous"
                 className="w-full h-full object-cover object-top scale-[1.03]"
               />
             </div>
@@ -79,6 +80,7 @@ export default function HeroSlider() {
                 src={getOptimizedCloudinaryUrl(slides[(currentSlide + 3) % slides.length].image, { width: 1200 })}
                 alt={slides[(currentSlide + 3) % slides.length].alt}
                 decoding="async"
+                crossOrigin="anonymous"
                 className="w-full h-full object-cover object-top scale-[1.03]"
               />
             </div>
