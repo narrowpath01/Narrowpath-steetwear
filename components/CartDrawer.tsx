@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useCartStore } from "@/store/useCartStore";
 import Image from "next/image";
 import Link from "next/link";
+import { getOptimizedCloudinaryUrl } from "@/lib/cloudinary";
 
 export default function CartDrawer() {
   // FIX 1: Changed `isOpen` to `isCartOpen` to match the Zustand store
@@ -57,9 +58,10 @@ export default function CartDrawer() {
                         {/* Drill down into the relational Prisma object for the image */}
                         {item.variant?.product?.images?.[0]?.url && (
                           <Image
-                            src={item.variant.product.images[0].url}
+                            src={getOptimizedCloudinaryUrl(item.variant.product.images[0].url, { width: 240 })}
                             alt={item.variant.product.title || "Product image"}
                             fill
+                            sizes="96px"
                             className="object-cover"
                           />
                         )}

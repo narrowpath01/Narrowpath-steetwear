@@ -338,7 +338,7 @@ export default function CustomisePage() {
 
     const prevActiveElement = activeElement;
     setActiveElement(null);
-    await new Promise((resolve) => setTimeout(resolve, 150));
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
     const hiddenEls: { el: HTMLElement; origDisplay: string }[] = [];
     const graphicImages = Array.from(previewContainerRef.current.querySelectorAll("img[alt*='Graphic']") || []) as HTMLImageElement[];
@@ -420,7 +420,7 @@ export default function CustomisePage() {
 
     const prevActiveElement = activeElement;
     setActiveElement(null);
-    await new Promise((resolve) => setTimeout(resolve, 150));
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
     let baseImgEl: HTMLImageElement | null = null;
     let originalSrc = "";

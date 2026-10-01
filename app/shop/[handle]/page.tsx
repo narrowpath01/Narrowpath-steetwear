@@ -1,12 +1,11 @@
 // app/shop/[handle]/page.tsx
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/db";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import AddToCartForm from "./AddToCartForm"; 
+import { getOptimizedCloudinaryUrl } from "@/lib/cloudinary";
 
-const prisma = new PrismaClient();
-
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 // In Next.js 15+, params is an async promise. We await it.
 export default async function ProductPage({ params }: { params: Promise<{ handle: string }> }) {
@@ -32,9 +31,10 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
         <div className="relative aspect-[4/5] bg-neutral-100 border border-neutral-200 w-full sticky top-32">
           {product.images[0] && (
             <Image 
-              src={product.images[0].url} 
+              src={getOptimizedCloudinaryUrl(product.images[0].url, { width: 1000 })} 
               alt={product.title} 
               fill 
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover" 
               priority
             />

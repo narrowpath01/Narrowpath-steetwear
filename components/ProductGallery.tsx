@@ -1,4 +1,6 @@
 // components/ProductGallery.tsx
+import { getOptimizedCloudinaryUrl } from "@/lib/cloudinary";
+
 interface ProductGalleryProps {
   images: any[];
 }
@@ -14,8 +16,11 @@ export default function ProductGallery({ images }: ProductGalleryProps) {
           className="w-full rounded-2xl overflow-hidden border border-neutral-100/50"
         >
           <img
-            src={image.url}
+            src={getOptimizedCloudinaryUrl(image.url, { width: 1000 })}
             alt={image.altText || `Product image ${index + 1}`}
+            loading={index === 0 ? "eager" : "lazy"}
+            fetchPriority={index === 0 ? "high" : "auto"}
+            decoding="async"
             className="w-full h-auto block select-none object-contain rounded-2xl"
           />
         </div>

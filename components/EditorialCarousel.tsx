@@ -6,6 +6,7 @@ import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import Marquee from "./Marquee";
+import { getOptimizedCloudinaryUrl } from "@/lib/cloudinary";
 
 interface EditorialCarouselProps {
   products?: any[];
@@ -29,7 +30,7 @@ export default function EditorialCarousel({ products = [], marqueeText }: Editor
     ? products.slice(0, 4).map((p) => ({
         id: p.id,
         title: p.title.toUpperCase(),
-        image: p.images?.[0]?.url || "https://via.placeholder.com/400x500",
+        image: getOptimizedCloudinaryUrl(p.images?.[0]?.url, { width: 800 }) || "https://via.placeholder.com/400x500",
         handle: p.handle
       }))
     : COLLECTIONS_FALLBACK;

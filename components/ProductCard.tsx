@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useCartStore } from "@/store/useCartStore";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useSession } from "next-auth/react";
+import { getOptimizedCloudinaryUrl } from "@/lib/cloudinary";
 
 interface ProductCardProps {
   product: any; 
@@ -127,8 +128,10 @@ export default function ProductCard({ product, womenProduct, defaultGender = "me
             return (
               <div key={img.id || idx} className="w-full h-full flex-shrink-0 snap-start snap-always relative overflow-hidden rounded-2xl">
                 <img
-                  src={img.url}
+                  src={getOptimizedCloudinaryUrl(img.url, { width: 600 })}
                   alt={img.altText || `${currentProduct.title} view ${idx + 1}`}
+                  loading={idx === 0 ? "eager" : "lazy"}
+                  decoding="async"
                   className={`w-full h-full object-cover object-top rounded-2xl animate-fade-in transition-all duration-300 ${
                     isZoomed ? "scale-[1.12] origin-top" : ""
                   }`}

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useWishlistStore } from "@/store/useWishlistStore";
+import { getOptimizedCloudinaryUrl } from "@/lib/cloudinary";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -93,13 +94,20 @@ export default function Navbar() {
   }, [isSearchOpen]);
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      // Sets to true the moment you scroll down more than 0 pixels
-      setIsScrolled(window.scrollY > 0);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrolled = window.scrollY > 0;
+          setIsScrolled((prev) => (prev !== scrolled ? scrolled : prev));
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    handleScroll();
-    window.addEventListener("scroll", handleScroll);
+    setIsScrolled(window.scrollY > 0);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -589,8 +597,10 @@ export default function Navbar() {
                             <div className="flex items-center gap-3">
                               <div className="relative w-10 h-12 bg-neutral-100 rounded-lg overflow-hidden flex-shrink-0">
                                 <img
-                                  src={image}
+                                  src={getOptimizedCloudinaryUrl(image, { width: 120 })}
                                   alt={suggestion.title}
+                                  loading="lazy"
+                                  decoding="async"
                                   className="w-full h-full object-cover object-top"
                                 />
                               </div>

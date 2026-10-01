@@ -2,17 +2,28 @@ import React from "react";
 import prisma from "@/lib/db";
 import Link from "next/link";
 import { Metadata } from "next";
+import { getOptimizedCloudinaryUrl } from "@/lib/cloudinary";
 
 export const metadata: Metadata = {
   title: "Narrow Path — Editorial & Stories",
   description: "Underground streetwear culture, design stories, and drop announcements.",
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function BlogsIndexPage() {
   const blogs = await prisma.blog.findMany({
     where: { status: "PUBLISHED" },
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      excerpt: true,
+      featuredImage: true,
+      category: true,
+      publishedAt: true,
+      authorName: true,
+    },
     orderBy: { publishedAt: "desc" },
   });
 
@@ -49,8 +60,10 @@ export default async function BlogsIndexPage() {
                 <div className="aspect-[16/10] overflow-hidden bg-neutral-900 relative">
                   {blog.featuredImage ? (
                     <img
-                      src={blog.featuredImage}
+                      src={getOptimizedCloudinaryUrl(blog.featuredImage, { width: 700 })}
                       alt={blog.title}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                     />
                   ) : (

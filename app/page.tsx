@@ -8,31 +8,35 @@ import EditorialCarousel from "@/components/EditorialCarousel";
 import { InfoMarquee } from "@/components/InfoMarquee";
 import { TrustBadges } from "@/components/TrustBadges";
 import Link from "next/link";
+import { getOptimizedCloudinaryUrl } from "@/lib/cloudinary";
 
 export const revalidate = 60;
 
 export default async function Home() {
-  // Fetch from Postgres
+  // Fetch from Postgres in parallel
   let products: any[] = [];
   let activeAnnouncement: any = null;
   try {
-    products = await prisma.product.findMany({
-      where: {
-        status: { not: "DRAFT" },
-      },
-      include: {
-        images: true,
-        variants: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      }
-    });
-
-    activeAnnouncement = await prisma.announcement.findFirst({
-      where: { isActive: true, type: "MARQUEE" },
-      orderBy: { priority: "desc" },
-    });
+    const [fetchedProducts, fetchedAnnouncement] = await Promise.all([
+      prisma.product.findMany({
+        where: {
+          status: { not: "DRAFT" },
+        },
+        include: {
+          images: true,
+          variants: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        }
+      }),
+      prisma.announcement.findFirst({
+        where: { isActive: true, type: "MARQUEE" },
+        orderBy: { priority: "desc" },
+      })
+    ]);
+    products = fetchedProducts;
+    activeAnnouncement = fetchedAnnouncement;
   } catch (err) {
     console.warn("Home page database fetch warning:", err);
   }
@@ -117,8 +121,10 @@ export default async function Home() {
           <Link href="/shop?gender=men" className="group block relative">
             <div className="relative aspect-[3/4] w-full rounded-[24px] overflow-hidden bg-neutral-50 border border-neutral-100 shadow-sm transition-all duration-500 group-hover:shadow-md">
               <img
-                src="https://res.cloudinary.com/lhqxzevt/image/upload/v1790840509/sunflower-back.png"
+                src={getOptimizedCloudinaryUrl("https://res.cloudinary.com/lhqxzevt/image/upload/v1790840509/sunflower-back.png", { width: 800 })}
                 alt="Men's Collection"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-90"></div>
@@ -138,8 +144,10 @@ export default async function Home() {
           <Link href="/shop?gender=women" className="group block relative">
             <div className="relative aspect-[3/4] w-full rounded-[24px] overflow-hidden bg-neutral-50 border border-neutral-100 shadow-sm transition-all duration-500 group-hover:shadow-md">
               <img
-                src="https://res.cloudinary.com/lhqxzevt/image/upload/v1790840672/women-sunflower-1.png"
+                src={getOptimizedCloudinaryUrl("https://res.cloudinary.com/lhqxzevt/image/upload/v1790840672/women-sunflower-1.png", { width: 800 })}
                 alt="Women's Collection"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-90"></div>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { getOptimizedCloudinaryUrl } from "@/lib/cloudinary";
 
 const slides = [
   {
@@ -65,16 +66,19 @@ export default function HeroSlider() {
             {/* Left Image (always shown on mobile, left half on desktop) */}
             <div className="w-full md:w-1/2 h-full relative overflow-hidden">
               <img
-                src={slides[currentSlide].image}
+                src={getOptimizedCloudinaryUrl(slides[currentSlide].image, { width: 1200 })}
                 alt={slides[currentSlide].alt}
+                fetchPriority={currentSlide === 0 ? "high" : "auto"}
+                decoding="async"
                 className="w-full h-full object-cover object-top scale-[1.03]"
               />
             </div>
             {/* Right Image (only shown on desktop/md and up) */}
             <div className="hidden md:block w-1/2 h-full relative overflow-hidden border-l border-neutral-900">
               <img
-                src={slides[(currentSlide + 3) % slides.length].image}
+                src={getOptimizedCloudinaryUrl(slides[(currentSlide + 3) % slides.length].image, { width: 1200 })}
                 alt={slides[(currentSlide + 3) % slides.length].alt}
+                decoding="async"
                 className="w-full h-full object-cover object-top scale-[1.03]"
               />
             </div>

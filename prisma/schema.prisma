@@ -23,6 +23,10 @@ model Product {
   images        Image[]
   variants      Variant[]
   wishlistItems WishlistItem[]
+
+  @@index([status, collection])
+  @@index([createdAt])
+  @@index([isFeatured])
 }
 
 model Variant {
@@ -36,6 +40,9 @@ model Variant {
   product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
   orderItems OrderItem[]
   cartItems  CartItem[]
+
+  @@index([productId])
+  @@index([inventory])
 }
 
 model Image {
@@ -45,6 +52,8 @@ model Image {
   altText   String?
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
 }
 
 // --- 2. AUTHENTICATION (NEXTAUTH) ---
@@ -120,6 +129,8 @@ model Address {
   updatedAt   DateTime @updatedAt
   orders      Order[]
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 // --- 4. TRANSACTIONS & FULFILLMENT ---
@@ -144,6 +155,9 @@ model Order {
   items             OrderItem[]
   // Link to the return request
   returnRequest     ReturnRequest?
+
+  @@index([userId])
+  @@index([status, createdAt])
 }
 
 model OrderItem {
@@ -155,6 +169,9 @@ model OrderItem {
 
   order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   variant Variant @relation(fields: [variantId], references: [id])
+
+  @@index([orderId])
+  @@index([variantId])
 }
 
 // --- 5. SERVER-SIDE CART ---
@@ -245,6 +262,8 @@ model Blog {
   authorName    String?   @default("Narrow Path Team")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+
+  @@index([status, publishedAt])
 }
 
 // --- 8. ANNOUNCEMENTS & MARQUEE ---
@@ -257,6 +276,8 @@ model Announcement {
   type      String   @default("MARQUEE") // "MARQUEE" or "BANNER"
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([isActive, priority])
 }
 
 // --- 9. MARKETING & DISCOUNTS ---
@@ -272,6 +293,8 @@ model Promotion {
   endDate        DateTime?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+
+  @@index([isActive])
 }
 
 // --- 10. STORE CONFIGURATION ---

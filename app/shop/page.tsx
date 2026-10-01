@@ -2,7 +2,7 @@
 import prisma from "@/lib/db";
 import ProductCard from "@/components/ProductCard";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 interface ShopPageProps {
   searchParams: Promise<{ type?: string; gender?: string }>;
@@ -13,6 +13,9 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   const activeGender = gender?.toLowerCase() || "all";
 
   const products = await prisma.product.findMany({
+    where: {
+      status: { not: "DRAFT" },
+    },
     include: {
       images: true,
       variants: true,

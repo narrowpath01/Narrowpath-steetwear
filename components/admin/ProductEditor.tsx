@@ -246,10 +246,8 @@ export function ProductEditor({
           : "Product created successfully! Redirecting..."
       );
 
-      setTimeout(() => {
-        router.push("/admin/products");
-        router.refresh();
-      }, 1000);
+      router.push("/admin/products");
+      router.refresh();
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred while saving.");
     } finally {

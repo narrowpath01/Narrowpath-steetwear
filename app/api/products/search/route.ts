@@ -12,6 +12,7 @@ export async function GET(req: Request) {
 
     const products = await prisma.product.findMany({
       where: {
+        status: { not: "DRAFT" },
         OR: [
           { title: { contains: query, mode: "insensitive" } },
           { handle: { contains: query, mode: "insensitive" } },
@@ -19,14 +20,28 @@ export async function GET(req: Request) {
           { collection: { contains: query, mode: "insensitive" } }
         ]
       },
-      include: {
-        images: true,
-        variants: true
+      select: {
+        id: true,
+        title: true,
+        handle: true,
+        collection: true,
+        images: {
+          take: 1,
+          select: { url: true, altText: true }
+        },
+        variants: {
+          take: 1,
+          select: { price: true }
+        }
       },
       take: 5
     });
 
-    return NextResponse.json(products);
+    return NextResponse.json(products, {
+      headers: {
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+      },
+    });
   } catch (error) {
     console.error("Search API Error:", error);
     return NextResponse.json({ error: "Failed to search products" }, { status: 500 });

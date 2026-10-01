@@ -37,42 +37,17 @@ export default function RootLayout({
             __html: `
               (function() {
                 if (typeof window === 'undefined') return;
-                
-                function clean(node) {
-                  if (!node || node.nodeType !== 1) return;
-                  if (node.hasAttribute && node.hasAttribute('bis_skin_checked')) {
-                    node.removeAttribute('bis_skin_checked');
-                  }
-                  if (node.getElementsByTagName) {
-                    var children = node.getElementsByTagName('*');
+                function clean() {
+                  var els = document.querySelectorAll('[bis_skin_checked]');
+                  for (var i = 0; i < els.length; i++) {
+                    els[i].removeAttribute('bis_skin_checked');
                   }
                 }
-
-                clean(document.documentElement);
-
-                const observer = new MutationObserver(function(mutations) {
-                  for (var i = 0; i < mutations.length; i++) {
-                    var m = mutations[i];
-                    if (m.type === 'childList') {
-                      var added = m.addedNodes;
-                      for (var j = 0; j < added.length; j++) {
-                        clean(added[j]);
-                      }
-                    } else if (m.type === 'attributes' && m.attributeName === 'bis_skin_checked') {
-                      var target = m.target;
-                      if (target.hasAttribute && target.hasAttribute('bis_skin_checked')) {
-                        target.removeAttribute('bis_skin_checked');
-                      }
-                    }
-                  }
-                });
-
-                observer.observe(document.documentElement, { 
-                  childList: true, 
-                  subtree: true,
-                  attributes: true,
-                  attributeFilter: ['bis_skin_checked']
-                });
+                if (document.readyState === 'loading') {
+                  document.addEventListener('DOMContentLoaded', clean, { once: true });
+                } else {
+                  clean();
+                }
               })();
             `
           }}

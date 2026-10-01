@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import ProductGallery from "./ProductGallery";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useSession } from "next-auth/react";
@@ -13,6 +13,15 @@ interface ProductGalleryWrapperProps {
 export default function ProductGalleryWrapper({ images, product }: ProductGalleryWrapperProps) {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const rafId = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (rafId.current !== null) {
+        window.cancelAnimationFrame(rafId.current);
+      }
+    };
+  }, []);
 
   const { data: session } = useSession();
   const isWishlisted = useWishlistStore((state) => state.isWishlisted);
@@ -28,27 +37,31 @@ export default function ProductGalleryWrapper({ images, product }: ProductGaller
   };
 
   const handleScroll = () => {
-    if (!containerRef.current) return;
-    const container = containerRef.current;
-    const scrollTop = container.scrollTop;
-    
-    // The ProductGallery component renders a div containing the list of image wrappers
-    const galleryContainer = container.firstElementChild;
-    if (!galleryContainer) return;
-    
-    const children = galleryContainer.children;
-    let closestIndex = 0;
-    let minDistance = Infinity;
+    if (rafId.current !== null) return;
+    rafId.current = window.requestAnimationFrame(() => {
+      rafId.current = null;
+      if (!containerRef.current) return;
+      const container = containerRef.current;
+      const scrollTop = container.scrollTop;
+      
+      // The ProductGallery component renders a div containing the list of image wrappers
+      const galleryContainer = container.firstElementChild;
+      if (!galleryContainer) return;
+      
+      const children = galleryContainer.children;
+      let closestIndex = 0;
+      let minDistance = Infinity;
 
-    for (let i = 0; i < children.length; i++) {
-      const child = children[i] as HTMLElement;
-      const distance = Math.abs(child.offsetTop - scrollTop);
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestIndex = i;
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i] as HTMLElement;
+        const distance = Math.abs(child.offsetTop - scrollTop);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestIndex = i;
+        }
       }
-    }
-    setActiveImageIndex(closestIndex);
+      setActiveImageIndex(closestIndex);
+    });
   };
 
   const scrollToImage = (idx: number) => {

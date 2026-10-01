@@ -138,10 +138,8 @@ export function BlogEditor({ initialBlog }: BlogEditorProps) {
           : "Article draft saved successfully."
       );
 
-      setTimeout(() => {
-        router.push("/admin/blogs");
-        router.refresh();
-      }, 1000);
+      router.push("/admin/blogs");
+      router.refresh();
     } catch (err: any) {
       setError(err.message || "Failed to save article");
     } finally {

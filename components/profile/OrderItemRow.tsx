@@ -1,13 +1,15 @@
 "use client";
 
 import { OrderItem } from "./types";
+import { getOptimizedCloudinaryUrl } from "@/lib/cloudinary";
 
 interface OrderItemRowProps {
   item: OrderItem;
 }
 
 export default function OrderItemRow({ item }: OrderItemRowProps) {
-  const productThumbnail = item.variant?.product?.images?.[0]?.url || "/placeholder-clothing.png";
+  const rawUrl = item.variant?.product?.images?.[0]?.url;
+  const productThumbnail = rawUrl ? getOptimizedCloudinaryUrl(rawUrl, { width: 160 }) : "/placeholder-clothing.png";
 
   return (
     <div className="py-4 flex gap-4 items-center first:pt-0 last:pb-0">
@@ -17,6 +19,8 @@ export default function OrderItemRow({ item }: OrderItemRowProps) {
         <img
           src={productThumbnail}
           alt={item.variant?.product?.title || "Product item"}
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover"
         />
       </div>

@@ -1,10 +1,17 @@
-import React from "react";
+import React, { cache } from "react";
 import prisma from "@/lib/db";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Metadata } from "next";
+import { getOptimizedCloudinaryUrl } from "@/lib/cloudinary";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
+
+const getBlogBySlug = cache(async (slug: string) => {
+  return prisma.blog.findUnique({
+    where: { slug },
+  });
+});
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -12,9 +19,7 @@ interface BlogPostPageProps {
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const blog = await prisma.blog.findUnique({
-    where: { slug },
-  });
+  const blog = await getBlogBySlug(slug);
 
   if (!blog) {
     return { title: "Article Not Found — Narrow Path" };
@@ -28,10 +33,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
-
-  const blog = await prisma.blog.findUnique({
-    where: { slug },
-  });
+  const blog = await getBlogBySlug(slug);
 
   if (!blog || blog.status !== "PUBLISHED") {
     notFound();
@@ -88,8 +90,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         {blog.featuredImage && (
           <div className="rounded-2xl overflow-hidden aspect-[16/9] border border-neutral-800 bg-neutral-950">
             <img
-              src={blog.featuredImage}
+              src={getOptimizedCloudinaryUrl(blog.featuredImage, { width: 1200 })}
               alt={blog.title}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
               className="w-full h-full object-cover"
             />
           </div>
