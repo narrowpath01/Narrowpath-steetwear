@@ -23,7 +23,9 @@ export const useWishlistStore = create<WishlistStore>()(
           const response = await fetch("/api/wishlist");
           if (response.ok) {
             const data = await response.json();
-            set({ items: data });
+            if (Array.isArray(data)) {
+              set({ items: data });
+            }
           }
         } catch (error) {
           console.error("Failed to load wishlist:", error);
@@ -31,7 +33,8 @@ export const useWishlistStore = create<WishlistStore>()(
       },
 
       toggleWishlist: async (product: any, session: any) => {
-        const previousItems = get().items;
+        if (!product?.id) return;
+        const previousItems = get().items || [];
         const isCurrentlyWishlisted = previousItems.some((item) => item.id === product.id);
 
         let newItems;
@@ -65,8 +68,10 @@ export const useWishlistStore = create<WishlistStore>()(
       },
 
       syncWishlist: async () => {
-        const localItems = get().items;
-        const productIds = localItems.map((item) => item.id);
+        const localItems = get().items || [];
+        const productIds = localItems
+          .map((item) => (typeof item === "string" ? item : item?.id))
+          .filter((id): id is string => typeof id === "string" && id.trim().length > 0);
 
         try {
           const response = await fetch("/api/wishlist", {
@@ -77,7 +82,9 @@ export const useWishlistStore = create<WishlistStore>()(
 
           if (response.ok) {
             const data = await response.json();
-            set({ items: data });
+            if (Array.isArray(data)) {
+              set({ items: data });
+            }
           }
         } catch (error) {
           console.error("Failed to sync client wishlist on login:", error);

@@ -13,15 +13,20 @@ export const revalidate = 60;
 
 export default async function Home() {
   // Fetch from Postgres
-  const products = await prisma.product.findMany({
-    include: {
-      images: true,
-      variants: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    }
-  });
+  let products: any[] = [];
+  try {
+    products = await prisma.product.findMany({
+      include: {
+        images: true,
+        variants: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      }
+    });
+  } catch (err) {
+    console.warn("Home page database fetch warning:", err);
+  }
 
   const printedAll = products.filter((p: any) => p.collection === 'PRINTED' || !p.collection);
   const womenPrinted = printedAll.filter((p: any) => p.handle.startsWith("women-"));

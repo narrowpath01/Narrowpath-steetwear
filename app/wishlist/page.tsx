@@ -5,7 +5,8 @@ import ProductCard from "@/components/ProductCard";
 import Link from "next/link";
 
 export default function WishlistPage() {
-  const wishlist = useWishlistStore((state) => state.items);
+  const wishlistState = useWishlistStore((state) => state.items);
+  const wishlist = Array.isArray(wishlistState) ? wishlistState : [];
 
   return (
     <div className="min-h-screen bg-white py-28 px-6 md:px-12">

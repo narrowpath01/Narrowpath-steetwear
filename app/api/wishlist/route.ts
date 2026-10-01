@@ -27,11 +27,15 @@ export async function GET() {
       },
     });
 
-    const products = wishlist ? wishlist.items.map((item) => item.product) : [];
+    const products = wishlist
+      ? wishlist.items
+          .filter((item) => item.product)
+          .map((item) => item.product)
+      : [];
     return NextResponse.json(products, { status: 200 });
   } catch (error) {
     console.error("Failed to fetch wishlist:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json([], { status: 200 });
   }
 }
 
@@ -43,30 +47,38 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { productIds } = await request.json();
-    if (!productIds || !Array.isArray(productIds)) {
-      return NextResponse.json({ error: "Invalid productIds" }, { status: 400 });
-    }
-
-    // 1. Find or create user's wishlist
-    let wishlist = await prisma.wishlist.findUnique({
-      where: { userId: session.user.id },
+    // 1. Verify user exists in DB before attempting relational mutations
+    const userExists = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { id: true },
     });
 
-    if (!wishlist) {
-      wishlist = await prisma.wishlist.create({
-        data: { userId: session.user.id },
-      });
+    if (!userExists) {
+      return NextResponse.json([], { status: 200 });
     }
 
-    // 2. Add each productId to WishlistItem if not already present
-    for (const productId of productIds) {
-      // Ensure the product exists in the DB before wishlisting
-      const productExists = await prisma.product.findUnique({
-        where: { id: productId },
-      });
+    const body = await request.json().catch(() => ({}));
+    const productIds = body?.productIds;
+    const validProductIds: string[] = Array.isArray(productIds)
+      ? productIds.filter((id): id is string => typeof id === "string" && id.trim().length > 0)
+      : [];
 
-      if (productExists) {
+    // 2. Find or create user's wishlist atomically using upsert (prevents concurrency race conditions)
+    const wishlist = await prisma.wishlist.upsert({
+      where: { userId: session.user.id },
+      update: {},
+      create: { userId: session.user.id },
+    });
+
+    // 3. Add each valid productId to WishlistItem if product exists
+    if (validProductIds.length > 0) {
+      const existingProducts = await prisma.product.findMany({
+        where: { id: { in: validProductIds } },
+        select: { id: true },
+      });
+      const validDbIds = existingProducts.map((p) => p.id);
+
+      for (const productId of validDbIds) {
         await prisma.wishlistItem.upsert({
           where: {
             wishlistId_productId: {
@@ -83,7 +95,7 @@ export async function POST(request: Request) {
       }
     }
 
-    // 3. Fetch full updated wishlist items
+    // 4. Fetch full updated wishlist items
     const updatedWishlist = await prisma.wishlist.findUnique({
       where: { id: wishlist.id },
       include: {
@@ -100,7 +112,11 @@ export async function POST(request: Request) {
       },
     });
 
-    const products = updatedWishlist ? updatedWishlist.items.map((item) => item.product) : [];
+    const products = updatedWishlist
+      ? updatedWishlist.items
+          .filter((item) => item.product)
+          .map((item) => item.product)
+      : [];
     return NextResponse.json(products, { status: 200 });
   } catch (error) {
     console.error("Failed to sync wishlist:", error);
