@@ -61,13 +61,14 @@ export default function HeroSlider() {
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ type: "tween", duration: 0.8, ease: "easeInOut" }}
-            className="absolute inset-0 w-full h-full flex"
+            className="absolute inset-0 w-full h-full flex will-change-transform"
           >
             {/* Left Image (always shown on mobile, left half on desktop) */}
             <div className="w-full md:w-1/2 h-full relative overflow-hidden">
               <img
-                src={getOptimizedCloudinaryUrl(slides[currentSlide].image, { width: 1200 })}
+                src={getOptimizedCloudinaryUrl(slides[currentSlide].image, { width: 800 })}
                 alt={slides[currentSlide].alt}
+                loading="eager"
                 fetchPriority={currentSlide === 0 ? "high" : "auto"}
                 decoding="async"
                 crossOrigin="anonymous"
@@ -77,8 +78,9 @@ export default function HeroSlider() {
             {/* Right Image (only shown on desktop/md and up) */}
             <div className="hidden md:block w-1/2 h-full relative overflow-hidden border-l border-neutral-900">
               <img
-                src={getOptimizedCloudinaryUrl(slides[(currentSlide + 3) % slides.length].image, { width: 1200 })}
+                src={getOptimizedCloudinaryUrl(slides[(currentSlide + 3) % slides.length].image, { width: 800 })}
                 alt={slides[(currentSlide + 3) % slides.length].alt}
+                loading="lazy"
                 decoding="async"
                 crossOrigin="anonymous"
                 className="w-full h-full object-cover object-top scale-[1.03]"

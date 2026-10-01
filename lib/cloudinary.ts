@@ -1,6 +1,5 @@
 /**
  * Cloudinary Image Optimization Utility
- * 
  * Injects automatic format negotiation (f_auto -> AVIF/WebP) and
  * quality optimization (q_auto), as well as responsive width/height caps
  * directly into Cloudinary delivery URLs without altering visual dimensions,

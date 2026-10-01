@@ -130,7 +130,7 @@ export default function ProductCard({ product, womenProduct, defaultGender = "me
                 <img
                   src={getOptimizedCloudinaryUrl(img.url, { width: 600 })}
                   alt={img.altText || `${currentProduct.title} view ${idx + 1}`}
-                  loading={idx === 0 ? "eager" : "lazy"}
+                  loading="lazy"
                   decoding="async"
                   crossOrigin="anonymous"
                   className={`w-full h-full object-cover object-top rounded-2xl animate-fade-in transition-all duration-300 ${

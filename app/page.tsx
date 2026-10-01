@@ -9,10 +9,17 @@ import { InfoMarquee } from "@/components/InfoMarquee";
 import { TrustBadges } from "@/components/TrustBadges";
 import Link from "next/link";
 import { getOptimizedCloudinaryUrl } from "@/lib/cloudinary";
+import ReactDOM from "react-dom";
 
 export const revalidate = 60;
 
 export default async function Home() {
+  const heroLcpUrl = getOptimizedCloudinaryUrl(
+    "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840467/porsche-model.png",
+    { width: 800 }
+  );
+  ReactDOM.preload(heroLcpUrl, { as: "image", fetchPriority: "high" });
+
   // Fetch from Postgres in parallel
   let products: any[] = [];
   let activeAnnouncement: any = null;
@@ -104,6 +111,13 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-white text-black">
+      <link
+        rel="preload"
+        as="image"
+        href={heroLcpUrl}
+        fetchPriority="high"
+        crossOrigin="anonymous"
+      />
 
       {/* Hero Slider Banner */}
       <HeroSlider />

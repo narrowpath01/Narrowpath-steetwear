@@ -160,7 +160,7 @@ export default function EditorialCarousel({ products = [], marqueeText }: Editor
                   fill
                   className="object-cover pointer-events-none object-top rounded-2xl"
                   sizes="(max-width: 768px) 80vw, 400px"
-                  priority={index === 0 || index === 1}
+                  loading="lazy"
                 />
               </motion.div>
             );
