@@ -14,8 +14,12 @@ export const revalidate = 60;
 export default async function Home() {
   // Fetch from Postgres
   let products: any[] = [];
+  let activeAnnouncement: any = null;
   try {
     products = await prisma.product.findMany({
+      where: {
+        status: { not: "DRAFT" },
+      },
       include: {
         images: true,
         variants: true,
@@ -23,6 +27,11 @@ export default async function Home() {
       orderBy: {
         createdAt: 'desc',
       }
+    });
+
+    activeAnnouncement = await prisma.announcement.findFirst({
+      where: { isActive: true, type: "MARQUEE" },
+      orderBy: { priority: "desc" },
     });
   } catch (err) {
     console.warn("Home page database fetch warning:", err);
@@ -149,7 +158,7 @@ export default async function Home() {
       </section>
 
       {/* Editorial Carousel */}
-      <EditorialCarousel products={finalCarouselProducts} />
+      <EditorialCarousel products={finalCarouselProducts} marqueeText={activeAnnouncement?.text} />
 
       {/* Latest Drops Section */}
       <section className="py-10 px-4 md:px-8 max-w-[1600px] mx-auto space-y-12">

@@ -18,12 +18,59 @@ export const authOptions: NextAuthOptions = {
     }),
     CredentialsProvider({
       id: "credentials",
-      name: "OTP",
+      name: "Credentials",
       credentials: {
         contact: { label: "Contact", type: "text" },
         otp: { label: "OTP", type: "text" },
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        // 1. Admin Email & Password login
+        if (credentials?.email && credentials?.password) {
+          const email = credentials.email.trim().toLowerCase();
+          const password = credentials.password;
+
+          const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || "narrowpathtshirts@gmail.com").toLowerCase();
+          const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "Narrowpath@26052026";
+
+          if (
+            (email === "narrowpathtshirts@gmail.com" || email === ADMIN_EMAIL) &&
+            password === ADMIN_PASSWORD
+          ) {
+            let user = await prisma.user.findFirst({
+              where: { email },
+            });
+
+            if (!user) {
+              user = await prisma.user.create({
+                data: {
+                  email,
+                  name: "Narrow Path Admin",
+                  role: "ADMIN",
+                },
+              });
+            } else if (user.role !== "ADMIN") {
+              user = await prisma.user.update({
+                where: { id: user.id },
+                data: { role: "ADMIN" },
+              });
+            }
+
+            return {
+              id: user.id,
+              name: user.name || "Narrow Path Admin",
+              email: user.email,
+              image: user.image,
+              phone: user.phone,
+              role: "ADMIN",
+            };
+          }
+
+          throw new Error("Invalid administrator email or password.");
+        }
+
+        // 2. Customer Phone & OTP login
         if (!credentials?.contact || !credentials?.otp) {
           throw new Error("Phone number and verification code are required.");
         }
@@ -71,6 +118,7 @@ export const authOptions: NextAuthOptions = {
           email: user.email,
           image: user.image,
           phone: user.phone,
+          role: user.role,
         };
       },
     }),
@@ -80,6 +128,14 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.phone = (user as any).phone || token.phone || null;
+        token.role = (user as any).role || "CUSTOMER";
+      } else if (token.id && !token.role) {
+        // Fallback: check role in DB
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.id as string },
+          select: { role: true },
+        });
+        token.role = dbUser?.role || "CUSTOMER";
       }
       return token;
     },
@@ -87,6 +143,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user && token) {
         session.user.id = token.id as string;
         session.user.phone = (token.phone as string) || null;
+        session.user.role = (token.role as string) || "CUSTOMER";
       }
       return session;
     },

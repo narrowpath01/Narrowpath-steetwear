@@ -15,6 +15,8 @@ model Product {
   handle      String   @unique
   description String   @db.Text
   collection  String   @default("PRINTED") // e.g., "PRINTED" or "MONOCHROME"
+  status      String   @default("ACTIVE")  // "ACTIVE", "DRAFT", "ARCHIVED"
+  isFeatured  Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -80,6 +82,7 @@ model User {
   emailVerified DateTime?
   image         String?
   phone         String?   @unique
+  role          String    @default("CUSTOMER") // "CUSTOMER" or "ADMIN"
   otpCode       String?
   otpExpires    DateTime?
 
@@ -213,4 +216,78 @@ model WishlistItem {
   product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([wishlistId, productId])
+}
+
+// --- 6. CATALOG EXTENSIONS ---
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?  @db.Text
+  image       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// --- 7. EDITORIAL & BLOG CMS ---
+model Blog {
+  id            String    @id @default(cuid())
+  title         String
+  slug          String    @unique
+  excerpt       String?   @db.Text
+  content       String    @db.Text
+  featuredImage String?
+  category      String?   @default("Editorial")
+  tags          String?
+  status        String    @default("DRAFT") // "DRAFT", "PUBLISHED", "ARCHIVED"
+  publishedAt   DateTime?
+  authorName    String?   @default("Narrow Path Team")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// --- 8. ANNOUNCEMENTS & MARQUEE ---
+model Announcement {
+  id        String   @id @default(cuid())
+  text      String
+  link      String?
+  isActive  Boolean  @default(true)
+  priority  Int      @default(0)
+  type      String   @default("MARQUEE") // "MARQUEE" or "BANNER"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// --- 9. MARKETING & DISCOUNTS ---
+model Promotion {
+  id             String    @id @default(cuid())
+  code           String    @unique
+  description    String?
+  discountType   String    @default("PERCENTAGE") // "PERCENTAGE" or "FIXED"
+  discountValue  Float
+  minOrderAmount Float?    @default(0)
+  isActive       Boolean   @default(true)
+  startDate      DateTime?
+  endDate        DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+// --- 10. STORE CONFIGURATION ---
+model StoreSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}
+
+// --- 11. CUSTOM DESIGN STUDIO ---
+model CustomDesign {
+  id        String   @id @default(cuid())
+  imageData String   @db.Text
+  baseColor String
+  size      String
+  details   String?  @db.Text
+  createdAt DateTime @default(now())
 }

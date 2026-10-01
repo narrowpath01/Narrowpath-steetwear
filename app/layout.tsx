@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar"; 
-import CartDrawer from "@/components/CartDrawer";
 import SessionProvider from "@/components/SessionProvider";
-import { Footer } from "@/components/Footer"; 
-import CartInitializer from "@/components/CartInitializer";
-import WishlistInitializer from "@/components/WishlistInitializer";
+import { SiteChrome } from "@/components/SiteChrome";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,15 +45,9 @@ export default function RootLayout({
                   }
                   if (node.getElementsByTagName) {
                     var children = node.getElementsByTagName('*');
-                    for (var i = 0; i < children.length; i++) {
-                      if (children[i].hasAttribute && children[i].hasAttribute('bis_skin_checked')) {
-                        children[i].removeAttribute('bis_skin_checked');
-                      }
-                    }
                   }
                 }
 
-                // Clean root and any loaded DOM instantly
                 clean(document.documentElement);
 
                 const observer = new MutationObserver(function(mutations) {
@@ -90,12 +80,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col bg-neutral-50 text-black" suppressHydrationWarning>
         <SessionProvider>
-          <Navbar /> 
-          <CartDrawer />
-          {children}
-          <Footer />
-          <CartInitializer />
-          <WishlistInitializer />
+          <SiteChrome>{children}</SiteChrome>
         </SessionProvider>
       </body>
     </html>

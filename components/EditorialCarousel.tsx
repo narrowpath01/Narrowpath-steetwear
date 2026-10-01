@@ -9,6 +9,7 @@ import Marquee from "./Marquee";
 
 interface EditorialCarouselProps {
   products?: any[];
+  marqueeText?: string;
 }
 
 const COLLECTIONS_FALLBACK = [
@@ -18,7 +19,7 @@ const COLLECTIONS_FALLBACK = [
   { id: "fallback-4", title: "TEES", image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1200&auto=format&fit=crop", handle: "" },
 ];
 
-export default function EditorialCarousel({ products = [] }: EditorialCarouselProps) {
+export default function EditorialCarousel({ products = [], marqueeText }: EditorialCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const isWheeling = useRef(false);
@@ -129,7 +130,7 @@ export default function EditorialCarousel({ products = [] }: EditorialCarouselPr
       {/* Marquee: below the navbar/title, above the slides (on all viewports) */}
       <div className="w-full px-4 md:px-12 mb-8 text-center">
         <Marquee 
-          text={"Customization Available" + "\u00A0".repeat(16) + "Buy 2 Tees, Take INR 100 Back!"} 
+          text={marqueeText || ("Customization Available" + "\u00A0".repeat(16) + "Buy 2 Tees, Take INR 100 Back!")} 
           speed="slow" 
           className="rounded-[32px] overflow-hidden border border-neutral-800" 
         />
