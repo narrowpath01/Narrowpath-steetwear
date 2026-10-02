@@ -18,6 +18,10 @@ import {
   ExternalLinkIcon,
   LogOutIcon,
   XIcon,
+  TruckIcon,
+  TrendingUpIcon,
+  RefreshIcon,
+  ShieldCheckIcon,
 } from "./Icons";
 
 interface AdminSidebarProps {
@@ -47,6 +51,15 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Overview",
     items: [
       { name: "Dashboard", href: "/admin", icon: DashboardIcon },
+      { name: "Analytics", href: "/admin/analytics", icon: TrendingUpIcon },
+    ],
+  },
+  {
+    label: "Fulfillment & Orders",
+    items: [
+      { name: "Orders", href: "/admin/orders", icon: OrdersIcon },
+      { name: "Shipments", href: "/admin/shipments", icon: TruckIcon },
+      { name: "Returns & Claims", href: "/admin/returns", icon: RefreshIcon },
     ],
   },
   {
@@ -60,7 +73,6 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: "Sales",
     items: [
-      { name: "Orders", href: "/admin/orders", icon: OrdersIcon },
       { name: "Promotions", href: "/admin/promotions", icon: DiscountIcon },
     ],
   },
@@ -78,8 +90,9 @@ const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
-    label: "Store",
+    label: "System & Compliance",
     items: [
+      { name: "Audit Logs", href: "/admin/audit-logs", icon: ShieldCheckIcon },
       { name: "Settings", href: "/admin/settings", icon: SettingsIcon },
     ],
   },

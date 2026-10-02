@@ -155,9 +155,12 @@ model Order {
   items             OrderItem[]
   // Link to the return request
   returnRequest     ReturnRequest?
+  paymentStatus     String      @default("PENDING") // PENDING, PAID, FAILED, PARTIALLY_REFUNDED, REFUNDED
+  refunds           Refund[]
 
   @@index([userId])
   @@index([status, createdAt])
+  @@index([paymentStatus])
 }
 
 model OrderItem {
@@ -313,4 +316,74 @@ model CustomDesign {
   size      String
   details   String?  @db.Text
   createdAt DateTime @default(now())
+}
+
+// --- 12. REFUNDS & FINANCIAL AUDITING ---
+model Refund {
+  id                String   @id @default(cuid())
+  orderId           String
+  razorpayPaymentId String
+  razorpayRefundId  String?  @unique
+  amount            Float
+  currency          String   @default("INR")
+  reason            String?  @db.Text
+  status            String   @default("PROCESSED") // PENDING, PROCESSED, FAILED
+  adminEmail        String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([razorpayRefundId])
+  @@index([status])
+}
+
+// --- 13. AUDIT LOGGING ---
+model AuditLog {
+  id           String   @id @default(cuid())
+  adminEmail   String?
+  action       String   // ORDER_REFUND, ORDER_STATUS_UPDATE, PRODUCT_CREATE, INVENTORY_UPDATE, etc.
+  resourceType String   // Order, Product, Variant, Promotion, Blog, etc.
+  resourceId   String?
+  details      String?  @db.Text
+  ipAddress    String?
+  createdAt    DateTime @default(now())
+
+  @@index([action, createdAt])
+  @@index([resourceType, resourceId])
+  @@index([adminEmail])
+}
+
+// --- 14. COMMUNICATIONS & NOTIFICATIONS ---
+model NotificationLog {
+  id                String   @id @default(cuid())
+  channel           String   // EMAIL, WHATSAPP, ADMIN
+  recipient         String
+  event             String   // ORDER_CONFIRMATION, PAYMENT_CONFIRMATION, SHIPMENT_CREATED, REFUND_PROCESSED, etc.
+  orderId           String?
+  status            String   @default("SENT") // PENDING, SENT, FAILED
+  provider          String?  // META, RESEND, SMTP
+  providerMessageId String?
+  error             String?  @db.Text
+  idempotencyKey    String?  @unique
+  createdAt         DateTime @default(now())
+
+  @@index([orderId])
+  @@index([event, status])
+  @@index([idempotencyKey])
+}
+
+// --- 15. WEBHOOK IDEMPOTENCY ---
+model WebhookEvent {
+  id        String   @id @default(cuid())
+  eventId   String   @unique
+  provider  String   // RAZORPAY, DELHIVERY
+  eventType String
+  payload   String?  @db.Text
+  processed Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@index([eventId])
+  @@index([provider, eventType])
 }

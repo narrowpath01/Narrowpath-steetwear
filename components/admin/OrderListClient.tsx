@@ -209,7 +209,7 @@ export function OrderListClient({ initialOrders }: OrderListClientProps) {
                               : "bg-neutral-100 text-neutral-600 border-neutral-200"
                           }`}
                         >
-                          {order.razorpayPaymentId ? "PAID (ONLINE)" : "PENDING / COD"}
+                          {order.razorpayPaymentId ? "PAID (ONLINE)" : "PENDING PAYMENT"}
                         </span>
                       </td>
 

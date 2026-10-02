@@ -36,6 +36,9 @@ export default async function AdminOrderDetailPage({ params }: OrderDetailPagePr
         },
       },
       returnRequest: true,
+      refunds: {
+        orderBy: { createdAt: "desc" },
+      },
     },
   });
 
@@ -49,6 +52,7 @@ export default async function AdminOrderDetailPage({ params }: OrderDetailPagePr
         id: order.id,
         amount: order.amount,
         status: order.status,
+        paymentStatus: order.paymentStatus,
         shippingStatus: order.shippingStatus,
         awb: order.awb,
         trackingNumber: order.trackingNumber,
@@ -58,6 +62,15 @@ export default async function AdminOrderDetailPage({ params }: OrderDetailPagePr
         deliveredAt: order.deliveredAt,
         user: order.user,
         address: order.address,
+        refunds: order.refunds.map((r) => ({
+          id: r.id,
+          razorpayRefundId: r.razorpayRefundId,
+          amount: r.amount,
+          status: r.status,
+          reason: r.reason,
+          adminEmail: r.adminEmail,
+          createdAt: r.createdAt,
+        })),
         items: order.items.map((i) => ({
           id: i.id,
           quantity: i.quantity,

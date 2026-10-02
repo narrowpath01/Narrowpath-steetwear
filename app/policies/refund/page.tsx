@@ -60,19 +60,7 @@ export default function RefundPolicyPage() {
             </ul>
           </div>
 
-          {/* 6. CASH ON DELIVERY (COD) ORDERS */}
-          {/* <div>
-            <h3 className="font-black uppercase text-sm">6. CASH ON DELIVERY (COD) ORDERS</h3>
-            <div className="mt-2">
-              For orders paid via Cash on Delivery (COD), approved refund amounts will be issued as:
-              <ul className="list-circle pl-5 mt-1 space-y-1">
-                <li>Store credit/wallet balance (if available on the platform), or</li>
-                <li>Bank transfer upon submission of valid account details, at our discretion.</li>
-              </ul>
-            </div>
-          </div> */}
-
-          {/* 7. PARTIAL REFUNDS */}
+          {/* 6. PARTIAL REFUNDS */}
           <div>
             <h3 className="font-black uppercase text-sm">6. PARTIAL REFUNDS</h3>
             <p className="mt-2 mb-2">Partial refunds may be granted in certain circumstances, including but not limited to:</p>

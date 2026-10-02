@@ -15,22 +15,51 @@ export async function POST(req: Request) {
       .digest("hex");
 
     if (razorpay_signature === expectedSign) {
-      // 1. Signature is legit. Mark the order as PAID.
-      await prisma.order.update({
+      // 1. Idempotency & existing order check
+      const existingOrder = await prisma.order.findUnique({
         where: { id: dbOrderId },
-        data: {
-          status: "PAID",
-          razorpayPaymentId: razorpay_payment_id,
-        },
+        include: { items: true }
       });
 
-      // 1.5. Trigger Delhivery Manifest API call automatically
-      let awbNumber: string | null = null;
-      try {
-        awbNumber = await createDelhiveryShipment(dbOrderId);
-      } catch (shippingError) {
-        console.error("Auto Delhivery Shipment Error (Prepaid):", shippingError);
-        // We log the error but don't fail the verification since the payment was already successful.
+      if (!existingOrder) {
+        return NextResponse.json({ success: false, message: "Order not found" }, { status: 404 });
+      }
+
+      if (existingOrder.status === "PAID" || existingOrder.paymentStatus === "PAID") {
+        return NextResponse.json({ success: true, message: "Payment already verified" });
+      }
+
+      // 2. Mark the order as PAID and adjust inventory transactionally
+      await prisma.$transaction(async (tx) => {
+        await tx.order.update({
+          where: { id: dbOrderId },
+          data: {
+            status: "PAID",
+            paymentStatus: "PAID",
+            razorpayPaymentId: razorpay_payment_id,
+          },
+        });
+
+        // Safely decrement variant inventory
+        for (const item of existingOrder.items) {
+          await tx.variant.update({
+            where: { id: item.variantId },
+            data: {
+              inventory: { decrement: item.quantity },
+            },
+          });
+        }
+      });
+
+      // 3. Trigger Delhivery Manifest API call automatically (only if not already created)
+      let awbNumber: string | null = existingOrder.awb || null;
+      if (!awbNumber) {
+        try {
+          awbNumber = await createDelhiveryShipment(dbOrderId);
+        } catch (shippingError) {
+          console.error("Auto Delhivery Shipment Error (Prepaid):", shippingError);
+          // We log the error but don't fail verification since payment succeeded
+        }
       }
 
       // 2. Trigger WhatsApp notification to Store Owner

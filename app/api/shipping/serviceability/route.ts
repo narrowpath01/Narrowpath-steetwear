@@ -31,7 +31,6 @@ export async function GET(req: Request) {
         return NextResponse.json({ 
             serviceable: true, 
             details: details 
-            // Add COD availability logic here based on Delhivery's response structure
         }, { status: 200 });
     } else {
         return NextResponse.json({ serviceable: false }, { status: 200 });

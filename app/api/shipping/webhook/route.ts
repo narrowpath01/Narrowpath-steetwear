@@ -14,9 +14,21 @@ export async function POST(req: Request) {
     }
 
     const waybill = shipment.AWB;
-    const lowerStatus = (shipment.Status?.Status || "").toLowerCase();
+    const rawStatus = shipment.Status?.Status || "";
+    const lowerStatus = rawStatus.toLowerCase();
     const lowerInstructions = (shipment.Status?.Instructions || "").toLowerCase();
     const statusCode = (shipment.Status?.StatusCode || "").toLowerCase();
+    const statusDateTime = shipment.Status?.StatusDateTime || new Date().toISOString();
+
+    // Idempotency verification via WebhookEvent
+    const eventId = `DELHIVERY_${waybill}_${statusCode || rawStatus}_${statusDateTime}`;
+    const existingEvent = await prisma.webhookEvent.findUnique({
+      where: { eventId },
+    });
+
+    if (existingEvent) {
+      return NextResponse.json({ success: true, message: "Webhook already processed" });
+    }
 
     let dbStatus: string | null = null;
     let deliveredAt: Date | null = null;
@@ -31,35 +43,53 @@ export async function POST(req: Request) {
       dbStatus = "CANCELLED";
     } else if (lowerStatus === "delivered") {
       dbStatus = "DELIVERED";
-      deliveredAt = new Date(shipment.Status?.StatusDateTime || new Date());
+      deliveredAt = new Date(statusDateTime);
     } else if (
       lowerStatus.includes("rto") || 
-      lowerStatus.includes("return") || 
-      lowerInstructions.includes("rto") || 
-      lowerInstructions.includes("return")
+      lowerInstructions.includes("rto")
     ) {
-      dbStatus = "CANCELLED";
+      dbStatus = "RTO";
     } else if (
-      ["in transit", "dispatched", "out for delivery", "picked up"].includes(lowerStatus)
+      lowerStatus.includes("undelivered") ||
+      lowerStatus.includes("ndr") ||
+      lowerInstructions.includes("customer not available") ||
+      lowerInstructions.includes("address incomplete") ||
+      lowerInstructions.includes("rejected by customer")
+    ) {
+      dbStatus = "NDR";
+    } else if (
+      ["in transit", "dispatched", "out for delivery", "picked up", "manifested"].includes(lowerStatus)
     ) {
       dbStatus = "SHIPPED";
     }
 
-    if (dbStatus) {
-      const updateResult = await prisma.order.updateMany({
-        where: { awb: waybill },
+    await prisma.$transaction(async (tx) => {
+      // Record webhook event for idempotency
+      await tx.webhookEvent.create({
         data: {
-          status: dbStatus,
-          ...(deliveredAt ? { deliveredAt } : {})
-        }
+          eventId,
+          provider: "DELHIVERY",
+          eventType: rawStatus || "STATUS_UPDATE",
+          payload: JSON.stringify(data),
+          processed: true,
+        },
       });
-      console.log(`[Delhivery Webhook Sync]: Updated status to ${dbStatus} for waybill ${waybill}. Rows updated: ${updateResult.count}`);
-    }
+
+      if (dbStatus) {
+        await tx.order.updateMany({
+          where: { awb: waybill },
+          data: {
+            ...(dbStatus !== "NDR" ? { status: dbStatus } : {}), // Keep status or tag NDR in shippingStatus
+            shippingStatus: rawStatus || dbStatus,
+            ...(deliveredAt ? { deliveredAt } : {}),
+          },
+        });
+      }
+    });
 
     return NextResponse.json({ success: true, message: "Webhook processed successfully" }, { status: 200 });
-
-  } catch (error) {
+  } catch (error: any) {
     console.error("[Delhivery Webhook Error]:", error);
-    return NextResponse.json({ error: "Failed to process webhook" }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Failed to process webhook" }, { status: 500 });
   }
 }

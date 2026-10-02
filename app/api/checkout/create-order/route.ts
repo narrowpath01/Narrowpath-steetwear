@@ -51,8 +51,35 @@ export async function POST(req: Request) {
       userId = user.id;
     }
 
-    // 1. Calculate Base Amount of the clothes
-    const baseAmount = items.reduce((acc: number, item: any) => acc + (item.variant.price * item.quantity), 0);
+    // 1. SECURE SERVER-SIDE PRICE AND INVENTORY VALIDATION
+    // Never trust frontend prices. We verify every variant ID against the database.
+    const variantIds = items.map((i: any) => i.variant?.id || i.variantId).filter(Boolean);
+    const dbVariants = await prisma.variant.findMany({
+      where: { id: { in: variantIds } },
+      include: { product: true }
+    });
+
+    const variantMap = new Map(dbVariants.map((v) => [v.id, v]));
+
+    for (const item of items) {
+      const vid = item.variant?.id || item.variantId;
+      const dbVar = variantMap.get(vid);
+      if (!dbVar) {
+        return NextResponse.json({ error: "One or more products in your cart are no longer available." }, { status: 400 });
+      }
+      if (dbVar.inventory < item.quantity) {
+        return NextResponse.json({
+          error: `Insufficient stock for ${dbVar.product?.title || "item"} (${dbVar.title}). Only ${dbVar.inventory} remaining.`
+        }, { status: 400 });
+      }
+    }
+
+    // Calculate base amount strictly using database prices
+    const baseAmount = items.reduce((acc: number, item: any) => {
+      const vid = item.variant?.id || item.variantId;
+      const dbVar = variantMap.get(vid)!;
+      return acc + (dbVar.price * item.quantity);
+    }, 0);
 
     // 2. SECURE SHIPPING RECALCULATION
     // We do NOT trust the frontend fee. We recalculate it directly with Delhivery here.
@@ -144,21 +171,26 @@ export async function POST(req: Request) {
       }
     }
 
-    // 6. Draft the Order in your Database
+    // 6. Draft the Order in your Database with price snapshot
     const newOrder = await prisma.order.create({
       data: {
         userId: userId,
         amount: totalAmount,
         status: "PENDING",
+        paymentStatus: "PENDING",
         razorpayOrderId: razorpayOrder.id,
         addressId: addressId,
-        // Map the cart items to database OrderItems
+        // Snapshot the database prices on order creation
         items: {
-          create: items.map((item: any) => ({
-            variantId: item.variant.id,
-            quantity: item.quantity,
-            price: item.variant.price
-          }))
+          create: items.map((item: any) => {
+            const vid = item.variant?.id || item.variantId;
+            const dbVar = variantMap.get(vid)!;
+            return {
+              variantId: vid,
+              quantity: item.quantity,
+              price: dbVar.price
+            };
+          })
         }
       }
     });
