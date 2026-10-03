@@ -3,6 +3,7 @@ import crypto from "crypto";
 import prisma from "@/lib/db";
 import { createDelhiveryShipment } from "@/lib/delhivery";
 import { sendOwnerWhatsAppNotification } from "@/lib/whatsapp";
+import { sendOrderConfirmationEmails } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -109,6 +110,13 @@ export async function POST(req: NextRequest) {
               await sendOwnerWhatsAppNotification(order.id, awbNumber);
             } catch (err) {
               console.error("[Razorpay Webhook]: Owner notification error:", err);
+            }
+
+            // Trigger Resend Email Notifications (Admin New Order + Customer Order Confirmation)
+            try {
+              await sendOrderConfirmationEmails(order.id);
+            } catch (emailErr) {
+              console.error("[Razorpay Webhook]: Email notification error:", emailErr);
             }
           }
         }

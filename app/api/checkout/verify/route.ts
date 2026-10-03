@@ -3,6 +3,7 @@ import crypto from "crypto";
 import prisma from "@/lib/db";
 import { createDelhiveryShipment } from "@/lib/delhivery";
 import { sendOwnerWhatsAppNotification } from "@/lib/whatsapp";
+import { sendOrderConfirmationEmails } from "@/lib/email";
 
 export async function POST(req: Request) {
   try {
@@ -67,6 +68,13 @@ export async function POST(req: Request) {
         await sendOwnerWhatsAppNotification(dbOrderId, awbNumber);
       } catch (ownerNotificationError) {
         console.error("Owner WhatsApp Notification Error:", ownerNotificationError);
+      }
+
+      // 3. Trigger Resend Email Notifications (Admin New Order + Customer Order Confirmation)
+      try {
+        await sendOrderConfirmationEmails(dbOrderId);
+      } catch (emailNotificationError) {
+        console.error("Resend Email Notification Error:", emailNotificationError);
       }
 
       // 3. Clear user's cart in database
