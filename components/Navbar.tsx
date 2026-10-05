@@ -137,6 +137,9 @@ export default function Navbar() {
               <Link href="/shop?gender=women" className="hover:opacity-50 transition-opacity text-black">
                 Women
               </Link>
+              <Link href="/customise" className="hover:opacity-50 transition-opacity text-[#005bd3]">
+                Customise
+              </Link>
             </div>
           </div>
 
