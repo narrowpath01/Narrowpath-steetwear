@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import CartInitializer from "@/components/CartInitializer";
 import WishlistInitializer from "@/components/WishlistInitializer";
+import NavigationLoader from "@/components/NavigationLoader";
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -24,6 +25,9 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
       <Footer />
       <CartInitializer />
       <WishlistInitializer />
+      <Suspense fallback={null}>
+        <NavigationLoader />
+      </Suspense>
     </>
   );
 }
