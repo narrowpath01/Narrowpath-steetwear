@@ -232,6 +232,7 @@ export default function Navbar() {
                 </svg>
               </button>
               <nav className="flex flex-col items-start gap-5 mt-10 pl-2">
+                <Link href="/" onClick={() => setIsMenuOpen(false)} className="text-xl font-black uppercase tracking-widest text-black hover:opacity-50 transition-opacity">Home</Link>
                 <Link href="/shop" onClick={() => setIsMenuOpen(false)} className="text-xl font-black uppercase tracking-widest text-black hover:opacity-50 transition-opacity">Shop</Link>
                 
                 {/* Collections Accordion (Desktop Drawer) */}
@@ -441,6 +442,13 @@ export default function Navbar() {
         <div className="fixed inset-0 z-[125] flex md:hidden bg-white w-full h-full flex-col">
           {/* Scrollable category list shifted top-left and smaller */}
           <div className="flex-1 flex flex-col justify-start items-start pt-28 px-10 gap-5 animate-in fade-in slide-in-from-top-4 duration-300">
+            <Link 
+              href="/" 
+              onClick={() => setIsMenuOpen(false)} 
+              className="text-2xl font-black uppercase tracking-widest text-black hover:opacity-50 transition-opacity"
+            >
+              Home
+            </Link>
             <Link 
               href="/shop" 
               onClick={() => setIsMenuOpen(false)} 
