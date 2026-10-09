@@ -1,5 +1,6 @@
 import prisma from "@/lib/db";
 import Link from "next/link";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 
 interface SuccessPageProps {
@@ -29,6 +30,19 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
   return (
     <div className="min-h-screen bg-neutral-50 text-black flex flex-col justify-center items-center px-4 py-24">
       <div className="max-w-xl w-full bg-white border border-neutral-200 rounded-3xl p-8 shadow-xl text-center">
+        {/* Brand Logo */}
+        <div className="flex justify-center mb-6">
+          <Link href="/" aria-label="Narrow Path Home">
+            <Image
+              src="/logo-black.png"
+              alt="Narrow Path"
+              width={160}
+              height={78}
+              className="h-8 w-auto object-contain hover:opacity-80 transition-opacity"
+            />
+          </Link>
+        </div>
+
         {/* Success Icon */}
         <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
           <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

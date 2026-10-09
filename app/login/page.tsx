@@ -4,6 +4,7 @@
 import { useState, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 
 function LoginForm() {
@@ -81,9 +82,16 @@ function LoginForm() {
     <main className="min-h-screen w-full bg-gray-50 text-black flex flex-col items-center justify-center p-6 font-sans">
       <div className="w-full max-w-md flex flex-col items-center border border-neutral-200 rounded-3xl p-10 shadow-lg bg-white">
         
-        <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 text-center">
-          NARROW PATH
-        </h1>
+        <Link href="/" className="mb-4 hover:opacity-80 transition-opacity flex items-center justify-center" aria-label="Narrow Path Home">
+          <Image
+            src="/logo-black.png"
+            alt="Narrow Path"
+            width={180}
+            height={88}
+            className="h-10 w-auto object-contain"
+            priority
+          />
+        </Link>
         <p className="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-8 text-center">
           {step === "phone" ? "ACCESS THE UNDERGROUND" : `ENTER CODE SENT TO +91 ${phoneNumber.replace(/\D/g, "").slice(-10)}`}
         </p>

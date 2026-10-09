@@ -1,5 +1,6 @@
 // components/Footer.tsx
 import Link from "next/link";
+import Image from "next/image";
 
 export function Footer() {
   return (
@@ -62,11 +63,19 @@ export function Footer() {
           <Link href="/about" className="text-sm font-medium hover:text-neutral-400 transition-colors">Our Story</Link>
         </div>
 
-        {/* Column 4 & 5: Giant Brand Anchor */}
-        <div className="lg:col-span-2 flex items-center justify-start lg:justify-end">
-          {/* Replacing the shopping bag image with massive brand text to fit your aesthetic */}
-          <span className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none text-white">
-            NARROW<br/>PATH
+        {/* Column 4 & 5: Brand Logo Anchor */}
+        <div className="lg:col-span-2 flex flex-col items-start lg:items-end justify-center gap-2">
+          <Link href="/" aria-label="Narrow Path Home" className="group block">
+            <Image
+              src="/logo-white.png"
+              alt="Narrow Path Logo"
+              width={260}
+              height={127}
+              className="w-48 sm:w-56 md:w-64 h-auto object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_4px_24px_rgba(255,255,255,0.18)]"
+            />
+          </Link>
+          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.25em] text-neutral-400">
+            Walk by faith, not by sight
           </span>
         </div>
 

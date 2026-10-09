@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
@@ -118,8 +119,8 @@ export function AdminSidebar({ user, onCloseMobile }: AdminSidebarProps) {
             className="flex items-center gap-2.5 focus:outline-none group"
             onClick={onCloseMobile}
           >
-            <div className="w-8 h-8 bg-black text-white font-black flex items-center justify-center text-xs rounded-lg tracking-tighter shadow-sm">
-              NP
+            <div className="w-8 h-8 bg-black rounded-lg p-1 flex items-center justify-center shadow-xs">
+              <Image src="/logo-white.png" alt="Narrow Path" width={32} height={16} className="w-full h-auto object-contain" />
             </div>
             <div>
               <span className="text-xs font-black tracking-widest text-neutral-900 uppercase block leading-tight">

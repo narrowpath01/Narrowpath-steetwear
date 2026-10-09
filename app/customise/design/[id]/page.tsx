@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import prisma from "@/lib/db";
 import { memoryCache } from "@/app/api/customise/share/route";
 
@@ -96,8 +97,15 @@ export default async function DesignPreviewPage({ params }: PageProps) {
     <div className="min-h-screen bg-[#fafafa] text-black flex flex-col font-sans">
       {/* Top Header */}
       <header className="border-b border-neutral-200 bg-white sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="text-lg font-black tracking-widest uppercase">
-          NARROW PATH
+        <Link href="/" className="hover:opacity-80 transition-opacity flex items-center" aria-label="Narrow Path Home">
+          <Image
+            src="/logo-black.png"
+            alt="Narrow Path"
+            width={130}
+            height={64}
+            className="h-7 w-auto object-contain"
+            priority
+          />
         </Link>
         <div className="flex items-center gap-3">
           <Link

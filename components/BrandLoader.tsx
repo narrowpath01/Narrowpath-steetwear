@@ -14,11 +14,11 @@ export default function BrandLoader() {
       {/* Prominent Floating Brand Logo without white box */}
       <div className="relative w-32 sm:w-36 md:w-40 flex items-center justify-center select-none animate-in fade-in zoom-in-95 duration-150">
         <Image
-          src="/logo.png"
+          src="/logo-yellow.png"
           alt="Loading..."
-          width={197}
-          height={98}
-          className="w-full h-auto object-contain animate-pulse drop-shadow-[0_10px_35px_rgba(0,0,0,0.5)]"
+          width={240}
+          height={117}
+          className="w-full h-auto object-contain animate-pulse drop-shadow-[0_10px_35px_rgba(255,222,37,0.4)]"
           priority
         />
       </div>

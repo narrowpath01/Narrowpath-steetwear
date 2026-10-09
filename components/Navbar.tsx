@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useCartStore } from "@/store/useCartStore";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useWishlistStore } from "@/store/useWishlistStore";
@@ -144,9 +145,16 @@ export default function Navbar() {
           </div>
 
           {/* CENTER: THE LOGO */}
-          <div className="flex-1 flex justify-center">
-            <Link href="/" className="text-lg md:text-xl font-black uppercase tracking-tighter whitespace-nowrap text-black hover:opacity-70 transition-opacity">
-              NARROW PATH
+          <div className="flex-1 flex justify-center items-center">
+            <Link href="/" className="flex items-center justify-center py-1 hover:opacity-75 transition-opacity" aria-label="Narrow Path Home">
+              <Image
+                src="/logo-black.png"
+                alt="Narrow Path"
+                width={180}
+                height={88}
+                className="h-8 md:h-9 lg:h-10 w-auto object-contain"
+                priority
+              />
             </Link>
           </div>
 
@@ -225,16 +233,27 @@ export default function Navbar() {
         <div className="fixed inset-0 z-[150] hidden md:flex">
           <div className="w-80 bg-white h-full shadow-2xl p-6 flex flex-col justify-between transform transition-transform">
             <div className="flex flex-col">
-              <button
-                onClick={() => setIsMenuOpen(false)}
-                className="self-end p-2 hover:bg-neutral-100 rounded-full transition-colors text-black flex items-center justify-center"
-                aria-label="Close menu"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-              <nav className="flex flex-col items-start gap-5 mt-10 pl-2">
+              <div className="flex items-center justify-between w-full mb-6 pl-2">
+                <Link href="/" onClick={() => setIsMenuOpen(false)} aria-label="Narrow Path Home">
+                  <Image
+                    src="/logo-black.png"
+                    alt="Narrow Path"
+                    width={130}
+                    height={64}
+                    className="h-7 w-auto object-contain"
+                  />
+                </Link>
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="p-2 hover:bg-neutral-100 rounded-full transition-colors text-black flex items-center justify-center"
+                  aria-label="Close menu"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <nav className="flex flex-col items-start gap-5 mt-4 pl-2">
                 <Link href="/" onClick={() => setIsMenuOpen(false)} className="text-xl font-black uppercase tracking-widest text-black hover:opacity-50 transition-opacity">Home</Link>
                 <Link href="/shop" onClick={() => setIsMenuOpen(false)} className="text-xl font-black uppercase tracking-widest text-black hover:opacity-50 transition-opacity">Shop</Link>
                 
@@ -339,8 +358,15 @@ export default function Navbar() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
               </svg>
             </button>
-            <Link href="/" onClick={() => setIsMenuOpen(false)} className="text-xs font-black uppercase tracking-wider text-black">
-              NARROW PATH
+            <Link href="/" onClick={() => setIsMenuOpen(false)} className="flex items-center py-0.5 hover:opacity-75 transition-opacity" aria-label="Narrow Path Home">
+              <Image
+                src="/logo-black.png"
+                alt="Narrow Path"
+                width={95}
+                height={46}
+                className="h-5 w-auto object-contain"
+                priority
+              />
             </Link>
           </div>
         </div>
@@ -444,7 +470,16 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="fixed inset-0 z-[125] flex md:hidden bg-white w-full h-full flex-col">
           {/* Scrollable category list shifted top-left and smaller */}
-          <div className="flex-1 flex flex-col justify-start items-start pt-28 px-10 gap-5 animate-in fade-in slide-in-from-top-4 duration-300">
+          <div className="flex-1 flex flex-col justify-start items-start pt-24 px-10 gap-5 animate-in fade-in slide-in-from-top-4 duration-300">
+            <Link href="/" onClick={() => setIsMenuOpen(false)} className="mb-2" aria-label="Narrow Path Home">
+              <Image
+                src="/logo-black.png"
+                alt="Narrow Path"
+                width={150}
+                height={73}
+                className="h-8 w-auto object-contain"
+              />
+            </Link>
             <Link 
               href="/" 
               onClick={() => setIsMenuOpen(false)} 

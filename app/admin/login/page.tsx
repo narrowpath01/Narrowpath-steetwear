@@ -3,6 +3,7 @@
 import React, { useState, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 
 function AdminLoginForm() {
@@ -131,8 +132,15 @@ function AdminLoginForm() {
     <div className="w-full max-w-md bg-white border border-neutral-200 rounded-2xl p-6 sm:p-10 shadow-xl">
       {/* Brand Header */}
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-black text-white font-black text-lg mb-4 tracking-tighter shadow">
-          NP
+        <div className="inline-flex items-center justify-center mb-4">
+          <Image
+            src="/logo-black.png"
+            alt="Narrow Path"
+            width={160}
+            height={78}
+            className="h-9 w-auto object-contain"
+            priority
+          />
         </div>
         <h1 className="text-xl font-bold uppercase tracking-wider text-neutral-900">
           Operations Console

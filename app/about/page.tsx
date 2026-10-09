@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function AboutUsPage() {
   return (
@@ -8,9 +9,16 @@ export default function AboutUsPage() {
         {/* Massive Aesthetic Header */}
         <div className="text-center md:text-left space-y-4">
           <p className="text-xs font-black uppercase tracking-widest text-neutral-400">Our Story</p>
-          <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none">
-            NARROW<br/>PATH
-          </h1>
+          <div className="flex items-center justify-center md:justify-start">
+            <Image
+              src="/logo-black.png"
+              alt="Narrow Path"
+              width={260}
+              height={127}
+              className="h-12 md:h-16 w-auto object-contain"
+              priority
+            />
+          </div>
         </div>
 
         {/* Faith Statement Divider */}
@@ -37,6 +45,49 @@ export default function AboutUsPage() {
           <p>
             Narrow Path is more than a clothing brand; it is a reminder that the most meaningful journeys are often the ones less traveled. Whether you're pursuing your dreams, overcoming challenges, or simply navigating everyday life, we're here to walk that journey with you.
           </p>
+        </div>
+
+        {/* Visual Identity & Brand Colorways */}
+        <div className="space-y-4 pt-4 border-t border-neutral-100">
+          <p className="text-xs font-black uppercase tracking-widest text-neutral-400">Brand Colorways & Identity</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+            <div className="group overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 shadow-xs">
+              <Image
+                src="/NP1.jpg.jpeg"
+                alt="Narrow Path Purple & White Colorway"
+                width={300}
+                height={300}
+                className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <div className="group overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 shadow-xs">
+              <Image
+                src="/NP2.jpg.jpeg"
+                alt="Narrow Path Purple & Gold Colorway"
+                width={300}
+                height={300}
+                className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <div className="group overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 shadow-xs">
+              <Image
+                src="/NP3.jpg.jpeg"
+                alt="Narrow Path Gold & White Colorway"
+                width={300}
+                height={300}
+                className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <div className="group overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 shadow-xs">
+              <Image
+                src="/NP4.jpg.jpeg"
+                alt="Narrow Path Gold & Black Colorway"
+                width={300}
+                height={300}
+                className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Call To Action */}
