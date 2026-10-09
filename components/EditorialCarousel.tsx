@@ -68,6 +68,14 @@ export default function EditorialCarousel({ products = [], marqueeText }: Editor
     }
   };
 
+  const handlePrev = () => {
+    setActiveIndex((prev) => (prev - 1 + len) % len);
+  };
+
+  const handleNext = () => {
+    setActiveIndex((prev) => (prev + 1) % len);
+  };
+
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -137,55 +145,93 @@ export default function EditorialCarousel({ products = [], marqueeText }: Editor
         />
       </div>
 
-      <div className="relative w-full max-w-[400px] h-[500px] flex justify-center items-center">
-        <AnimatePresence initial={false}>
-          {extendedItems.map((item, index) => {
-            const variant = getVariant(index);
+      {/* Carousel Container with Left/Right Navigation Arrows */}
+      <div className="relative w-full flex items-center justify-center">
+        {/* Left Arrow Button */}
+        <button
+          type="button"
+          onClick={handlePrev}
+          aria-label="Previous slide"
+          className="absolute left-2 sm:left-4 md:left-8 lg:left-14 z-30 w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-white/90 hover:bg-black text-black hover:text-white backdrop-blur-md border border-neutral-200/80 shadow-lg flex items-center justify-center transition-all duration-200 active:scale-95 cursor-pointer focus:outline-none group"
+        >
+          <svg 
+            className="w-5 h-5 sm:w-5.5 sm:h-5.5 transition-transform duration-200 group-hover:-translate-x-0.5" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth={2.5} 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        </button>
 
-            const cardContent = (
-              <motion.div
-                variants={cardVariants}
-                initial={false}
-                animate={variant}
-                transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.2}
-                onDragEnd={handleDragEnd}
-                className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden cursor-grab active:cursor-grabbing shadow-2xl"
-              >
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  className="object-cover pointer-events-none object-top rounded-2xl"
-                  sizes="(max-width: 768px) 80vw, 400px"
-                  loading="lazy"
-                />
-              </motion.div>
-            );
+        <div className="relative w-full max-w-[400px] h-[500px] flex justify-center items-center">
+          <AnimatePresence initial={false}>
+            {extendedItems.map((item, index) => {
+              const variant = getVariant(index);
 
-            // Wrap in absolute positioning div matching relative parent dimensions
-            return (
-              <div 
-                key={item.id} 
-                className="absolute w-[80%] md:w-[90%] h-full flex justify-center items-center"
-                style={{ pointerEvents: variant === "active" ? "auto" : "none" }}
-              >
-                {item.handle ? (
-                  <Link href={`/products/${item.handle}`} className="w-full h-full block relative" aria-label={`View ${item.title}`}>
-                    {cardContent}
-                  </Link>
-                ) : (
-                  <div className="w-full h-full block relative">
-                    {cardContent}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </AnimatePresence>
+              const cardContent = (
+                <motion.div
+                  variants={cardVariants}
+                  initial={false}
+                  animate={variant}
+                  transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.2}
+                  onDragEnd={handleDragEnd}
+                  className="absolute inset-0 w-full h-full rounded-2xl overflow-hidden cursor-grab active:cursor-grabbing shadow-2xl"
+                >
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    className="object-cover pointer-events-none object-top rounded-2xl"
+                    sizes="(max-width: 768px) 80vw, 400px"
+                    loading="lazy"
+                  />
+                </motion.div>
+              );
 
+              // Wrap in absolute positioning div matching relative parent dimensions
+              return (
+                <div 
+                  key={item.id} 
+                  className="absolute w-[80%] md:w-[90%] h-full flex justify-center items-center"
+                  style={{ pointerEvents: variant === "active" ? "auto" : "none" }}
+                >
+                  {item.handle ? (
+                    <Link href={`/products/${item.handle}`} className="w-full h-full block relative" aria-label={`View ${item.title}`}>
+                      {cardContent}
+                    </Link>
+                  ) : (
+                    <div className="w-full h-full block relative">
+                      {cardContent}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
+
+        {/* Right Arrow Button */}
+        <button
+          type="button"
+          onClick={handleNext}
+          aria-label="Next slide"
+          className="absolute right-2 sm:right-4 md:right-8 lg:right-14 z-30 w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-white/90 hover:bg-black text-black hover:text-white backdrop-blur-md border border-neutral-200/80 shadow-lg flex items-center justify-center transition-all duration-200 active:scale-95 cursor-pointer focus:outline-none group"
+        >
+          <svg 
+            className="w-5 h-5 sm:w-5.5 sm:h-5.5 transition-transform duration-200 group-hover:translate-x-0.5" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth={2.5} 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
+        </button>
       </div>
 
       <div className="flex justify-center gap-3 mt-4">
