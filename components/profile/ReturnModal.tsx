@@ -59,7 +59,10 @@ export default function ReturnModal({ isOpen, onClose, orderId }: ReturnModalPro
         >
           ✕
         </button>
-        <h3 className="text-lg font-black uppercase tracking-widest mb-4">Request Return</h3>
+        <h3 className="text-lg font-black uppercase tracking-widest mb-2">Request Return / Exchange</h3>
+        <p className="text-[11px] text-neutral-500 mb-4 leading-normal">
+          5-Day Easy Exchange / Return for Plain & Printed tees. (Customized merchandise is non-returnable).
+        </p>
         <form onSubmit={submitReturnRequest} className="space-y-4">
           <div>
             <label className="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-1 block">Request Type</label>

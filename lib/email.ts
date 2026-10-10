@@ -219,7 +219,10 @@ export async function sendOrderConfirmationEmails(orderId: string): Promise<void
           <!-- Footer -->
           <tr>
             <td style="background-color: #fcfcfc; border-top: 1px solid #eeeeee; padding: 20px 32px; text-align: center;">
-              <p style="margin: 0; font-size: 12px; color: #888888;">
+              <p style="margin: 0; font-size: 12px; color: #555555; font-weight: 600;">
+                Policy: Plain & Printed tees are eligible for 5-Day Easy Exchange / Return. Custom personalized items are non-returnable.
+              </p>
+              <p style="margin: 6px 0 0 0; font-size: 11px; color: #888888;">
                 If you have questions about your order, reply directly to this email or contact support.
               </p>
               <p style="margin: 8px 0 0 0; font-size: 11px; color: #aaaaaa;">

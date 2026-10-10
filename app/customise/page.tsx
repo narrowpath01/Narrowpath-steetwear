@@ -615,7 +615,9 @@ BACK CUSTOMISATION:
 - Total Photos: ${backGraphics.length}
 ${backGraphics.map((g, idx) => `  * Photo ${idx + 1}: ${g.name || "Custom Image"}`).join("\n")}
 - Total Texts: ${backTexts.length}
-${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptions.find(f => f.value === t.fontFamily)?.name || "Standard"}, Color: ${t.color})`).join("\n")}`;
+${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptions.find(f => f.value === t.fontFamily)?.name || "Standard"}, Color: ${t.color})`).join("\n")}
+
+(Note: Custom personalized orders are tailored to your chosen size & design, and are strictly non-returnable and non-exchangeable per store policy.)`;
 
       const encodedText = encodeURIComponent(textDetails);
       // Official Narrow Path WhatsApp Business number
@@ -1293,6 +1295,13 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
                 <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider text-center mt-2.5">
                   Our designer will review and draft your order directly!
                 </p>
+
+                {/* Non-Returnable Custom Guarantee Notice */}
+                <div className="mt-3 p-2.5 bg-amber-50/80 border border-amber-200 rounded-xl text-center">
+                  <p className="text-[10px] text-amber-900 font-bold uppercase tracking-wider leading-relaxed">
+                    ⚠️ Custom Policy: Personalized items are custom-tailored to your selected size & graphics. Custom tees are strictly non-returnable & non-exchangeable.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -1507,6 +1516,12 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
                   <span className="text-sm leading-none">💾</span>
                   <span>
                     <strong>Saved in Downloads:</strong> Mockup PNG is also saved in your Downloads.
+                  </span>
+                </div>
+                <div className="flex items-start gap-2 text-[11px] text-amber-900 bg-amber-50/80 p-2 rounded-lg border border-amber-200/60">
+                  <span className="text-sm leading-none">⚠️</span>
+                  <span>
+                    <strong>Non-Returnable Policy:</strong> Custom apparel is made uniquely to order and is strictly non-returnable and non-exchangeable.
                   </span>
                 </div>
               </div>

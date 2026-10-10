@@ -45,8 +45,8 @@ export function TrustBadges() {
           <path d="M3 21v-5h5" />
         </svg>
       ),
-      title: "Free Returns",
-      desc: "Free returns within 7 days, please make sure the items are in unused & undamaged condition.",
+      title: "Easy Returns",
+      desc: "5-day easy exchange & return on standard Plain & Printed tees (customized items excluded).",
     },
   ];
 

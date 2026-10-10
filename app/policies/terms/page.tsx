@@ -73,9 +73,10 @@ export default function TermsOfServicePage() {
           <div>
             <h3 className="font-black uppercase text-sm mb-3">5. EXCHANGE AND REFUNDS</h3>
             <ul className="list-disc pl-5 space-y-1">
-              <li>Exchanges and refunds are governed by our separate Refund and Exchange Policy.</li>
-              <li>Unless an item is defective, damaged, incorrect, or affected by an error on our part, customers are responsible for return shipping costs.</li>
-              <li>Please review our Refund and Return Policy for detailed eligibility requirements and procedures.</li>
+              <li>Exchanges and refunds are governed by our separate Refund and Exchange Policy. Standard catalog Plain and Printed t-shirts are eligible for exchanges within 5 days of delivery.</li>
+              <li><strong>Customized & Personalized Goods:</strong> Any garment created or personalized by the customer through our Custom Studio (custom text, uploaded graphics, custom colors, or selected sizes) is bespoke and strictly non-returnable, non-exchangeable, and non-refundable once produced or shipped.</li>
+              <li>Unless an item is defective, damaged, incorrect, or affected by an error on our part, customers are responsible for return shipping costs on elective exchanges.</li>
+              <li>Please review our separate Refund and Exchange Policy for detailed eligibility requirements and procedures.</li>
             </ul>
           </div>
 

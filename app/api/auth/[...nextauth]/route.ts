@@ -32,10 +32,22 @@ export const authOptions: NextAuthOptions = {
           const password = credentials.password;
 
           const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || "narrowpathtshirts@gmail.com").toLowerCase();
-          const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "Narrowpath@26052026";
+          const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+
+          if (!ADMIN_PASSWORD) {
+            console.error("[NextAuth]: ADMIN_PASSWORD environment variable is not configured.");
+            throw new Error("Administrator authentication is temporarily unavailable.");
+          }
+
+          const envAdminEmails = (process.env.ADMIN_EMAILS || "")
+            .split(",")
+            .map((e) => e.trim().toLowerCase())
+            .filter(Boolean);
+
+          const allowedAdminEmails = Array.from(new Set([ADMIN_EMAIL, ...envAdminEmails]));
 
           if (
-            (email === "narrowpathtshirts@gmail.com" || email === ADMIN_EMAIL) &&
+            allowedAdminEmails.includes(email) &&
             password === ADMIN_PASSWORD
           ) {
             let user = await prisma.user.findFirst({

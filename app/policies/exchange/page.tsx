@@ -19,17 +19,35 @@ export default function ExchangePolicyPage() {
             <p className="mt-2">You may request an exchange within <strong>5 days</strong> of receiving your order.</p>
           </div>
 
-          {/* 2. EXCHANGE ELIGIBILITY */}
+          {/* 2. EXCHANGE ELIGIBILITY (PLAIN & PRINTED TEES) */}
           <div>
-            <h3 className="font-black uppercase text-sm">2. EXCHANGE ELIGIBILITY</h3>
-            <p className="mt-2 mb-2">To qualify for an exchange, the item must:</p>
+            <h3 className="font-black uppercase text-sm">2. EXCHANGE ELIGIBILITY (PLAIN & PRINTED TEES)</h3>
+            <p className="mt-2 mb-2">For our standard catalog apparel (including <strong>Plain Monochrome Tees</strong> and <strong>Printed Graphic Tees</strong>), to qualify for an exchange, the item must:</p>
             <ul className="list-disc pl-5 space-y-1">
               <li>Be unworn, unused, and unwashed.</li>
-              <li>Be free from stains, damage, or alterations.</li>
+              <li>Be free from stains, damage, perfume, or alterations.</li>
               <li>Have all original tags attached.</li>
-              <li>Be returned in its original packaging.</li>
+              <li>Be returned in its original packaging within the 5-day delivery window.</li>
             </ul>
             <p className="text-neutral-500 text-xs mt-2">Failure to meet the above conditions may result in the exchange request being declined.</p>
+          </div>
+
+          {/* 2A. CUSTOMIZED & PERSONALIZED TEES (STRICTLY NO EXCHANGE / NO RETURN) */}
+          <div className="bg-amber-50 border-2 border-amber-300 rounded-2xl p-6 space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="text-amber-800 text-lg">⚠️</span>
+              <h3 className="font-black uppercase text-sm text-amber-900 tracking-wider">
+                CUSTOMIZED & PERSONALIZED APPAREL (NO EXCHANGE / NO RETURN / NO REFUND)
+              </h3>
+            </div>
+            <p className="text-amber-950 font-medium text-xs leading-relaxed">
+              Garments created or customized through our <strong>Narrow Path Custom Studio</strong> (including custom-uploaded photos, custom typographic prints, tailored graphics, and customer-selected sizes/colors) are <strong>bespoke and produced strictly according to your individual specifications</strong>.
+            </p>
+            <ul className="list-disc pl-5 space-y-1 text-xs text-amber-900 font-medium">
+              <li>Because personalized items cannot be repurposed, restocked, or resold, <strong>all custom-designed apparel is strictly NON-EXCHANGEABLE, NON-RETURNABLE, and NON-REFUNDABLE</strong>.</li>
+              <li>Size exchange requests cannot be accepted for customized garments because each piece is uniquely printed on demand for the customer.</li>
+              <li>Customers are strongly encouraged to inspect sizing charts, measurement dimensions, and design previews thoroughly prior to placing a custom order.</li>
+            </ul>
           </div>
 
           {/* 3. EXCHANGE SHIPPING CHARGES */}

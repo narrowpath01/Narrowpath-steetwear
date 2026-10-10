@@ -90,7 +90,8 @@ export default async function DesignPreviewPage({ params }: PageProps) {
     `- Color: ${baseColor}\n` +
     `- Size: ${size}\n` +
     `- Price: INR 649\n\n` +
-    `View & Download Assets: https://narrowpath.in/customise/design/${id}`
+    `View & Download Assets: https://narrowpath.in/customise/design/${id}\n\n` +
+    `(Note: Custom personalized orders are final and non-returnable / non-exchangeable per store policy)`
   );
 
   return (
@@ -156,6 +157,13 @@ export default async function DesignPreviewPage({ params }: PageProps) {
                 <span className="block text-[9px] font-black uppercase tracking-wider text-neutral-400">Size</span>
                 <span className="text-sm font-black">{size}</span>
               </div>
+            </div>
+
+            {/* Non-Returnable Notice Badge */}
+            <div className="bg-amber-50 border border-amber-200/80 rounded-xl p-2.5 text-center">
+              <span className="text-[10px] font-bold text-amber-900 uppercase tracking-wider block">
+                ⚠️ Custom Order: Made exclusively for you. Non-returnable & non-exchangeable.
+              </span>
             </div>
 
             <div className="flex flex-col gap-3 pt-2">

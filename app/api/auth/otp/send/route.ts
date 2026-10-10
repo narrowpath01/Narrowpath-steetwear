@@ -16,6 +16,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Please enter a valid 10-digit mobile number" }, { status: 400 });
     }
 
+    // Anti-spam cooldown: Check if an OTP was dispatched within the last 60 seconds
+    const existingUser = await prisma.user.findFirst({
+      where: { phone: cleanPhone },
+      select: { otpExpires: true },
+    });
+
+    if (existingUser?.otpExpires) {
+      const msRemaining = existingUser.otpExpires.getTime() - Date.now();
+      // Total validity is 5 mins (300,000ms). If > 240,000ms remain, it was requested < 60s ago
+      if (msRemaining > 240 * 1000) {
+        const waitSec = Math.ceil((msRemaining - 240 * 1000) / 1000);
+        return NextResponse.json(
+          { error: `Please wait ${waitSec} seconds before requesting a new code.` },
+          { status: 429 }
+        );
+      }
+    }
+
     // Generate a 6-digit OTP code
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
     const otpExpires = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes expiry

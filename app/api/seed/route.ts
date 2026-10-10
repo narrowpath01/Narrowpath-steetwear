@@ -3,6 +3,10 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 
 export async function GET() {
+  if (process.env.NODE_ENV === "production") {
+    return NextResponse.json({ error: "Endpoint disabled in production environment." }, { status: 403 });
+  }
+
   try {
     const newDrops = [
       {

@@ -79,6 +79,19 @@ export default function ReturnRequestDrawer({ order, isOpen, onReturnSubmitted }
 
   const retReq = order.returnRequest;
 
+  const isCustomItem = (item: any) => {
+    const prod = item.variant?.product;
+    return (
+      prod?.collection?.toUpperCase() === "CUSTOM" ||
+      prod?.handle?.toLowerCase().startsWith("custom") ||
+      prod?.title?.toLowerCase().includes("custom") ||
+      item.variant?.title?.toLowerCase().includes("custom")
+    );
+  };
+
+  const isAllCustom = Boolean(order.items && order.items.length > 0 && order.items.every(isCustomItem));
+  const hasSomeCustom = Boolean(order.items && order.items.some(isCustomItem));
+
   return (
     <div className="border-t border-neutral-200 bg-neutral-50/70 p-4 sm:p-6 transition-all duration-300">
       {retReq ? (
@@ -159,6 +172,29 @@ export default function ReturnRequestDrawer({ order, isOpen, onReturnSubmitted }
             )}
           </div>
         </div>
+      ) : isAllCustom ? (
+        /* ALL ITEMS CUSTOM - NO RETURN ALLOWED */
+        <div className="border border-amber-300 bg-amber-50 rounded-2xl p-6 text-center space-y-3">
+          <div className="w-10 h-10 bg-amber-150 rounded-full flex items-center justify-center mx-auto text-amber-800 text-xl font-bold">
+            ⚠️
+          </div>
+          <h4 className="text-xs font-black uppercase tracking-widest text-amber-900">
+            Return / Exchange Unavailable (Custom Order)
+          </h4>
+          <p className="text-xs text-amber-950 font-medium leading-relaxed max-w-md mx-auto">
+            This order consists of personalized custom merchandise made uniquely to your specifications (custom size, artwork, and prints). Per Narrow Path store policy, customized apparel is <strong>strictly non-returnable and non-exchangeable</strong>.
+          </p>
+          <div className="pt-1">
+            <a
+              href="https://wa.me/918796621740?text=Hi! I have a question regarding my custom order"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-block text-[11px] font-bold uppercase text-amber-900 underline hover:text-black"
+            >
+              Contact Support on WhatsApp
+            </a>
+          </div>
+        </div>
       ) : order.status !== "DELIVERED" ? (
         /* ORDER NOT DELIVERED ERROR BLOCK */
         <div className="border border-orange-200 bg-orange-50 rounded-lg p-4 text-center">
@@ -176,6 +212,12 @@ export default function ReturnRequestDrawer({ order, isOpen, onReturnSubmitted }
           <h4 className="text-xs font-black uppercase tracking-widest text-neutral-400 border-b border-neutral-200 pb-2">
             Submit Return / Exchange Request
           </h4>
+
+          {hasSomeCustom && (
+            <div className="bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-lg text-xs font-medium leading-normal">
+              ⚠️ <strong>Note:</strong> Customized items in this order are non-returnable. You can only request an exchange or return for standard Plain and Printed tees.
+            </div>
+          )}
 
           <div className="bg-red-50 border border-red-200 text-red-800 p-3.5 rounded-lg text-[11px] font-bold leading-normal">
             ⚠️ Shipping Policy Notice: As this order has already been shipped, you will be responsible for both the initial shipping fee and the return shipping fee (unless the item arrived defective or incorrect).

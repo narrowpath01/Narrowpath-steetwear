@@ -201,7 +201,12 @@ export async function sendOwnerWhatsAppNotification(orderId: string, trackingNum
 
     const shortOrderId = orderId.slice(-8).toUpperCase();
     const amountStr = `INR ${order.amount}`;
-    const ownerPhone = formatE164Phone(process.env.WHATSAPP_OWNER_PHONE || "+918796621740");
+    const rawOwnerPhone = process.env.WHATSAPP_OWNER_PHONE;
+    if (!rawOwnerPhone) {
+      console.warn(`[WhatsApp Owner API]: WHATSAPP_OWNER_PHONE is not configured in .env. Skipping owner notification.`);
+      return;
+    }
+    const ownerPhone = formatE164Phone(rawOwnerPhone);
     const itemsStr = buildItemsString(order.items);
 
     const fullAddress = `${order.address.street}, ${order.address.city}, ${order.address.state} - ${order.address.pinCode}`;
@@ -423,7 +428,12 @@ export async function sendOwnerWhatsAppCancellation(orderId: string) {
 
     const shortOrderId = orderId.slice(-8).toUpperCase();
     const amountStr = `INR ${order.amount}`;
-    const ownerPhone = formatE164Phone(process.env.WHATSAPP_OWNER_PHONE || "+918796621740");
+    const rawOwnerPhone = process.env.WHATSAPP_OWNER_PHONE;
+    if (!rawOwnerPhone) {
+      console.warn(`[WhatsApp Owner API]: WHATSAPP_OWNER_PHONE is not configured in .env. Skipping cancellation alert.`);
+      return;
+    }
+    const ownerPhone = formatE164Phone(rawOwnerPhone);
     const itemsStr = buildItemsString(order.items);
     const customerName = `${order.address.firstName} ${order.address.lastName}`;
 
@@ -516,7 +526,12 @@ export async function sendOwnerWhatsAppReturnRequest(orderId: string) {
 
     const shortOrderId = orderId.slice(-8).toUpperCase();
     const amountStr = `INR ${order.amount}`;
-    const ownerPhone = formatE164Phone(process.env.WHATSAPP_OWNER_PHONE || "+918796621740");
+    const rawOwnerPhone = process.env.WHATSAPP_OWNER_PHONE;
+    if (!rawOwnerPhone) {
+      console.warn(`[WhatsApp Owner API]: WHATSAPP_OWNER_PHONE is not configured in .env. Skipping return request alert.`);
+      return;
+    }
+    const ownerPhone = formatE164Phone(rawOwnerPhone);
     const itemsStr = buildItemsString(order.items);
     const customerName = `${order.address.firstName} ${order.address.lastName}`;
     const retReq = order.returnRequest;

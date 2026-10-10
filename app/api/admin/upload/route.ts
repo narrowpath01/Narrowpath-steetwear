@@ -3,9 +3,9 @@ import { getAdminSession } from "@/lib/auth-admin";
 import { v2 as cloudinary } from "cloudinary";
 
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || "lhqxzevt",
-  api_key: process.env.CLOUDINARY_API_KEY || "965596432788773",
-  api_secret: process.env.CLOUDINARY_API_SECRET || "aFPzbnuUXyNfXFYqZqEWXa6W7QI",
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
   secure: true,
 });
 
@@ -14,6 +14,10 @@ export async function POST(req: Request) {
     const adminData = await getAdminSession();
     if (!adminData) {
       return NextResponse.json({ error: "Unauthorized. Admin privileges required." }, { status: 401 });
+    }
+
+    if (!process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET || !process.env.CLOUDINARY_CLOUD_NAME) {
+      return NextResponse.json({ error: "Cloudinary credentials are not configured in environment variables." }, { status: 500 });
     }
 
     const formData = await req.formData();

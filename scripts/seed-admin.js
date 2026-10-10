@@ -2,14 +2,15 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
+  const adminEmail = process.env.ADMIN_EMAIL || 'narrowpathtshirts@gmail.com';
   const user = await prisma.user.upsert({
-    where: { email: 'narrowpathtshirts@gmail.com' },
+    where: { email: adminEmail },
     update: {
       role: 'ADMIN',
       name: 'Narrow Path Admin',
     },
     create: {
-      email: 'narrowpathtshirts@gmail.com',
+      email: adminEmail,
       name: 'Narrow Path Admin',
       role: 'ADMIN',
     },

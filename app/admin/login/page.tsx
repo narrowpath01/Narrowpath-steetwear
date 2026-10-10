@@ -13,7 +13,7 @@ function AdminLoginForm() {
   const [authMethod, setAuthMethod] = useState<"password" | "phone">("password");
 
   // Password State
-  const [email, setEmail] = useState("narrowpathtshirts@gmail.com");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
@@ -205,7 +205,7 @@ function AdminLoginForm() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="e.g. narrowpathtshirts@gmail.com"
+              placeholder="admin@narrowpath.in"
               className="w-full bg-white border border-neutral-300 rounded-lg px-4 py-2.5 text-xs text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition font-mono"
               required
               autoFocus

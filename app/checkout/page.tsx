@@ -450,6 +450,13 @@ export default function CheckoutPage() {
              isPinServiceable === false ? "Area Unserviceable" : 
              "Pay Now"}
           </button>
+
+          <div className="mt-4 pt-4 border-t border-neutral-100 flex items-center justify-center gap-2 text-center">
+            <span className="text-xs">🛡️</span>
+            <p className="text-[10px] text-neutral-500 uppercase font-semibold tracking-wider">
+              5-Day Easy Exchange on Plain & Printed Tees • 100% Secure Payment
+            </p>
+          </div>
         </div>
 
       </div>

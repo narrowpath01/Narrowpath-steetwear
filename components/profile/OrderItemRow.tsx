@@ -34,6 +34,38 @@ export default function OrderItemRow({ item }: OrderItemRowProps) {
           <span>Size: <strong className="text-neutral-800 uppercase">{item.variant?.title}</strong></span>
           <span>Qty: <strong className="text-neutral-800">{item.quantity}</strong></span>
         </div>
+
+        {/* Return / Exchange Policy Badge */}
+        {(() => {
+          const prod = item.variant?.product;
+          const isCustom = 
+            prod?.collection?.toUpperCase() === "CUSTOM" ||
+            prod?.handle?.toLowerCase().startsWith("custom") ||
+            prod?.title?.toLowerCase().includes("custom") ||
+            item.variant?.title?.toLowerCase().includes("custom");
+
+          const isPlain = 
+            prod?.collection?.toUpperCase() === "MONOCHROME" ||
+            prod?.handle?.toLowerCase().includes("monochrome");
+
+          return (
+            <div className="mt-1.5 flex items-center">
+              {isCustom ? (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-50 text-amber-850 border border-amber-300">
+                  <span>⚠️</span> Non-Returnable (Customized)
+                </span>
+              ) : isPlain ? (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-neutral-100 text-neutral-800 border border-neutral-200">
+                  <span>✓</span> Plain Tee • 5-Day Return / Exchange
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-neutral-100 text-neutral-800 border border-neutral-200">
+                  <span>✓</span> Printed Tee • 5-Day Return / Exchange
+                </span>
+              )}
+            </div>
+          );
+        })()}
       </div>
 
       {/* Price */}

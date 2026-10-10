@@ -13,9 +13,12 @@ export async function POST(req: NextRequest) {
     const signature = req.headers.get("x-razorpay-signature");
     const headerEventId = req.headers.get("x-razorpay-event-id");
 
-    const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET || process.env.RAZORPAY_KEY_SECRET;
+    const configuredSecret = process.env.RAZORPAY_WEBHOOK_SECRET?.trim();
+    const isPlaceholder = !configuredSecret || configuredSecret === "aapka_webhook_secret" || configuredSecret.includes("aapka_");
+    const webhookSecret = isPlaceholder ? process.env.RAZORPAY_KEY_SECRET : configuredSecret;
+
     if (!webhookSecret) {
-      console.error("[Razorpay Webhook Error]: Webhook secret not configured in environment");
+      console.error("[Razorpay Webhook Error]: Neither RAZORPAY_WEBHOOK_SECRET nor RAZORPAY_KEY_SECRET configured in environment");
       return NextResponse.json({ error: "Webhook secret missing" }, { status: 500 });
     }
 

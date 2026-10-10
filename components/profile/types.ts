@@ -8,6 +8,8 @@ export type Product = {
   id: string;
   title: string;
   description: string;
+  handle?: string;
+  collection?: string;
   images: ProductImage[];
 };
 

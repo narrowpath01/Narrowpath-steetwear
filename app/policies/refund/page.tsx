@@ -40,6 +40,24 @@ export default function RefundPolicyPage() {
               <li>The returned product does not meet the eligibility requirements listed above.</li>
               <li>The product has been used, washed, altered, or damaged after delivery.</li>
               <li>Original tags or packaging are missing.</li>
+              <li>The request was submitted after the eligible refund window.</li>
+            </ul>
+          </div>
+
+          {/* 3A. CUSTOMIZED & PERSONALIZED TEES (STRICTLY NON-REFUNDABLE) */}
+          <div className="bg-amber-50 border-2 border-amber-300 rounded-2xl p-6 space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="text-amber-800 text-lg">⚠️</span>
+              <h3 className="font-black uppercase text-sm text-amber-900 tracking-wider">
+                CUSTOMIZED APPAREL IS NON-REFUNDABLE
+              </h3>
+            </div>
+            <p className="text-amber-950 font-medium text-xs leading-relaxed">
+              Every t-shirt customized through our <strong>Narrow Path Custom Studio</strong> is tailored specifically to the customer's design preferences (personalized graphics, photos, typography, base colors, and chosen sizing).
+            </p>
+            <ul className="list-disc pl-5 space-y-1 text-xs text-amber-900 font-medium">
+              <li>As custom merchandise cannot be resold or returned to stock, <strong>all customized orders are strictly NON-REFUNDABLE and NON-RETURNABLE</strong>.</li>
+              <li>Standard catalog Plain and Printed t-shirts remain eligible for return/refund per Section 2 of this policy.</li>
             </ul>
           </div>
 

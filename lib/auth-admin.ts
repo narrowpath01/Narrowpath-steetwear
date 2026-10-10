@@ -3,13 +3,19 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/lib/db";
 import { redirect } from "next/navigation";
 
-const OWNER_PHONE = process.env.WHATSAPP_OWNER_PHONE?.replace(/\D/g, "").slice(-10) || "9894781426";
-const ADMIN_EMAILS = [
-  "narrowpathtshirts@gmail.com",
-  "pv254424@gmail.com",
-  "kuhu.mishra98188@gmail.com",
-  process.env.ADMIN_EMAIL,
-].filter(Boolean) as string[];
+const OWNER_PHONE = process.env.WHATSAPP_OWNER_PHONE?.replace(/\D/g, "").slice(-10) || "";
+
+// Load permitted admin emails from environment (ADMIN_EMAILS or primary ADMIN_EMAIL)
+const envAdminEmails = (process.env.ADMIN_EMAILS || "")
+  .split(",")
+  .map((e) => e.trim().toLowerCase())
+  .filter(Boolean);
+
+const primaryAdmin = (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
+
+const ADMIN_EMAILS = Array.from(
+  new Set([primaryAdmin, ...envAdminEmails].filter(Boolean))
+) as string[];
 
 export async function getAdminSession() {
   try {
@@ -40,8 +46,8 @@ export async function getAdminSession() {
     }
 
     // Check if user is owner phone or admin email -> auto elevate
-    const isOwnerPhone = user.phone && user.phone.replace(/\D/g, "").slice(-10) === OWNER_PHONE;
-    const isAdminEmail = user.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
+    const isOwnerPhone = Boolean(OWNER_PHONE && user.phone && user.phone.replace(/\D/g, "").slice(-10) === OWNER_PHONE);
+    const isAdminEmail = Boolean(user.email && ADMIN_EMAILS.length > 0 && ADMIN_EMAILS.includes(user.email.toLowerCase()));
 
     if (isOwnerPhone || isAdminEmail) {
       await prisma.user.update({
