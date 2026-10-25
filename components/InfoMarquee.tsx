@@ -22,7 +22,7 @@ export function InfoMarquee() {
           <path d="M12 19v3M9.5 21c1.5-1 3.5-1 5 0" />
         </svg>
       ),
-      text: "240 GSM FRENCH TERRY COTTON",
+      text: "FRENCH TERRY COTTON",
     },
     {
       icon: (

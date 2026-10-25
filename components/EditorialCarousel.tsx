@@ -137,11 +137,9 @@ export default function EditorialCarousel({ products = [], marqueeText }: Editor
       className="relative w-full bg-zinc-50 pt-3 pb-6 md:pt-4 md:pb-12 overflow-hidden flex flex-col items-center border-t border-neutral-100"
     >
       {/* Marquee: below the navbar/title, above the slides (on all viewports) */}
-      <div className="w-full px-4 md:px-12 mb-8 text-center">
+      <div className="w-full px-4 md:px-8 mb-8 text-center">
         <Marquee 
-          text={marqueeText || ("Customization Available" + "\u00A0".repeat(16) + "Buy 2 Tees, Take INR 100 Back!")} 
-          speed="slow" 
-          className="rounded-[32px] overflow-hidden border border-neutral-800" 
+          text={marqueeText || "CUSTOMIZATION AVAILABLE • BUY 2 TEES, TAKE INR 100 BACK!"} 
         />
       </div>
 
