@@ -35,7 +35,7 @@ const imageUrlToBase64 = async (url: string): Promise<string> => {
 };
 
 export default function CustomisePage() {
-  const [baseColor, setBaseColor] = useState<"black" | "brown" | "off-white" | "red">("black");
+  const [baseColor, setBaseColor] = useState<"black" | "white" | "off-white" | "brown" | "red">("black");
   const [size, setSize] = useState<"S" | "M" | "L" | "XL">("M");
 
   // Slide view mode
@@ -118,14 +118,16 @@ export default function CustomisePage() {
   const teeImages = {
     front: {
       black: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840374/monochrome-black-front.png",
-      brown: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840377/monochrome-brown-1.png",
+      white: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840420/monochrome-white-front.png",
       "off-white": "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840401/monochrome-offwhite-front.png",
+      brown: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840377/monochrome-brown-1.png",
       red: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840404/monochrome-red-front.png"
     },
     back: {
       black: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840373/monochrome-black-back.png",
-      brown: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840377/monochrome-brown-2.png",
+      white: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840403/monochrome-white-back.png",
       "off-white": "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840379/monochrome-offwhite-back.png",
+      brown: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840377/monochrome-brown-2.png",
       red: "https://res.cloudinary.com/lhqxzevt/image/upload/v1790840403/monochrome-red-back.png"
     }
   };
@@ -868,23 +870,25 @@ ${backTexts.map((t, idx) => `  * Text ${idx + 1}: "${t.text}" (Font: ${fontOptio
               <label className="block text-xs font-black uppercase tracking-wider text-neutral-500">
                 1. Select Base Color
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {(["black", "brown", "off-white", "red"] as const).map((color) => (
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+                {(["black", "white", "off-white", "brown", "red"] as const).map((color) => (
                   <button
                     key={color}
                     onClick={() => setBaseColor(color)}
-                    className={`py-3 px-2 rounded-xl text-[10px] font-black uppercase tracking-wider border-2 transition-all flex items-center justify-center gap-2 ${baseColor === color
+                    className={`py-3 px-2 rounded-xl text-[10px] font-black uppercase tracking-wider border-2 transition-all flex items-center justify-center gap-1.5 sm:gap-2 ${baseColor === color
                       ? "border-black bg-black text-white"
                       : "border-neutral-200 bg-white text-black hover:border-neutral-400"
                       }`}
                   >
                     <span className={`w-3.5 h-3.5 rounded-full border border-neutral-300 ${color === "black"
                       ? "bg-black"
-                      : color === "brown"
-                        ? "bg-[#5A4D41]"
-                        : color === "off-white"
-                          ? "bg-[#FAF9F6]"
-                          : "bg-red-600"
+                      : color === "white"
+                        ? "bg-white"
+                        : color === "brown"
+                          ? "bg-[#5A4D41]"
+                          : color === "off-white"
+                            ? "bg-[#FAF9F6]"
+                            : "bg-red-600"
                       }`} />
                     {color === "off-white" ? "Off-White" : color}
                   </button>
