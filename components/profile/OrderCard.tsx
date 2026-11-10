@@ -188,7 +188,7 @@ export default function OrderCard({ order, onOrderUpdate }: OrderCardProps) {
         ) : null}
 
         <a
-          href={`https://wa.me/918796621740?text=Hi! I need help with my order %23${order.id.slice(-8).toUpperCase()}`}
+          href={`https://wa.me/919894781426?text=Hi! I need help with my order %23${order.id.slice(-8).toUpperCase()}`}
           target="_blank"
           rel="noreferrer"
           className="flex items-center gap-2.5 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider border border-neutral-300 hover:border-black hover:bg-neutral-50 text-neutral-700 hover:text-black bg-white shadow-sm transition-all duration-200"

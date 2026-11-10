@@ -176,7 +176,7 @@ export async function sendWhatsAppNotification(orderId: string, trackingNumber: 
 }
 
 /**
- * Sends a WhatsApp notification to the store owner (+91 9818891540) when a new order is paid.
+ * Sends a WhatsApp notification to the store owner (+91 9894781426) when a new order is paid.
  */
 export async function sendOwnerWhatsAppNotification(orderId: string, trackingNumber?: string | null) {
   try {
